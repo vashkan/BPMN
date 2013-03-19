@@ -1,0 +1,42 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="Mono 2.10.6" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Control\Flows.cs">
+    <Files>
+      <File FileName="MainWindow.cs" Line="76" Column="4" />
+      <File FileName="Control\MVPanel.cs" Line="127" Column="30" />
+      <File FileName="Control\MVObject.cs" Line="48" Column="17" />
+      <File FileName="Control\Task.cs" Line="40" Column="31" />
+      <File FileName="Control\Event.cs" Line="26" Column="20" />
+      <File FileName="Control\Flows.cs" Line="316" Column="21" />
+      <File FileName="Control\Gateway.cs" Line="27" Column="37" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Option id="ShowAllFiles" value="True" />
+          <Node name="GtkControl" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="UserInterface" expanded="True" />
+            <Node name="Control" expanded="True">
+              <Node name="Flows.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>tmVersion</Value>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/home/anuna/Документы/GtkControl/Control/Flows.cs" line="269" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

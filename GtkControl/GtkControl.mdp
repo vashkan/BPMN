@@ -1,0 +1,44 @@
+<Project name="GtkControl" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin\Debug" assembly="GtkControl" />
+      <Build debugmode="True" target="Exe" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin\Release" assembly="GtkControl" />
+      <Build debugmode="False" target="Exe" />
+      <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File subtype="Code" buildaction="EmbedAsResource" name="gtk-gui\gui.stetic" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui\generated.cs" />
+    <File subtype="Code" buildaction="Compile" name="MainWindow.cs" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui\MainWindow.cs" />
+    <File subtype="Code" buildaction="Compile" name="Main.cs" />
+    <File subtype="Code" buildaction="Compile" name="AssemblyInfo.cs" />
+    <File subtype="Directory" buildaction="Compile" name="Control" />
+    <File subtype="Code" buildaction="Compile" name="Control\MVPanel.cs" />
+    <File subtype="Code" buildaction="Compile" name="gtk-gui\GtkControl.MVPanel.cs" />
+    <File subtype="Code" buildaction="EmbedAsResource" name="gtk-gui\objects.xml" />
+    <File subtype="Code" buildaction="Compile" name="Control\MVObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\Flows.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\Task.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\Event.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\Gateway.cs" />
+  </Contents>
+  <References>
+    <ProjectReference type="Package" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Package" localcopy="True" refto="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Package" localcopy="True" refto="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Package" localcopy="True" refto="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Package" localcopy="True" refto="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <ProjectReference type="Package" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Package" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference specificVersion="False" type="Package" localcopy="False" refto="Mono.Cairo, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <ProjectReference specificVersion="False" type="Package" localcopy="False" refto="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  </References>
+</Project>
