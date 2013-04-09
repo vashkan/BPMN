@@ -148,19 +148,42 @@ namespace GtkControl.Control
 
         #region Public methods
 
-        public Flow(string pName, string cap, ElementType typeEl, double _width, double _height, PointD start, PointD end)
+        public Flow (string pName, string cap, ElementType typeEl, double _width, double _height, PointD start, PointD end)
             : base(pName, cap, typeEl, _width, _height)
-        {
-            WayPoints = new List<PointD>();
-            arrow_degrees = 0.5;
-            arrow_lenght = 15;
-            StartX = start.X;
-            StartY = start.Y;
-            WayPoints.Add(start);
-            WayPoints.Add(end);
-            EndX = end.X;
-            EndY = end.Y;
-        }
+		{
+			WayPoints = new List<PointD> ();
+			arrow_degrees = 0.5;
+			arrow_lenght = 15;
+			StartX = start.X;
+			StartY = start.Y;
+			WayPoints.Clear ();
+			WayPoints.Add (start);
+			
+			WayPoints.Add (end);
+			EndX = end.X;
+			EndY = end.Y;
+			
+			var dX = EndX - StartX;
+			var dY = EndY - StartY;
+			signX = dX / Math.Abs (dX);
+			signY = dY / Math.Abs (dY);
+			
+			LastX = EndX - dX / 2 + 15 * signX;
+			LastY = EndY;
+			//gr.LineTo (StartX + dX / 2 - radius * signX, StartY);
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + dX / 2, StartY));
+			//gr.ArcNegative (StartX + dX / 2 - radius * signX, StartY + radius * signY, radius, Math.PI / 2, 2 * Math.PI);
+			//gr.LineTo (StartX + dX / 2, EndY - radius * signY);
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + dX / 2, EndY));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 50));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 7 * dX / 8, EndY + 50));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 7 * dX / 8, EndY + 100));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 100));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 150));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 28 * dX / 32, EndY + 150));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 28 * dX / 32, EndY));
+		}
 
         #endregion
 
@@ -211,27 +234,56 @@ namespace GtkControl.Control
 
 
         #region MVObject members
-        public override void Paint(Cairo.Context gr)
-        {
+        public override void Paint (Cairo.Context gr)
+		{
 
-            //throw new Exception("The method or operation is not implemented.");
-            var radius = 15;
-            gr.MoveTo(StartX, StartY);
-            var dX = EndX - StartX;
-            var dY = EndY - StartY;
-            signX = dX / Math.Abs(dX);
-            signY = dY / Math.Abs(dY);
-            gr.LineTo(StartX + dX / 2 - radius * signX, StartY);
-            WayPoints.Insert(WayPoints.Count - 1, new PointD(StartX + dX / 2, StartY));
-            gr.ArcNegative(StartX + dX / 2 - radius * signX, StartY + radius * signY, radius, Math.PI / 2, 2 * Math.PI);
-            gr.LineTo(StartX + dX / 2, EndY - radius * signY);
-            WayPoints.Insert(WayPoints.Count - 1, new PointD(StartX + dX / 2, EndY));
-            gr.Arc(StartX + dX / 2 + radius * signX, EndY - radius * signY, radius, Math.PI, -Math.PI / 2);
-            //gr.MoveTo(EndX-dX/2+radius*signX,EndY);
-            LastX = EndX - dX / 2 + radius * signX;
-            LastY = EndY;
-            gr.LineTo(EndX, EndY);
-            gr.LineJoin = LineJoin.Round;
+			//throw new Exception("The method or operation is not implemented.");
+			var radius = 15;
+			//gr.NewPath ();
+			gr.MoveTo (WayPoints [0]);
+			
+			//gr.Arc (StartX + dX / 2 + radius * signX, EndY - radius * signY, radius, Math.PI, 3*Math.PI / 2);
+			//gr.MoveTo(EndX-dX/2+radius*signX,EndY);
+			//gr.LineTo (EndX  10, EndY - 5);
+			var count = WayPoints.Count;
+			if (count > 2) {
+				for (int i = 1; i< count-1; i++) {
+					double angleA = Math.Atan2 (WayPoints [i - 1].Y - WayPoints [i].Y, WayPoints [i - 1].X - WayPoints [i].X);
+					//приведение угла к (0;2*pi)
+					angleA = (angleA >= 0) ? angleA : (angleA + 2 * Math.PI) % (2 * Math.PI);
+					double angleB = Math.Atan2 (WayPoints [i + 1].Y - WayPoints [i].Y, WayPoints [i + 1].X - WayPoints [i].X);
+					//приведение угла к (0;2*pi)
+					angleB = (angleB >= 0) ? angleB : (angleB + 2 * Math.PI) % (2 * Math.PI);
+					double angleG = angleB - angleA;
+					angleG = Math.Abs(angleG)==3*Math.PI/2?(-angleG/3):angleG;
+					//3 точки находтся на одной прямой текущий узел должен быть удален
+					if (angleG == Math.PI) 
+						continue;	
+					var krad = radius / Math.Tan (Math.Abs (angleG / 2));
+					var kxc = WayPoints [i].X + krad * Math.Cos (angleA);
+					var kyc = WayPoints [i].Y + krad * Math.Sin (angleA);
+					
+					gr.LineTo (kxc, kyc);
+					
+					var xc = WayPoints [i].X + radius / Math.Sin (Math.Abs (angleG / 2)) * Math.Cos (angleA + angleG / 2);
+					var yc = WayPoints [i].Y + radius / Math.Sin (Math.Abs (angleG / 2)) * Math.Sin (angleA + angleG / 2);
+					if (angleG > 0) {
+						gr.ArcNegative (xc, yc, radius, Math.PI + angleB, Math.PI + angleA);					
+					} else {
+						gr.Arc (xc, yc, radius, Math.PI + angleB, Math.PI + angleA);
+					}
+					
+
+					var rxc = WayPoints [i].X + krad * Math.Cos (angleB);
+					var ryc = WayPoints [i].Y + krad * Math.Sin (angleB);
+					gr.MoveTo(rxc, ryc);
+					
+				}
+			}
+			
+			gr.LineTo (WayPoints [WayPoints.Count - 1]);
+			gr.LineJoin = LineJoin.Round;
+			//gr.ClosePath ();
             //gr.Antialias = Antialias.Subpixel;
             gr.Stroke();
         }
@@ -256,16 +308,22 @@ namespace GtkControl.Control
         {
             line_color = new Color(0, 0, 0);
         }
-        public override void Paint(Context gr)
-        {
-            gr.LineWidth = 2;
-            base.Paint(gr);
-            double x1;
-            double y1;
-            double x2;
-            double y2;
-            calcVertexes(LastX, LastY, EndX, EndY, out x1, out y1, out x2, out y2);
-            gr.MoveTo(EndX, EndY);
+        public override void Paint (Context gr)
+		{
+			gr.LineWidth = 2;
+			base.Paint (gr);
+			double x1;
+			double y1;
+			double x2;
+			double y2;
+			calcVertexes (
+				WayPoints [WayPoints.Count - 2].X,
+				WayPoints [WayPoints.Count - 2].Y,
+				WayPoints [WayPoints.Count - 1].X,
+				WayPoints [WayPoints.Count - 1].Y, 
+				out x1, out y1, out x2, out y2
+			);
+			gr.MoveTo (WayPoints [WayPoints.Count - 1]);
             gr.LineTo(x1, y1);
             gr.LineTo(x2, y2);
             gr.ClosePath();
@@ -288,19 +346,25 @@ namespace GtkControl.Control
             line_color = new Color(0, 0, 0);
             fill_color = new Color(1, 1, 1);
         }
-        public override void Paint(Context gr)
-        {
-            gr.LineWidth = 3;
-            base.Paint(gr);
-            double x1;
-            double y1;
-            double x2;
-            double y2;
-            double x3;
-            double y3;
+        public override void Paint (Context gr)
+		{
+			gr.LineWidth = 2;
+			base.Paint (gr);
+			double x1;
+			double y1;
+			double x2;
+			double y2;
+			double x3;
+			double y3;
 
-            calcVertexes(LastX, LastY, EndX, EndY, out x1, out y1, out x2, out y2);
-            gr.MoveTo(EndX, EndY);
+			calcVertexes (
+				WayPoints [WayPoints.Count - 2].X,
+				WayPoints [WayPoints.Count - 2].Y,
+				WayPoints [WayPoints.Count - 1].X,
+				WayPoints [WayPoints.Count - 1].Y, 
+				out x1, out y1, out x2, out y2
+			);
+			gr.MoveTo (WayPoints [WayPoints.Count - 1]);
             gr.LineTo(x1, y1);
             //gr.MoveTo(EndX,EndY);
             gr.LineTo(x2, y2);
@@ -328,9 +392,6 @@ namespace GtkControl.Control
             gr.ClosePath();
             gr.Color = line_color;
             gr.StrokePreserve();
-
-
-
             gr.Color = fill_color;
             gr.Fill();
         }
@@ -348,21 +409,27 @@ namespace GtkControl.Control
             line_color = new Color(0, 0, 0);
             fill_color = new Color(1, 1, 1);
         }
-        public override void Paint(Context gr)
-        {
+        public override void Paint (Context gr)
+		{
 
-            gr.LineWidth = 2;
-            double[] dash = { 10, 2 };
-            double[] none_dash = { 10, 0 };
-            gr.SetDash(dash, -10);
-            base.Paint(gr);
-            gr.SetDash(none_dash, 0);
-            double x1;
-            double y1;
-            double x2;
-            double y2;
-            calcVertexes(LastX, LastY, EndX, EndY, out x1, out y1, out x2, out y2);
-            gr.MoveTo(EndX, EndY);
+			gr.LineWidth = 2;
+			double[] dash = { 10, 2 };
+			double[] none_dash = { 10, 0 };
+			gr.SetDash (dash, -10);
+			base.Paint (gr);
+			gr.SetDash (none_dash, 0);
+			double x1;
+			double y1;
+			double x2;
+			double y2;
+			calcVertexes (
+				WayPoints [WayPoints.Count - 2].X,
+				WayPoints [WayPoints.Count - 2].Y,
+				WayPoints [WayPoints.Count - 1].X,
+				WayPoints [WayPoints.Count - 1].Y, 
+				out x1, out y1, out x2, out y2
+			);
+			gr.MoveTo (WayPoints [WayPoints.Count - 1]);
             gr.LineTo(x1, y1);
             gr.LineTo(x2, y2);
             gr.ClosePath();
