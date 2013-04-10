@@ -5,18 +5,6 @@ using Gtk;
 
 namespace GtkControl.Control
 {
-	//направление поворота
-	public enum TurnDirections
-	{
-		UR,
-		RU,
-		RD,
-		DR,
-		DL,
-		LD,
-		LU,
-		UL
-	}
     /// <summary>
     /// Стрелки
     /// </summary>
@@ -170,10 +158,9 @@ namespace GtkControl.Control
 			
 			LastX = EndX - dX / 2 + 15 * signX;
 			LastY = EndY;
-			//gr.LineTo (StartX + dX / 2 - radius * signX, StartY);
+			//todo path finder
+			
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + dX / 2, StartY));
-			//gr.ArcNegative (StartX + dX / 2 - radius * signX, StartY + radius * signY, radius, Math.PI / 2, 2 * Math.PI);
-			//gr.LineTo (StartX + dX / 2, EndY - radius * signY);
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + dX / 2, EndY));
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY));
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 50));
@@ -182,7 +169,7 @@ namespace GtkControl.Control
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 100));
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 150));
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 28 * dX / 32, EndY + 150));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 28 * dX / 32, EndY));
+			//WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 28 * dX / 32, EndY));
 		}
 
         #endregion
@@ -248,6 +235,8 @@ namespace GtkControl.Control
 			var count = WayPoints.Count;
 			if (count > 2) {
 				for (int i = 1; i< count-1; i++) {
+					var length1 = Math.Sqrt(Math.Pow(WayPoints [i - 1].X - WayPoints [i].X,2) + Math.Pow(WayPoints [i - 1].Y - WayPoints [i].Y,2));
+					var length2 = Math.Sqrt(Math.Pow(WayPoints [i + 1].X - WayPoints [i].X,2) + Math.Pow(WayPoints [i + 1].Y - WayPoints [i].Y,2));
 					double angleA = Math.Atan2 (WayPoints [i - 1].Y - WayPoints [i].Y, WayPoints [i - 1].X - WayPoints [i].X);
 					//приведение угла к (0;2*pi)
 					angleA = (angleA >= 0) ? angleA : (angleA + 2 * Math.PI) % (2 * Math.PI);
@@ -255,29 +244,33 @@ namespace GtkControl.Control
 					//приведение угла к (0;2*pi)
 					angleB = (angleB >= 0) ? angleB : (angleB + 2 * Math.PI) % (2 * Math.PI);
 					double angleG = angleB - angleA;
-					angleG = Math.Abs(angleG)==3*Math.PI/2?(-angleG/3):angleG;
+					angleG = Math.Abs (angleG) == 3 * Math.PI / 2 ? (-angleG / 3) : angleG;
 					//3 точки находтся на одной прямой текущий узел должен быть удален
 					if (angleG == Math.PI) 
 						continue;	
+					
 					var krad = radius / Math.Tan (Math.Abs (angleG / 2));
 					var kxc = WayPoints [i].X + krad * Math.Cos (angleA);
 					var kyc = WayPoints [i].Y + krad * Math.Sin (angleA);
-					
-					gr.LineTo (kxc, kyc);
-					
+
 					var xc = WayPoints [i].X + radius / Math.Sin (Math.Abs (angleG / 2)) * Math.Cos (angleA + angleG / 2);
 					var yc = WayPoints [i].Y + radius / Math.Sin (Math.Abs (angleG / 2)) * Math.Sin (angleA + angleG / 2);
-					if (angleG > 0) {
-						gr.ArcNegative (xc, yc, radius, Math.PI + angleB, Math.PI + angleA);					
-					} else {
-						gr.Arc (xc, yc, radius, Math.PI + angleB, Math.PI + angleA);
-					}
 					
-
 					var rxc = WayPoints [i].X + krad * Math.Cos (angleB);
 					var ryc = WayPoints [i].Y + krad * Math.Sin (angleB);
-					gr.MoveTo(rxc, ryc);
 					
+					
+					if ((length1 < 2 * radius) || (length2 < 2 * radius)) {
+						gr.LineTo (WayPoints [i]);
+					} else {
+						gr.LineTo (kxc, kyc);
+						if (angleG > 0) {
+							gr.ArcNegative (xc, yc, radius, Math.PI + angleB, Math.PI + angleA);					
+						} else {
+							gr.Arc (xc, yc, radius, Math.PI + angleB, Math.PI + angleA);
+						}
+						gr.MoveTo (rxc, ryc);
+					}
 				}
 			}
 			
