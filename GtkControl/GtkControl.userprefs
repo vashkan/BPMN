@@ -1,22 +1,24 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="Mono 2.10.6" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Control\Flows.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Control\MVPanel.cs">
     <Files>
-      <File FileName="MainWindow.cs" Line="87" Column="1" />
-      <File FileName="Control\MVPanel.cs" Line="74" Column="1" />
-      <File FileName="Control\MVObject.cs" Line="258" Column="1" />
-      <File FileName="Control\Task.cs" Line="26" Column="19" />
-      <File FileName="Control\Event.cs" Line="26" Column="20" />
-      <File FileName="Control\Flows.cs" Line="331" Column="18" />
-      <File FileName="Control\Gateway.cs" Line="22" Column="23" />
-      <File FileName="Main.cs" Line="29" Column="1" />
+      <File FileName="Control\Task.cs" Line="49" Column="2" />
+      <File FileName="Control\Event.cs" Line="41" Column="22" />
+      <File FileName="Control\Flows.cs" Line="301" Column="10" />
+      <File FileName="Control\Gateway.cs" Line="27" Column="33" />
+      <File FileName="Main.cs" Line="33" Column="2" />
+      <File FileName="Control\MVPanel.cs" Line="261" Column="17" />
+      <File FileName="Control\MVObject.cs" Line="167" Column="16" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Option id="ShowAllFiles" value="True" />
-          <Node name="GtkControl" expanded="True" selected="True">
-            <Node name="Control" expanded="True" />
+          <Node name="GtkControl" expanded="True">
+            <Node name="Control" expanded="True">
+              <Node name="MVPanel.cs" selected="True" />
+            </Node>
+            <Node name="gtk-gui" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -32,12 +34,8 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/home/anuna/Документы/GtkControl/Control/Flows.cs" line="269" />
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\Flows.cs" line="268" />
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\Flows.cs" line="266" />
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\Flows.cs" line="253" />
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\Flows.cs" line="234" />
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\Flows.cs" line="286" />
+      <Breakpoint enabled="false" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="283" />
+      <Breakpoint enabled="false" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="192" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

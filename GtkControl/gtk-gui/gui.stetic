@@ -96,7 +96,6 @@
                 <property name="MemberName" />
                 <property name="Events">PointerMotionMask, PointerMotionHintMask, ButtonMotionMask, Button1MotionMask, Button2MotionMask, Button3MotionMask</property>
                 <property name="HasWindow">False</property>
-                <signal name="MotionNotifyEvent" handler="OnFixed1MotionNotifyEvent" />
               </widget>
             </child>
           </widget>

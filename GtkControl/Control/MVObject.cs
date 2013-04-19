@@ -59,7 +59,7 @@ namespace GtkControl.Control
 		public ElementType ELType=ElementType.NONE;
 		public MVObject (string pName, string cap, ElementType typeEl, double _width, double _height)
 		{
-
+			ID = Guid.NewGuid ();
 			popup = new Gtk.Menu ();
 
 			//цвет фона draw area

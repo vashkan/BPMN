@@ -26,7 +26,7 @@ public partial class MainWindow: Gtk.Window
 		
 		string name = "MovingBox";
 		int index = 0;
-		this.hpaned1.Position = 500;
+		this.hpaned1.Position =700;
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"start",

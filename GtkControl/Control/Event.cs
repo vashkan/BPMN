@@ -43,7 +43,6 @@ namespace GtkControl.Control
 	        g.FillPreserve ();
 	 
 	        g.Restore ();
-
 			g.Color = line_color;
 	        g.LineWidth = line_width;
 	        g.Stroke ();

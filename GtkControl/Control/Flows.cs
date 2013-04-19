@@ -168,8 +168,8 @@ namespace GtkControl.Control
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 7 * dX / 8, EndY + 100));
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 100));
 			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 150));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 28 * dX / 32, EndY + 150));
-			//WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 28 * dX / 32, EndY));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 29 * dX / 32, EndY + 150));
+			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 29 * dX / 32, EndY));
 		}
 
         #endregion
@@ -244,7 +244,7 @@ namespace GtkControl.Control
 					//приведение угла к (0;2*pi)
 					angleB = (angleB >= 0) ? angleB : (angleB + 2 * Math.PI) % (2 * Math.PI);
 					double angleG = angleB - angleA;
-					angleG = Math.Abs (angleG) == 3 * Math.PI / 2 ? (-angleG / 3) : angleG;
+					angleG = Math.Abs (angleG) > Math.PI / 2 ?  Math.Sign(angleG)*((Math.Abs(angleG)-2*Math.PI)) : angleG;
 					//3 точки находтся на одной прямой текущий узел должен быть удален
 					if (angleG == Math.PI) 
 						continue;	
