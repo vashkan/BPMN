@@ -33,6 +33,7 @@ namespace GtkControl
 				this.Child.ShowAll ();
 			}
 			this.Show ();
+			this.fixed1.MotionNotifyEvent += new global::Gtk.MotionNotifyEventHandler (this.OnFixed1MotionNotifyEvent);
 		}
 	}
 }

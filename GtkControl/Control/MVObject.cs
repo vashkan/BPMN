@@ -52,7 +52,7 @@ namespace GtkControl.Control
 		string parentName = "";
 		public Guid ID;
 		//string caption = "";
-		Gtk.Menu popup = null;
+		protected Gtk.Menu popup = null;
 		protected string body = "";
 		public double width = 0;
 		public double height = 0;

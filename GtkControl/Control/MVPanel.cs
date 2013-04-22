@@ -32,7 +32,7 @@ namespace GtkControl
 		private int pointX = 0;
 		private int pointY = 0;
 		private bool isDragged = false;
-		
+		private Resizer resizer = null;
 		public MVPanel ()
 		{
 			this.Build ();
@@ -139,8 +139,8 @@ namespace GtkControl
 			Fixed frame = new Fixed ();
 			frame.SetSizeRequest ((int)width, (int)height);
 			frame.Put (ctrl, 0, 0);
-			var resizer = new Button (Stock.Ok);
-			resizer.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
+			//var resizer = new Button();
+			//resizer.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
 			//frame.Put (resizer, (int)width + 5, (int)height + 5);
 			frame.ShowAll ();
 			rev.Add (frame);
@@ -204,7 +204,8 @@ namespace GtkControl
 			this.fixed1.QueueDraw ();	
 		}
 		
-		Button butt;
+		EventBox butt;
+		bool resizing;
 		//Mouse click on the controls of the panel  
 		protected void OnButtonPressed (object sender, ButtonPressEventArgs a)
 		{		
@@ -233,10 +234,24 @@ namespace GtkControl
 					Console.WriteLine ("Pointer:" + pointX.ToString () + "-" + pointY.ToString ());
 					Console.WriteLine ("Origin:" + origX.ToString () + "-" + origY.ToString ());
 					if (butt == null) {
-						butt = new Button (Stock.Ok);
-						butt.SetSizeRequest (10, 10);
-						butt.Events = (Gdk.EventMask)252;
-						butt.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
+						butt = new EventBox ();
+						var res = new Resizer ();
+						butt.Add (res);
+						//butt.SetSizeRequest (10, 10);
+						butt.Events = (Gdk.EventMask)1020;//252;
+						
+						butt.ButtonPressEvent += delegate {
+							resizing = true;
+							isDragged = true;
+							resizer = (Resizer)(butt as EventBox).Child;
+						};
+						butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args) {
+							resizing = false;
+							isDragged = false;
+							fixed1.Move (butt, (int)args.Event.X, (int)args.Event.Y);
+							//resizer = null;
+						};
+						//butt.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
 						fixed1.Put (butt, origX, origY);
 						fixed1.ShowAll ();
 					}
@@ -279,8 +294,8 @@ namespace GtkControl
 				if (currCtrl != null) {
 					if (((currCtrl as EventBox).Child as Fixed).Children [0] is MVObject)
 						MoveClone (ref currClone, args.Event.X, args.Event.Y);
-					else
-						if (o is Button) {
+					if ((resizer!=null)&&resizing) {
+						MoveControl (butt, args.Event.X, args.Event.Y, true);
 						var obj = (((currCtrl as EventBox).Child as Fixed).Children [0] as MVObject);
 						obj.height = args.Event.Y;
 						obj.width = args.Event.X;
