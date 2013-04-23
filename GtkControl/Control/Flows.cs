@@ -8,7 +8,7 @@ namespace GtkControl.Control
     /// <summary>
     /// Стрелки
     /// </summary>
-    public class Flow : MVObject
+    public class Flow : BaseItem
     {
         #region Aggregations
 

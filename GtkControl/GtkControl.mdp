@@ -24,7 +24,7 @@
     <File subtype="Code" buildaction="Compile" name="Control\MVPanel.cs" />
     <File subtype="Code" buildaction="Compile" name="gtk-gui\GtkControl.MVPanel.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="gtk-gui\objects.xml" />
-    <File subtype="Code" buildaction="Compile" name="Control\MVObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\BaseItem.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Flows.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Task.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Event.cs" />

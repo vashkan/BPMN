@@ -3,7 +3,7 @@ using Gtk;
 using Cairo;
 namespace GtkControl.Control
 {
-	public class Event:MVObject
+	public class Event:BaseItem
 	{
 		Cairo.Gradient pat;
 		double radius;

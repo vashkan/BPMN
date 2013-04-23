@@ -45,7 +45,7 @@ namespace GtkControl
 		}
 		
 		//Add a movable control to the panel
-		public void AddMovingObject (string name, string caption, int x, int y, MVObject.ElementType typeEl, int width, int height)
+		public void AddMovingObject (string name, string caption, int x, int y, ElementType typeEl, int width, int height)
 		{
 			//Prevent the object to be displayed outside the panel
 			if (x < 0) {
@@ -69,22 +69,22 @@ namespace GtkControl
 		}
 		
 		//Create the event box for the custom control
-		private EventBox GetMovingBox (string name, string caption, MVObject.ElementType typeEl, double width, double height)
+		private EventBox GetMovingBox (string name, string caption, ElementType typeEl, double width, double height)
 		{ 
-			MVObject ctrl;
+			BaseItem ctrl;
 			switch (typeEl) {
-			case MVObject.ElementType.START_EVENT:
-			case MVObject.ElementType.END_EVENT:
+			case ElementType.START_EVENT:
+			case ElementType.END_EVENT:
 				{
 					ctrl = new Event (name, caption, typeEl, height / 2);
 					break;
 				}
-			case MVObject.ElementType.TASK:
+			case ElementType.TASK:
 				{
 					ctrl = new Task (name, caption, width, height);
 					break;
 				}
-			case MVObject.ElementType.SEQUENCE_FLOW_UNCONDITIONAL:
+			case ElementType.SEQUENCE_FLOW_UNCONDITIONAL:
 				{
 					ctrl = new UnCondSeqFlow (
 						name,
@@ -97,7 +97,7 @@ namespace GtkControl
 					);
 					break;
 				}
-			case MVObject.ElementType.SEQUENCE_FLOW_CONDITIONAL:
+			case ElementType.SEQUENCE_FLOW_CONDITIONAL:
 				{
 					ctrl = new CondSeqFlow (
 						name,
@@ -110,7 +110,7 @@ namespace GtkControl
 					);
 					break;
 				}
-			case MVObject.ElementType.MESSAGE_FLOW:
+			case ElementType.MESSAGE_FLOW:
 				{
 					ctrl = new MessageFlow (
 						name,
@@ -123,14 +123,14 @@ namespace GtkControl
 					);
 					break;
 				}
-			case MVObject.ElementType.GATEWAY:
+			case ElementType.GATEWAY:
 				{
 					ctrl = new Gateway (name, caption, width, height);
 					break;
 				}
 			default:
 				{
-					ctrl = new MVObject (name, caption, typeEl, width, height);
+					ctrl = new BaseItem (name, caption, typeEl, width, height);
 					break;
 				}
 			}
@@ -139,9 +139,6 @@ namespace GtkControl
 			Fixed frame = new Fixed ();
 			frame.SetSizeRequest ((int)width, (int)height);
 			frame.Put (ctrl, 0, 0);
-			//var resizer = new Button();
-			//resizer.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
-			//frame.Put (resizer, (int)width + 5, (int)height + 5);
 			frame.ShowAll ();
 			rev.Add (frame);
 			Console.WriteLine ("Creating new moving object" + rev.Name);
@@ -160,10 +157,10 @@ namespace GtkControl
 						Widget mv = (fr as Fixed).Children [0];
 						re = GetMovingBox (
 							(currCtrl as EventBox).Name+"Clone",
-							(mv as  MVObject).Caption,
-							(mv as MVObject).ELType,
-							(mv as MVObject).width,
-							(mv as MVObject).height
+							(mv as  BaseItem).Caption,
+							(mv as BaseItem).ELType,
+							(mv as BaseItem).width,
+							(mv as BaseItem).height
 						);
 					}
 				}
@@ -214,7 +211,7 @@ namespace GtkControl
 				if (sender is EventBox) {
 					Widget fr = (sender as EventBox).Child;
 					if (fr is Fixed) {
-						((fr as Fixed).Children [0] as MVObject).ShowMenu ();
+						((fr as Fixed).Children [0] as BaseItem).ShowMenu ();
 					}
 				}	
 			} else if (a.Event.Button == 1) {
@@ -222,7 +219,7 @@ namespace GtkControl
 				if (a.Event.Type == Gdk.EventType.TwoButtonPress) {
 					if (sender is EventBox) {
 						//Calling the edit method of the control
-						((sender as EventBox).Child as MVObject).Edit ();
+						((sender as EventBox).Child as BaseItem).Edit ();
 					}	
 				} else {
 					//Setup the origin of the move
@@ -230,25 +227,27 @@ namespace GtkControl
 					currCtrl = sender as Widget;
 					currCtrl.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
 					fixed1.GetPointer (out pointX, out pointY);
-					Console.WriteLine ("MovingBox KeyPressed on " + (((currCtrl as EventBox).Child as Fixed).Children [0] as MVObject).Caption);
+					Console.WriteLine ("MovingBox KeyPressed on " + (((currCtrl as EventBox).Child as Fixed).Children [0] as BaseItem).Caption);
 					Console.WriteLine ("Pointer:" + pointX.ToString () + "-" + pointY.ToString ());
 					Console.WriteLine ("Origin:" + origX.ToString () + "-" + origY.ToString ());
 					if (butt == null) {
 						butt = new EventBox ();
 						var res = new Resizer ();
-						butt.Add (res);
+						var fix = new Fixed (); 
+						fix.Put (res, 0, 0);
+						butt.Add (fix);
 						//butt.SetSizeRequest (10, 10);
 						butt.Events = (Gdk.EventMask)1020;//252;
 						
 						butt.ButtonPressEvent += delegate {
 							resizing = true;
 							isDragged = true;
-							resizer = (Resizer)(butt as EventBox).Child;
+							resizer = (Resizer)((butt as EventBox).Child as Fixed).Children [0];
 						};
 						butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args) {
 							resizing = false;
 							isDragged = false;
-							fixed1.Move (butt, (int)args.Event.X, (int)args.Event.Y);
+							MoveControl (butt, (int)args.Event.XRoot, (int)args.Event.YRoot, true);
 							//resizer = null;
 						};
 						//butt.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
@@ -273,12 +272,11 @@ namespace GtkControl
 					currClone = null;
 				}
 				var dx = (origX + System.Convert.ToInt32 (a.Event.X) - pointX);
-				var dy = (origY + System.Convert.ToInt32 (a.Event.Y) - pointY);          
-				if ((origX + System.Convert.ToInt32 (a.Event.X) - pointX != 0) || (origY + System.Convert.ToInt32 (a.Event.Y) - pointY != 0)) {
+				var dy = (origY + System.Convert.ToInt32 (a.Event.Y) - pointY);
+				if ((dx != 0) || (dy != 0)) {
 					fixed1.Remove (butt);
 					butt.Dispose ();
 					butt = null;
-						
 				}
 			}
 		}
@@ -292,13 +290,17 @@ namespace GtkControl
 			if (isDragged) {
 				//Render of a clone at the desired location
 				if (currCtrl != null) {
-					if (((currCtrl as EventBox).Child as Fixed).Children [0] is MVObject)
+					if (((currCtrl as EventBox).Child as Fixed).Children [0] is BaseItem)
 						MoveClone (ref currClone, args.Event.X, args.Event.Y);
-					if ((resizer!=null)&&resizing) {
-						MoveControl (butt, args.Event.X, args.Event.Y, true);
-						var obj = (((currCtrl as EventBox).Child as Fixed).Children [0] as MVObject);
-						obj.height = args.Event.Y;
-						obj.width = args.Event.X;
+					if ((resizer != null) && resizing) {
+						MoveControl (butt, args.Event.XRoot, args.Event.YRoot, true);
+						var obj = (((currCtrl as EventBox).Child as Fixed).Children [0] as BaseItem);
+						
+						obj.height = Math.Abs (obj.Y - args.Event.Y);
+						obj.width = Math.Abs (obj.X - args.Event.X);
+						obj.X = Math.Min ((int)obj.X, (int)args.Event.X);
+						obj.Y = Math.Min ((int)obj.Y, (int)args.Event.Y);
+						MoveControl(currCtrl, obj.X, obj.Y, true);
 					}
 				}
 			}

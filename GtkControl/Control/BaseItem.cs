@@ -22,9 +22,80 @@ using Cairo;
 
 namespace GtkControl.Control
 {
+	public enum ElementType
+		{
+			NONE,
+			
+			/// <summary>
+			/// Начало процесса.
+			/// </summary>
+			/// 
+			START_EVENT,
+			/// <summary>
+			/// Конец процесса.
+			/// </summary>
+			END_EVENT,
+			
+			/// <summary>
+			/// Задача
+			/// </summary>
+			TASK,
+			
+			/// <summary>
+			/// Безусловный поток операций
+			/// </summary>
+			SEQUENCE_FLOW_UNCONDITIONAL,
+			
+			/// <summary>
+			/// Условный поток операций
+			/// </summary>
+			SEQUENCE_FLOW_CONDITIONAL,
+			
+			/// <summary>
+			/// Поток операций по умолчанию.
+			/// </summary>
+			SEQUENCE_FLOW_DEFAULT,
+			
+			/// <summary>
+			/// Ассоциация
+			/// </summary>
+			ASSOCIATION,
+			
+			/// <summary>
+			/// Поток сообщений
+			/// </summary>
+			MESSAGE_FLOW,
+			
+			/// <summary>
+			/// Шлюз
+			/// </summary>
+			GATEWAY
+		};
 	
-	public class MVObject : Gtk.DrawingArea 
+	public class BaseItem : Gtk.DrawingArea 
 	{
+		string parentName = "";
+		
+		/// <summary>
+        /// Идентификатор
+        /// </summary>
+        public Guid ID { get; set; }
+		
+		/// <summary>
+        /// Линк
+        /// </summary>
+        public string Link { get; set; }
+
+        /// <summary>
+        /// Код элемента
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
+        /// Признак выбора
+        /// </summary>
+        public virtual bool IsSelected { get; set; }
+		
 		protected enum ArrowStyle
 		{
 			ARROW_OPEN,
@@ -35,29 +106,27 @@ namespace GtkControl.Control
 			ARROW_CIRCLE,
 			ARROW_CIRCLE_FILLED
 		};
-		public enum ElementType
-		{
-			NONE,
-			START_EVENT,
-			END_EVENT,
-			TASK,
-			SEQUENCE_FLOW_UNCONDITIONAL,
-			SEQUENCE_FLOW_CONDITIONAL,
-			SEQUENCE_FLOW_DEFAULT,
-			ASSOCIATION,
-			MESSAGE_FLOW,
-			GATEWAY
-		};
+		
 
-		string parentName = "";
-		public Guid ID;
+		
+		
+		private int x;
+		private int y;
+		public int X {
+			get { return x;}
+			set{ x = value;}
+		}
+		public int Y {
+			get { return y;}
+			set{ y = value;}
+		}
 		//string caption = "";
 		protected Gtk.Menu popup = null;
 		protected string body = "";
 		public double width = 0;
 		public double height = 0;
 		public ElementType ELType=ElementType.NONE;
-		public MVObject (string pName, string cap, ElementType typeEl, double _width, double _height)
+		public BaseItem (string pName, string cap, ElementType typeEl, double _width, double _height)
 		{
 			ID = Guid.NewGuid ();
 			popup = new Gtk.Menu ();
@@ -142,7 +211,7 @@ namespace GtkControl.Control
 		protected override void OnScreenChanged (Gdk.Screen previous_screen)
 		{
 			base.OnScreenChanged (previous_screen);
-			this.Screen.DefaultColormap = this.Screen.RgbaColormap;
+			//this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		}
 
 		public void ShowMenu()

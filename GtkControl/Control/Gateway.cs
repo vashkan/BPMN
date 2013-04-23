@@ -3,7 +3,7 @@ using Cairo;
 using Gtk;
 namespace GtkControl.Control
 {
-	public class Gateway:MVObject
+	public class Gateway:BaseItem
 	{
 		double line_width = 6;
 		public Gateway (string pName, string cap, double _width, double _height)
