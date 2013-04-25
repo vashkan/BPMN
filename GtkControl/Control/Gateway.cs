@@ -13,8 +13,8 @@ namespace GtkControl.Control
 		public override void Paint (Context g)
 		{
 			g.Save ();
-			var rad = min(new double[]{height,width})/2-line_width/2;
-			g.MoveTo (width / 2, height / 2);
+			var rad = min(new double[]{Height,Width})/2-line_width/2;
+			g.MoveTo (Width / 2,Height / 2);
 			g.RelMoveTo (-rad, 0);
 			g.RelLineTo (+rad, -rad);
 			g.RelLineTo (+rad, +rad);

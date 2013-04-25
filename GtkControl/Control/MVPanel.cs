@@ -159,8 +159,8 @@ namespace GtkControl
 							(currCtrl as EventBox).Name+"Clone",
 							(mv as  BaseItem).Caption,
 							(mv as BaseItem).ELType,
-							(mv as BaseItem).width,
-							(mv as BaseItem).height
+							(mv as BaseItem).Width,
+							(mv as BaseItem).Height
 						);
 					}
 				}
@@ -242,16 +242,28 @@ namespace GtkControl
 						butt.ButtonPressEvent += delegate {
 							resizing = true;
 							isDragged = true;
+							butt.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
+							fixed1.GetPointer (out pointX, out pointY);
 							resizer = (Resizer)((butt as EventBox).Child as Fixed).Children [0];
 						};
 						butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args) {
 							resizing = false;
 							isDragged = false;
-							MoveControl (butt, (int)args.Event.XRoot, (int)args.Event.YRoot, true);
+							int destX = origX + System.Convert.ToInt32 (args.Event.X) + origX - pointX;
+							if (destX < 0) {
+								destX = 0;
+							}
+							int destY = origY + System.Convert.ToInt32 (args.Event.Y) + origY - pointY;
+							if (destY < 0) {
+								destY = 0;
+							}
+							MoveControl (butt, destX, destY, true);
 							//resizer = null;
 						};
 						//butt.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
-						fixed1.Put (butt, origX, origY);
+						fixed1.Add (butt);
+						fixed1.Move (butt, origX + (int)((((currCtrl as EventBox).Child) as Fixed).Children [0] as BaseItem).Width,
+						    (int)((((currCtrl as EventBox).Child) as Fixed).Children [0] as BaseItem).Height + origY);
 						fixed1.ShowAll ();
 					}
 				}
@@ -264,7 +276,7 @@ namespace GtkControl
 			if (a.Event.Button == 1) {
 				MoveControl (currCtrl, a.Event.X, a.Event.Y, false);
 				isDragged = false;
-				currCtrl = null;
+				//currCtrl = null;
 				if (currClone != null) {
 					this.fixed1.Remove (currClone);
 					Console.WriteLine ("Deleting moving object" + currClone.Name);
@@ -289,19 +301,38 @@ namespace GtkControl
 			this.fixed1.QueueDraw ();
 			if (isDragged) {
 				//Render of a clone at the desired location
+				if (/*(resizer != null) &&*/ resizing && (currCtrl != null)) {
+					//MoveControl (butt, args.Event.XRoot, args.Event.YRoot, true);
+					var obj = (((currCtrl as EventBox).Child as Fixed).Children [0] as BaseItem);
+						
+					var temp = Math.Abs (obj.Y - args.Event.Y);
+					temp = (temp > 10) ? temp : 10;
+					obj.Height = temp;
+					temp = Math.Abs (obj.X - args.Event.X);
+					temp = (temp > 10) ? temp : 10;
+					obj.Width = temp;
+					
+					currCtrl.SetSizeRequest ((int)obj.Width, (int)obj.Height);
+					obj.SetSizeRequest ((int)obj.Width, (int)obj.Height);
+					
+					if ((obj.Width != 0) && (obj.Height != 0)) {
+						obj.mask ();
+					}
+					
+					Console.WriteLine ("Resizing: \n width: " + obj.Width.ToString () + "\n height: " + obj.Height.ToString ());
+					Console.WriteLine ("x: " + args.Event.X.ToString () + " y: " + args.Event.Y.ToString ());
+					Console.WriteLine ("x_root: " + args.Event.XRoot.ToString () + " y_root: " + args.Event.YRoot.ToString ());
+					
+					obj.X = Math.Min ((int)obj.X, (int)args.Event.X);
+					obj.Y = Math.Min ((int)obj.Y, (int)args.Event.Y);
+					//MoveControl (currCtrl,obj.X , obj.Y, true);
+					MoveControl (butt, origX, origY, true);
+				}
+				else
 				if (currCtrl != null) {
 					if (((currCtrl as EventBox).Child as Fixed).Children [0] is BaseItem)
 						MoveClone (ref currClone, args.Event.X, args.Event.Y);
-					if ((resizer != null) && resizing) {
-						MoveControl (butt, args.Event.XRoot, args.Event.YRoot, true);
-						var obj = (((currCtrl as EventBox).Child as Fixed).Children [0] as BaseItem);
-						
-						obj.height = Math.Abs (obj.Y - args.Event.Y);
-						obj.width = Math.Abs (obj.X - args.Event.X);
-						obj.X = Math.Min ((int)obj.X, (int)args.Event.X);
-						obj.Y = Math.Min ((int)obj.Y, (int)args.Event.Y);
-						MoveControl(currCtrl, obj.X, obj.Y, true);
-					}
+					
 				}
 			}
 		}

@@ -13,9 +13,9 @@ namespace GtkControl.Control
 		public override void Paint (Context g)
 		{
 			g.Save();
-			DrawRoundedRectangle (g,2, 2, width-4, height-4, 40);
+			DrawRoundedRectangle (g,2, 2, Width-4, Height-4, 40);
 
-			Cairo.Gradient pat = new Cairo.LinearGradient( 2,2, 2,2+height-4);
+			Cairo.Gradient pat = new Cairo.LinearGradient( 2,2, 2,2+Height-4);
 	        pat.AddColorStop(0, new Cairo.Color(0.98,0.98,1,1));
 	        pat.AddColorStop(1, new Cairo.Color(0.90,0.9,1,1));
 	        g.Pattern = pat;
@@ -37,8 +37,8 @@ namespace GtkControl.Control
 			g.SelectFontFace("Georgia", FontSlant.Normal, FontWeight.Bold);
 			g.SetFontSize(36.0);
 			TextExtents te = g.TextExtents(body);
-			g.MoveTo(2 - te.Width/2+width/2,
-			         2 + te.Height/2+height/2);
+			g.MoveTo(2 - te.Width/2+Width/2,
+			         2 + te.Height/2+Height/2);
 			g.ShowText(body);
 		}
 		public override void PaintMask (Context g)

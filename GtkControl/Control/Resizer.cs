@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Cairo;
 using Gtk;
 namespace GtkControl.Control
@@ -56,6 +57,7 @@ namespace GtkControl.Control
 				}
 				Gdk.Pixmap map1, map2;
 				var px = new Gdk.Pixbuf ("mask_" + "resizer" + ".png");
+				File.Delete ("mask_" + "resizer" + ".png");
 				px.RenderPixmapAndMask (out map1, out map2, 255);
 
 				this.ParentWindow.InputShapeCombineMask (map2, 0, 0);
@@ -72,10 +74,10 @@ namespace GtkControl.Control
         public void Paint (Cairo.Context g)
 		{
 			g.Save ();
-			g.MoveTo (10, 5);
-			g.Arc (5, 5, 5, 0, 2 * Math.PI);
+			g.MoveTo (8, 5);
+			g.Arc (5, 5, 4, 0, 2 * Math.PI);
 			g.Color = new Cairo.Color (0.98, 0.98, 0.98);
-			g.ClosePath ();
+			//g.ClosePath ();
 			g.FillPreserve ();
 			g.Color = new Cairo.Color (0.01, 0.4, 0.6);
 	 			

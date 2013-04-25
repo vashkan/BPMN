@@ -1,23 +1,24 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="Mono 2.10.6" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Control\Resizer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Control\MVPanel.cs">
     <Files>
-      <File FileName="Control\Event.cs" Line="4" Column="29" />
-      <File FileName="Control\Flows.cs" Line="396" Column="6" />
-      <File FileName="Control\Gateway.cs" Line="21" Column="29" />
-      <File FileName="Control\MVObject.cs" Line="190" Column="23" />
-      <File FileName="Control\Resizer.cs" Line="18" Column="45" />
+      <File FileName="Control\Event.cs" Line="69" Column="4" />
+      <File FileName="Control\Gateway.cs" Line="29" Column="16" />
+      <File FileName="Control\BaseItem.cs" Line="146" Column="7" />
+      <File FileName="Control\Task.cs" Line="16" Column="30" />
+      <File FileName="MainWindow.cs" Line="38" Column="5" />
+      <File FileName="Control\Resizer.cs" Line="72" Column="3" />
+      <File FileName="Main.cs" Line="25" Column="38" />
+      <File FileName="Control\MVPanel.cs" Line="299" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Option id="ShowAllFiles" value="True" />
           <Node name="GtkControl" expanded="True">
-            <Node name="UserInterface" expanded="True" />
             <Node name="Control" expanded="True">
-              <Node name="Resizer.cs" selected="True" />
+              <Node name="MVPanel.cs" selected="True" />
             </Node>
-            <Node name="gtk-gui" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -34,9 +35,6 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="299" />
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="253" />
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="290" />
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="246" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

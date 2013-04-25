@@ -10,7 +10,22 @@ namespace GtkControl.Control
 		double line_width;
 		Cairo.Color fill_color;
 		Cairo.Color line_color;
-
+		public override double Height {
+			get {
+				return base.Height;
+			}
+			set {
+				base.Height = value;
+			}
+		}
+		public override double Width {
+			get {
+				return base.Width;
+			}
+			set {
+				base.Width = value;
+			}
+		}
 		public Event (string pName, string cap, ElementType typeEl, double radius)
 		:base(pName,cap,typeEl,2*radius,2*radius)
 		{
