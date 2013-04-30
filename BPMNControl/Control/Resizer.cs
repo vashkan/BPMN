@@ -5,21 +5,35 @@ using Gtk;
 //using Gdk;
 namespace GtkControl.Control
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Resizer : Gtk.DrawingArea
     {
 		static Gdk.Cursor hresizeCursor = new Gdk.Cursor(Gdk.CursorType.Sizing);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="previous_screen"></param>
 		protected override void OnScreenChanged (Gdk.Screen previous_screen)
 		{
 			base.OnScreenChanged (previous_screen);
 		}
 		
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Redraw()
 		{
 			Console.WriteLine("Redrawing");
 			this.QueueDraw();
 		}
 		
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
 		protected override bool OnExposeEvent (Gdk.EventExpose args)
 		{	
 					using (Context g = Gdk.CairoHelper.Create (args.Window)) {
@@ -29,6 +43,9 @@ namespace GtkControl.Control
 			return true;
 		}
 		
+        /// <summary>
+        /// 
+        /// </summary>
         public Resizer ()
 		{
 			this.SetSizeRequest ((int)10, (int)10);
@@ -70,20 +87,33 @@ namespace GtkControl.Control
 				map2.Dispose ();
 			};
         }
-			
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="evnt"></param>
+		/// <returns></returns>
+	
 		protected override bool OnEnterNotifyEvent(Gdk.EventCrossing evnt)
        {
 			
                 GdkWindow.Cursor = hresizeCursor ;
                 return base.OnEnterNotifyEvent(evnt);
         }
-		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="evnt"></param>
+		/// <returns></returns>
 		protected override bool OnLeaveNotifyEvent(Gdk.EventCrossing evnt)
             {
                 GdkWindow.Cursor = null;
                 return base.OnLeaveNotifyEvent(evnt);
             }
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="g"></param>
         public void Paint (Cairo.Context g)
 		{
 			g.Save ();
@@ -98,6 +128,10 @@ namespace GtkControl.Control
 			g.Stroke ();
 			g.Restore ();
         }
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="g"></param>
 		public  void PaintMask (Cairo.Context g)
 		{
 			Paint (g);

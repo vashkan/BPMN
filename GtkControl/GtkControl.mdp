@@ -1,14 +1,14 @@
-<Project name="GtkControl" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="2.0" ctype="DotNetProject">
+<Project name="GtkControl" fileversion="2.0" language="C#" clr-version="Net_2_0" targetFramework="3.5" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin\Debug" assembly="GtkControl" />
-      <Build debugmode="True" target="Exe" />
+      <Build debugmode="True" target="WinExe" />
       <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
       <Output directory="bin\Release" assembly="GtkControl" />
-      <Build debugmode="False" target="Exe" />
+      <Build debugmode="False" target="WinExe" />
       <Execution consolepause="True" runwithwarnings="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
@@ -42,4 +42,5 @@
     <ProjectReference specificVersion="False" type="Package" localcopy="False" refto="Mono.Cairo, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference specificVersion="False" type="Package" localcopy="False" refto="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </References>
+  <LanguageParameters StartupObject="GtkControl.MainClass" ctype="CSharpProjectParameters" />
 </Project>
