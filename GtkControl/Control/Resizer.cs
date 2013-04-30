@@ -2,11 +2,12 @@ using System;
 using System.IO;
 using Cairo;
 using Gtk;
+//using Gdk;
 namespace GtkControl.Control
 {
     public class Resizer : Gtk.DrawingArea
     {
-		
+		static Gdk.Cursor hresizeCursor = new Gdk.Cursor(Gdk.CursorType.Sizing);
 		protected override void OnScreenChanged (Gdk.Screen previous_screen)
 		{
 			base.OnScreenChanged (previous_screen);
@@ -31,6 +32,7 @@ namespace GtkControl.Control
         public Resizer ()
 		{
 			this.SetSizeRequest ((int)10, (int)10);
+			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
 			//mask
 			this.Realized += delegate {
 				
@@ -69,7 +71,18 @@ namespace GtkControl.Control
 			};
         }
 			
+		protected override bool OnEnterNotifyEvent(Gdk.EventCrossing evnt)
+       {
+			
+                GdkWindow.Cursor = hresizeCursor ;
+                return base.OnEnterNotifyEvent(evnt);
+        }
 		
+		protected override bool OnLeaveNotifyEvent(Gdk.EventCrossing evnt)
+            {
+                GdkWindow.Cursor = null;
+                return base.OnLeaveNotifyEvent(evnt);
+            }
 		
         public void Paint (Cairo.Context g)
 		{

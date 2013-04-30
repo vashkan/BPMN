@@ -108,7 +108,7 @@ namespace GtkControl.Control
 			ARROW_CIRCLE_FILLED
 		};
 		
-
+		static Gdk.Cursor mCursor = new Gdk.Cursor (Gdk.CursorType.Fleur);
 		
 		
 		private int x;
@@ -191,6 +191,7 @@ namespace GtkControl.Control
 		{
 			ID = Guid.NewGuid ();
 			popup = new Gtk.Menu ();
+			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
 
 			//цвет фона draw area
 			//this.ModifyBg(StateType.Normal, new Gdk.Color());
@@ -221,6 +222,18 @@ namespace GtkControl.Control
 			base.OnScreenChanged (previous_screen);
 			//this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		}
+		protected override bool OnEnterNotifyEvent (Gdk.EventCrossing evnt)
+		{
+			
+			GdkWindow.Cursor = mCursor;
+			return base.OnEnterNotifyEvent (evnt);
+        }
+		
+		protected override bool OnLeaveNotifyEvent (Gdk.EventCrossing evnt)
+		{
+			GdkWindow.Cursor = null;
+			return base.OnLeaveNotifyEvent (evnt);
+            }
 
 		public void ShowMenu()
 		{

@@ -226,6 +226,8 @@ namespace GtkControl
 					isDragged = true;
 					currCtrl = sender as Widget;
 					currCtrl.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
+					(((currCtrl as EventBox).Child as Fixed).Children [0] as BaseItem).X = (int)origX;
+					(((currCtrl as EventBox).Child as Fixed).Children [0] as BaseItem).Y = (int)origY;
 					fixed1.GetPointer (out pointX, out pointY);
 					Console.WriteLine ("MovingBox KeyPressed on " + (((currCtrl as EventBox).Child as Fixed).Children [0] as BaseItem).Caption);
 					Console.WriteLine ("Pointer:" + pointX.ToString () + "-" + pointY.ToString ());
@@ -249,15 +251,7 @@ namespace GtkControl
 						butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args) {
 							resizing = false;
 							isDragged = false;
-							int destX = origX + System.Convert.ToInt32 (args.Event.X) + origX - pointX;
-							if (destX < 0) {
-								destX = 0;
-							}
-							int destY = origY + System.Convert.ToInt32 (args.Event.Y) + origY - pointY;
-							if (destY < 0) {
-								destY = 0;
-							}
-							MoveControl (butt, destX, destY, true);
+							fixed1.Move(butt, origX, origY/*args.Event.Y*/);
 							//resizer = null;
 						};
 						//butt.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
@@ -274,7 +268,7 @@ namespace GtkControl
 		{
 			//Final destination of the control
 			if (a.Event.Button == 1) {
-				MoveControl (currCtrl, a.Event.X, a.Event.Y, false);
+				MoveControl (currCtrl, a.Event.X , a.Event.Y, false);
 				isDragged = false;
 				//currCtrl = null;
 				if (currClone != null) {
@@ -304,14 +298,18 @@ namespace GtkControl
 				if (/*(resizer != null) &&*/ resizing && (currCtrl != null)) {
 					//MoveControl (butt, args.Event.XRoot, args.Event.YRoot, true);
 					var obj = (((currCtrl as EventBox).Child as Fixed).Children [0] as BaseItem);
-						
-					var temp = Math.Abs (obj.Y - args.Event.Y);
+					int p_x, p_y, dx, dy;
+					fixed1.GetPointer (out p_x, out p_y);
+					dx = p_x - pointX;
+					dy = p_y - pointY;
+					var temp = obj.Height + dy;
 					temp = (temp > 10) ? temp : 10;
 					obj.Height = temp;
-					temp = Math.Abs (obj.X - args.Event.X);
+					temp = obj.Width + dx;
 					temp = (temp > 10) ? temp : 10;
 					obj.Width = temp;
-					
+					pointX = p_x;
+					pointY = p_y;
 					currCtrl.SetSizeRequest ((int)obj.Width, (int)obj.Height);
 					obj.SetSizeRequest ((int)obj.Width, (int)obj.Height);
 					
@@ -320,13 +318,19 @@ namespace GtkControl
 					}
 					
 					Console.WriteLine ("Resizing: \n width: " + obj.Width.ToString () + "\n height: " + obj.Height.ToString ());
-					Console.WriteLine ("x: " + args.Event.X.ToString () + " y: " + args.Event.Y.ToString ());
+					Console.WriteLine ("dx: " + dx.ToString () + "dy: " + dy.ToString ()
+						+ "\nPointer1(" + pointX.ToString () + ", " + pointY.ToString () + ")\n"
+						+ "pointer current (" + p_x + ", " + p_y + ")"
+					);
 					Console.WriteLine ("x_root: " + args.Event.XRoot.ToString () + " y_root: " + args.Event.YRoot.ToString ());
 					
 					obj.X = Math.Min ((int)obj.X, (int)args.Event.X);
 					obj.Y = Math.Min ((int)obj.Y, (int)args.Event.Y);
 					//MoveControl (currCtrl,obj.X , obj.Y, true);
-					MoveControl (butt, origX, origY, true);
+					origX += dx;
+					origY += dy;
+					Console.WriteLine ("Origin: (" + origX.ToString () + ", " + origY.ToString ()+")");
+					fixed1.Move(butt, origX,origY);
 				}
 				else
 				if (currCtrl != null) {
