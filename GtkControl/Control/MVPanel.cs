@@ -16,6 +16,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
+using System.Collections.Generic;
 using Gtk;
 using GtkControl.Control;
 
@@ -226,7 +227,10 @@ namespace GtkControl
 					if (butt == null) {
 						butt = new EventBox ();
 						var res = new Resizer ();
-					
+						var resizers = new List<Resizer> ();
+						for (var i=0; i<8; i++) {
+							resizers.Add (new Resizer ());
+						}
 						butt.Add (res);
 						//butt.SetSizeRequest (10, 10);
 						butt.Events = (Gdk.EventMask)1020;//252;

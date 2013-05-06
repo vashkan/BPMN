@@ -7,15 +7,15 @@
       <File FileName="Control\BaseItem.cs" Line="301" Column="15" />
       <File FileName="Control\Task.cs" Line="42" Column="21" />
       <File FileName="MainWindow.cs" Line="40" Column="1" />
-      <File FileName="Control\Resizer.cs" Line="12" Column="4" />
+      <File FileName="Control\Resizer.cs" Line="32" Column="26" />
       <File FileName="Main.cs" Line="25" Column="38" />
-      <File FileName="Control\MVPanel.cs" Line="319" Column="5" />
+      <File FileName="Control\MVPanel.cs" Line="234" Column="22" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Option id="ShowAllFiles" value="False" />
           <Option id="ShowVersionControlOverlays" value="True" />
+          <Option id="ShowAllFiles" value="False" />
           <Node name="GtkControl" expanded="True">
             <Node name="UserInterface" expanded="True" />
             <Node name="Control" expanded="True">
