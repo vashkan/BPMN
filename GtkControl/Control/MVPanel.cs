@@ -136,11 +136,7 @@ namespace GtkControl
 			}
 			EventBox rev = new EventBox ();
 			rev.Name = name;
-			Fixed frame = new Fixed ();
-			//frame.SetSizeRequest ((int)width, (int)height);
-			//frame.Put (ctrl, 0, 0);
-			//frame.ShowAll ();
-			rev.Add (/*frame*/ctrl);
+			rev.Add (ctrl);
 			Console.WriteLine ("Creating new moving object" + rev.Name);
 			return rev;
 		}
@@ -153,16 +149,13 @@ namespace GtkControl
 			if (this.currCtrl != null) {
 				if (currCtrl is EventBox) {
 					Widget mv = (currCtrl as EventBox).Child;
-					//if (fr is Fixed) {
-						//Widget mv = (fr as Fixed).Children [0];
-						re = GetMovingBox (
+							re = GetMovingBox (
 							(currCtrl as EventBox).Name+"Clone",
 							(mv as  BaseItem).Caption,
 							(mv as BaseItem).ELType,
 							(mv as BaseItem).Width,
 							(mv as BaseItem).Height
 						);
-					//}
 				}
 			}
 			if (re == null) {
@@ -211,9 +204,6 @@ namespace GtkControl
 				if (sender is EventBox) {
 					Widget fr = (sender as EventBox).Child;
 					(fr as BaseItem).ShowMenu (); 
-					/*if (fr is Fixed) {
-						((fr as Fixed).Children [0] as BaseItem).ShowMenu ();
-					}*/
 				}	
 			} else if (a.Event.Button == 1) {
 				
@@ -227,18 +217,17 @@ namespace GtkControl
 					isDragged = true;
 					currCtrl = sender as Widget;
 					currCtrl.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
-					(/*(*/(currCtrl as EventBox).Child /*as Fixed).Children [0]*/ as BaseItem).X = (int)origX;
-					(/*(*/(currCtrl as EventBox).Child /*as Fixed).Children [0]*/ as BaseItem).Y = (int)origY;
+					((currCtrl as EventBox).Child  as BaseItem).X = (int)origX;
+					((currCtrl as EventBox).Child  as BaseItem).Y = (int)origY;
 					fixed1.GetPointer (out pointX, out pointY);
-					Console.WriteLine ("MovingBox KeyPressed on " + (/*(*/(currCtrl as EventBox).Child /*as Fixed).Children [0]*/ as BaseItem).Caption);
+					Console.WriteLine ("MovingBox KeyPressed on " + ((currCtrl as EventBox).Child as BaseItem).Caption);
 					Console.WriteLine ("Pointer:" + pointX.ToString () + "-" + pointY.ToString ());
 					Console.WriteLine ("Origin:" + origX.ToString () + "-" + origY.ToString ());
 					if (butt == null) {
 						butt = new EventBox ();
 						var res = new Resizer ();
-						//var fix = new Fixed (); 
-						//fix.Put (res, 0, 0);
-						butt.Add (/*fix*/res);
+					
+						butt.Add (res);
 						//butt.SetSizeRequest (10, 10);
 						butt.Events = (Gdk.EventMask)1020;//252;
 						
@@ -247,18 +236,18 @@ namespace GtkControl
 							isDragged = true;
 							butt.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
 							fixed1.GetPointer (out pointX, out pointY);
-							resizer = (Resizer)/*(*/(butt as EventBox).Child /*as Fixed).Children [0]*/;
+							resizer = (Resizer)(butt as EventBox).Child;
 						};
 						butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args) {
 							resizing = false;
 							isDragged = false;
-							fixed1.Move(butt, origX, origY/*args.Event.Y*/);
+							fixed1.Move(butt, origX, origY);
 							//resizer = null;
 						};
-						//butt.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
+						
 						fixed1.Add (butt);
-						fixed1.Move (butt, origX + (int)((/*(*/(currCtrl as EventBox).Child) /*as Fixed).Children [0]*/ as BaseItem).Width,
-						    (int)((/*(*/(currCtrl as EventBox).Child) /*as Fixed).Children [0]*/ as BaseItem).Height + origY);
+						fixed1.Move (butt, origX + (int)(((currCtrl as EventBox).Child) as BaseItem).Width,
+						    (int)(((currCtrl as EventBox).Child)  as BaseItem).Height + origY);
 						fixed1.ShowAll ();
 					}
 				}
@@ -298,7 +287,7 @@ namespace GtkControl
 				//Render of a clone at the desired location
 				if (/*(resizer != null) &&*/ resizing && (currCtrl != null)) {
 					//MoveControl (butt, args.Event.XRoot, args.Event.YRoot, true);
-					var obj = ((/*(*/currCtrl as EventBox).Child /*as Fixed).Children[0]*/ as BaseItem);
+					var obj = ((/*(*/currCtrl as EventBox).Child  as BaseItem);
 					int p_x, p_y, dx, dy;
 					fixed1.GetPointer (out p_x, out p_y);
 					dx = p_x - pointX;
@@ -335,7 +324,7 @@ namespace GtkControl
 				}
 				else
 				if (currCtrl != null) {
-					if (/*(*/(currCtrl as EventBox).Child /*as Fixed).Children [0]*/ is BaseItem)
+					if ((currCtrl as EventBox).Child  is BaseItem)
 						MoveClone (ref currClone, args.Event.X, args.Event.Y);
 					
 					
