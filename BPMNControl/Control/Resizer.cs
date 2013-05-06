@@ -1,7 +1,11 @@
 using System;
 using System.IO;
 using Cairo;
+using Gdk;
 using Gtk;
+using Color = Gdk.Color;
+using Point = Cairo.Point;
+
 //using Gdk;
 namespace GtkControl.Control
 {
@@ -10,6 +14,7 @@ namespace GtkControl.Control
     /// </summary>
     public class Resizer : Gtk.DrawingArea
     {
+        Gdk.GC redgc;
 		static Gdk.Cursor hresizeCursor = new Gdk.Cursor(Gdk.CursorType.Sizing);
         /// <summary>
         /// 
@@ -35,24 +40,64 @@ namespace GtkControl.Control
         /// <param name="args"></param>
         /// <returns></returns>
 		protected override bool OnExposeEvent (Gdk.EventExpose args)
-		{	
-					using (Context g = Gdk.CairoHelper.Create (args.Window)) {
+        {
+            //цвет границы заголовка
+            var gc = new Gdk.GC(args.Window)
+            {
+                RgbFgColor = new Gdk.Color((int) (0.01*255), (int) (255*0.4), (int) (255*0.6))
+            };
+
+            gc.SetLineAttributes(1, LineStyle.Solid, CapStyle.Butt, JoinStyle.Round);
+            
+            gc.Background = new Gdk.Color(250, 250, 250);
+            //args.Window.DrawRectangle(gc,true, 0, 0,9,9);
+            args.Window.DrawLines(gc,new[]
+                                          {
+                                              new Gdk.Point(0,0), 
+                                              new Gdk.Point(0,9),
+                                              new Gdk.Point(9,9),
+                                              new Gdk.Point(9,0),
+                                              new Gdk.Point(0,0)
+                                          }
+                                          );
+            args.Window.Fullscreen();
+            //QueueDraw();
+            return true;
+		/*			using (Context g = Gdk.CairoHelper.Create (args.Window)) {
 						g.Antialias = Antialias.Subpixel;
 						Paint(g);
-					}
-			return true;
+					}*/
+            
+            return true;
 		}
 		
         /// <summary>
         /// 
         /// </summary>
         public Resizer ()
-		{
+        {
+            redgc = new Gdk.GC(GdkWindow);
 			this.SetSizeRequest ((int)10, (int)10);
 			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
 			//mask
 			this.Realized += delegate {
-				
+
+                var black = new Gdk.Color(0, 0, 0) { Pixel = 1 };
+                var white = new Color(255, 255, 255) { Pixel = 0 };
+
+                var pm = new Pixmap(GdkWindow, 10, 10, 1);
+                var gc = new Gdk.GC(pm)
+                {
+                    Background = white,
+                    Foreground = black
+                };
+
+                pm.DrawRectangle(gc, true,0,0,10,10);
+
+                ShapeCombineMask(pm, 0, 0);
+
+                QueueDraw();
+                /*
 				Gdk.Pixmap pm = new Gdk.Pixmap (this.GdkWindow, 10, 10, 1);
 				using (ImageSurface draw = new ImageSurface (Format.Argb32,10,10)) {
 					using (Context gr = new Context(draw)) {
@@ -84,7 +129,7 @@ namespace GtkControl.Control
 				px.Dispose ();
 				pm.Dispose ();
 				map1.Dispose ();
-				map2.Dispose ();
+				map2.Dispose ();*/
 			};
         }
 		/// <summary>

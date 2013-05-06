@@ -219,7 +219,7 @@ namespace GtkControl
 				if (a.Event.Type == Gdk.EventType.TwoButtonPress) {
 					if (sender is EventBox) {
 						//Calling the edit method of the control
-						((sender as EventBox).Child as BaseItem).Edit ();
+						(((sender as EventBox).Child as Fixed).Children[0] as BaseItem).Edit ();
 					}	
 				} else {
 					//Setup the origin of the move

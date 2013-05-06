@@ -4,6 +4,9 @@ using Cairo;
 
 namespace GtkControl.Control
 {
+	/// <summary>
+	/// Задача
+	/// </summary>
 	public class Task:BaseItem
 	{
 		public Task (string pName, string cap, double _width, double _height)

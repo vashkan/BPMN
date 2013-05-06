@@ -79,11 +79,7 @@ public partial class MainWindow: Gtk.Window
 		this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		this.Colormap = this.Screen.RgbaColormap;
 		this.Opacity = 0.5;
-		*/
-		//this.mvpanel1.AddMovingObject(name+(index++).ToString(),"Gtk#",10,145);
-		//this.mvpanel1.AddMovingObject(name+(index++).ToString(),"MonoDevelop",10,190);
-		//this.mvpanel1.AddMovingObject(name+(index++).ToString(),"Pango",10,235);
-		//this.mvpanel1.AddMovingObject(name+(index++).ToString(),"Test",10,280);
+        */
 	}
 
 
