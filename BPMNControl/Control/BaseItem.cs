@@ -72,7 +72,12 @@ namespace GtkControl.Control
 			/// <summary>
 			/// Шлюз
 			/// </summary>
-			GATEWAY
+			GATEWAY,
+
+            /// <summary>
+            /// Пул
+            /// </summary>
+	        POOL
 		};
 	
 	public class BaseItem : Gtk.DrawingArea 
@@ -99,17 +104,6 @@ namespace GtkControl.Control
         /// </summary>
         public virtual bool IsSelected { get; set; }
 		
-		protected enum ArrowStyle
-		{
-			ARROW_OPEN,
-			ARROW_SOLID,
-			ARROW_SOLID_FILLED,
-			ARROW_DIAMOND,
-			ARROW_DIAMOND_FILLED,
-			ARROW_CIRCLE,
-			ARROW_CIRCLE_FILLED
-		};
-		
 		static Gdk.Cursor mCursor = new Gdk.Cursor (Gdk.CursorType.Fleur);
 		
 		
@@ -128,19 +122,28 @@ namespace GtkControl.Control
 		protected string body = "";
 		private double width=0;
 		private double height=0;
+        /// <summary>
+        /// Ширина элемента
+        /// </summary>
 		public virtual double Width { get { return width; } set { width = value;}}
+        /// <summary>
+        /// Высота элемента
+        /// </summary>
 		public virtual double Height { get { return height; } set { height = value;}}
 		public ElementType ELType=ElementType.NONE;
+        /// <summary>
+        /// Наложение маски
+        /// </summary>
 		public void mask ()
 		{
 			Width = Math.Abs (Width);
 			Height = Math.Abs (Height);
 			Gdk.Pixmap pm = new Gdk.Pixmap (this.GdkWindow, (int)Width, (int)Height, 1);
-			/*using (ImageSurface draw = new ImageSurface (Format.Argb32,(int) Width,(int) Height)) {
+			using (ImageSurface draw = new ImageSurface (Format.Argb32,(int) Width,(int) Height)) {
 				using (Context gr = new Context(draw)) {
 					gr.Antialias = Antialias.None;
 					Paint (gr);
-				}*/
+				}
 				using (Context crPix = Gdk.CairoHelper.Create(pm)) {
 					crPix.Antialias = Antialias.None;
 					crPix.Operator = Operator.Source;
@@ -155,8 +158,8 @@ namespace GtkControl.Control
 					//Paint (crPix);
 				}
 				//save the image as a png image.
-				//draw.WriteToPng (("mask_" + ELType.ToString () + ID.ToString () + ".png"));
-			//}
+				draw.WriteToPng (("mask_" + ELType.ToString () + ID.ToString () + ".png"));
+			}
 			//var image = new Gtk.Image (pm, pm);
             /*
 		    Bitmap bmp = null;
@@ -172,17 +175,17 @@ namespace GtkControl.Control
 
 			//pm.Colormap = null;
 			Gdk.Pixmap map1, map2;
-			//var px = new Gdk.Pixbuf ("mask_" + ELType.ToString () + ID.ToString () + ".png");
+			var px = new Gdk.Pixbuf ("mask_" + ELType.ToString () + ID.ToString () + ".png");
 			
-           // px.RenderPixmapAndMask (out map1, out map2, 255);
-			//File.Delete ("mask_" + ELType.ToString () + ID.ToString () + ".png");
+            px.RenderPixmapAndMask (out map1, out map2, 255);
+			File.Delete ("mask_" + ELType.ToString () + ID.ToString () + ".png");
 				
-			this.ParentWindow.InputShapeCombineMask (pm, 0, 0);
-			this.ParentWindow.ShapeCombineMask (pm, 0, 0);
+			this.ParentWindow.InputShapeCombineMask (map2, 0, 0);
+			this.ParentWindow.ShapeCombineMask (map2, 0, 0);
 			//px.Dispose ();
 			pm.Dispose ();
-		//	map1.Dispose ();
-		//	map2.Dispose ();
+		map1.Dispose ();
+			map2.Dispose ();
 			/*	
 			var pix = new Gdk.Pixmap(this.ParentWindow,Allocation.Width,Allocation.Height,1);
 				using (Context crPix = Gdk.CairoHelper.Create(pix)){

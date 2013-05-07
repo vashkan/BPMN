@@ -14,7 +14,6 @@ namespace GtkControl.Control
     /// </summary>
     public class Resizer : Gtk.DrawingArea
     {
-        Gdk.GC redgc;
 		static Gdk.Cursor hresizeCursor = new Gdk.Cursor(Gdk.CursorType.Sizing);
         /// <summary>
         /// 
@@ -76,7 +75,6 @@ namespace GtkControl.Control
         /// </summary>
         public Resizer ()
         {
-            redgc = new Gdk.GC(GdkWindow);
 			this.SetSizeRequest ((int)10, (int)10);
 			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
 			//mask

@@ -75,6 +75,15 @@ public partial class MainWindow: Gtk.Window
 			303,
 			225
 			);
+        this.mvpanel1.AddMovingObject(
+            name + (index++).ToString(),
+            "Pool and some text and other thinks",
+            10,
+            212,
+            ElementType.POOL,
+            600,
+            100
+            );
 		/*//Прозрачность окна  
 		this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		this.Colormap = this.Screen.RgbaColormap;

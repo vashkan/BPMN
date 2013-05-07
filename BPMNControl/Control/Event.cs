@@ -10,6 +10,9 @@ namespace GtkControl.Control
 		double line_width;
 		Cairo.Color fill_color;
 		Cairo.Color line_color;
+        /// <summary>
+        /// Высота элемента
+        /// </summary>
 		public override double Height {
 			get {
 				return base.Height;
@@ -18,6 +21,9 @@ namespace GtkControl.Control
 				base.Height = value;
 			}
 		}
+        /// <summary>
+        /// Ширина
+        /// </summary>
 		public override double Width {
 			get {
 				return base.Width;
