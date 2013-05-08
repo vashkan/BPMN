@@ -230,7 +230,9 @@ namespace GtkControl
                     Widget fr = (sender as EventBox).Child;
                     if (fr is Fixed)
                     {
-                        ((fr as Fixed).Children[0] as BaseItem).ShowMenu();
+                        var baseItem = (fr as Fixed).Children[0] as BaseItem;
+                        if (baseItem != null)
+                            baseItem.ShowMenu();
                     }
                 }
             }
@@ -242,7 +244,12 @@ namespace GtkControl
                     if (sender is EventBox)
                     {
                         //Calling the edit method of the control
-                        (((sender as EventBox).Child as Fixed).Children[0] as BaseItem).Edit();
+                        var @fixed = (sender as EventBox).Child as Fixed;
+                        if (@fixed != null)
+                        {
+                            var baseItem = @fixed.Children[0] as BaseItem;
+                            if (baseItem != null) baseItem.Edit();
+                        }
                     }
                 }
                 else
@@ -250,9 +257,24 @@ namespace GtkControl
                     //Setup the origin of the move
                     isDragged = true;
                     currCtrl = sender as Widget;
-                    currCtrl.TranslateCoordinates(this.fixed1, 0, 0, out origX, out origY);
-                    (((currCtrl as EventBox).Child as Fixed).Children[0] as BaseItem).X = (int)origX;
-                    (((currCtrl as EventBox).Child as Fixed).Children[0] as BaseItem).Y = (int)origY;
+                    if (currCtrl != null)
+                    {
+                        currCtrl.TranslateCoordinates(fixed1, 0, 0, out origX, out origY);
+                        var eventBox = currCtrl as EventBox;
+                        if (eventBox != null)
+                        {
+                            var @fixed = eventBox.Child as Fixed;
+                            if (@fixed != null)
+                            {
+                                var baseItem = @fixed.Children[0] as BaseItem;
+                                if (baseItem != null)
+                                {
+                                    baseItem.X = origX;
+                                    baseItem.Y = origY;
+                                }
+                            }
+                        }
+                    }
                     fixed1.GetPointer(out pointX, out pointY);
                     Console.WriteLine("MovingBox KeyPressed on " + (((currCtrl as EventBox).Child as Fixed).Children[0] as BaseItem).Caption);
                     Console.WriteLine("Pointer:" + pointX.ToString() + "-" + pointY.ToString());
@@ -273,7 +295,9 @@ namespace GtkControl
                             isDragged = true;
                             butt.TranslateCoordinates(this.fixed1, 0, 0, out origX, out origY);
                             fixed1.GetPointer(out pointX, out pointY);
-                            resizer = (Resizer)((butt as EventBox).Child as Fixed).Children[0];
+                            var @fixed = butt.Child as Fixed;
+                            if (@fixed != null)
+                                resizer = (Resizer)@fixed.Children[0];
                         };
                         butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args)
                         {
@@ -284,8 +308,18 @@ namespace GtkControl
                         };
                         //butt.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
                         fixed1.Add(butt);
-                        fixed1.Move(butt, origX + (int)((((currCtrl as EventBox).Child) as Fixed).Children[0] as BaseItem).Width,
-                            (int)((((currCtrl as EventBox).Child) as Fixed).Children[0] as BaseItem).Height + origY);
+                        var eventBox = currCtrl as EventBox;
+                        if (eventBox != null)
+                        {
+                            var fixed2 = (eventBox.Child) as Fixed;
+                            if (fixed2 != null)
+                            {
+                                var baseItem = fixed2.Children[0] as BaseItem;
+                                if (baseItem != null)
+                                    fixed1.Move(butt, origX + (int)baseItem.Width,
+                                                (int)baseItem.Height + origY);
+                            }
+                        }
                         fixed1.ShowAll();
                     }
                 }
@@ -330,48 +364,65 @@ namespace GtkControl
                 if (/*(resizer != null) &&*/ resizing && (currCtrl != null))
                 {
                     //MoveControl (butt, args.Event.XRoot, args.Event.YRoot, true);
-                    var obj = (((currCtrl as EventBox).Child as Fixed).Children[0] as BaseItem);
-                    int p_x, p_y, dx, dy;
-                    fixed1.GetPointer(out p_x, out p_y);
-                    dx = p_x - pointX;
-                    dy = p_y - pointY;
-                    var temp = obj.Height + dy;
-                    temp = (temp > 10) ? temp : 10;
-                    obj.Height = temp;
-                    temp = obj.Width + dx;
-                    temp = (temp > 10) ? temp : 10;
-                    obj.Width = temp;
-                    pointX = p_x;
-                    pointY = p_y;
-                    currCtrl.SetSizeRequest((int)obj.Width, (int)obj.Height);
-                    obj.SetSizeRequest((int)obj.Width, (int)obj.Height);
-
-                    if ((obj.Width != 0) && (obj.Height != 0))
+                    var eventBox = currCtrl as EventBox;
+                    if (eventBox != null)
                     {
-                        obj.mask();
+                        var @fixed = eventBox.Child as Fixed;
+                        if (@fixed != null)
+                        {
+                            var obj = (@fixed.Children[0] as BaseItem);
+                            if (obj != null)
+                            {
+                                int p_x, p_y;
+                                fixed1.GetPointer(out p_x, out p_y);
+                                int dx = p_x - pointX;
+                                int dy = p_y - pointY;
+                                var temp = obj.height + dy;
+                                temp = (temp > 10) ? temp : 10;
+                                obj.Height = temp;
+                                temp = obj.width + dx;
+                                temp = (temp > 10) ? temp : 10;
+                                obj.Width = temp;
+                                pointX = p_x;
+                                pointY = p_y;
+                                currCtrl.SetSizeRequest((int) obj.Width, (int) obj.Height);
+                                obj.SetSizeRequest((int) obj.Width, (int) obj.Height);
+
+                                if ((obj.Width != 0) && (obj.Height != 0))
+                                {
+                                    obj.mask();
+                                }
+
+                                Console.WriteLine("Resizing: \n width: " + obj.Width.ToString() + "\n height: " +
+                                                  obj.Height.ToString());
+                                Console.WriteLine("dx: " + dx.ToString() + "dy: " + dy.ToString()
+                                                  + "\nPointer1(" + pointX.ToString() + ", " + pointY.ToString() + ")\n"
+                                                  + "pointer current (" + p_x + ", " + p_y + ")"
+                                    );
+                                Console.WriteLine("x_root: " + args.Event.XRoot.ToString() + " y_root: " +
+                                                  args.Event.YRoot.ToString());
+
+                                obj.X = Math.Min((int) obj.X, (int) args.Event.X);
+                                obj.Y = Math.Min((int) obj.Y, (int) args.Event.Y);
+                                //MoveControl (currCtrl,obj.X , obj.Y, true);
+                                origX += dx;
+                                origY += dy;
+                            }
+                        }
                     }
-
-                    Console.WriteLine("Resizing: \n width: " + obj.Width.ToString() + "\n height: " + obj.Height.ToString());
-                    Console.WriteLine("dx: " + dx.ToString() + "dy: " + dy.ToString()
-                        + "\nPointer1(" + pointX.ToString() + ", " + pointY.ToString() + ")\n"
-                        + "pointer current (" + p_x + ", " + p_y + ")"
-                    );
-                    Console.WriteLine("x_root: " + args.Event.XRoot.ToString() + " y_root: " + args.Event.YRoot.ToString());
-
-                    obj.X = Math.Min((int)obj.X, (int)args.Event.X);
-                    obj.Y = Math.Min((int)obj.Y, (int)args.Event.Y);
-                    //MoveControl (currCtrl,obj.X , obj.Y, true);
-                    origX += dx;
-                    origY += dy;
                     Console.WriteLine("Origin: (" + origX.ToString() + ", " + origY.ToString() + ")");
                     fixed1.Move(butt, origX, origY);
                 }
                 else
                     if (currCtrl != null)
                     {
-                        if (((currCtrl as EventBox).Child as Fixed).Children[0] is BaseItem)
-                            MoveClone(ref currClone, args.Event.X, args.Event.Y);
-
+                        var eventBox = currCtrl as EventBox;
+                        if (eventBox != null)
+                        {
+                            var @fixed = eventBox.Child as Fixed;
+                            if (@fixed != null && (@fixed.Children[0] is BaseItem))
+                                MoveClone(ref currClone, args.Event.X, args.Event.Y);
+                        }
                     }
             }
         }

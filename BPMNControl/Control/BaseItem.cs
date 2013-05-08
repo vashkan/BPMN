@@ -117,25 +117,65 @@ namespace GtkControl.Control
 			get { return y;}
 			set{ y = value;}
 		}
-		//string caption = "";
+
+        public int MinWidth { get; set; }
+        public int MinHeight { get; set; }
+
+
+	    //string caption = "";
 		protected Gtk.Menu popup = null;
 		protected string body = "";
-		private double width=0;
-		private double height=0;
+	    public double width=0;
+	    public double height=0;
+
         /// <summary>
         /// Ширина элемента
         /// </summary>
-		public virtual double Width { get { return width; } set { width = value;}}
+        public virtual double Width { 
+            get {
+                var w = (width<MinWidth)?MinWidth:width; 
+                SetSizeRequest((int)w,(int)height);
+                WidthRequest = (int)w;
+                if (this.Parent!=null)
+                {
+                    Parent.WidthRequest = (int)w;
+                   Parent.SetSizeRequest((int)w,(int)Height);
+                }
+                return w;
+
+            } set { width = value; } }
+
         /// <summary>
         /// Высота элемента
         /// </summary>
-		public virtual double Height { get { return height; } set { height = value;}}
+        public virtual double Height
+        {
+            get
+            {
+                var h = (width < MinHeight) ? MinHeight : height;
+                SetSizeRequest((int)width,(int)h);
+                HeightRequest = (int)h;
+                if (this.Parent != null)
+                {
+                    Parent.HeightRequest = (int)h;
+                    Parent.SetSizeRequest((int)width,(int)h);
+                }
+                return h;
+            }
+            set { height = value; }
+        }
+
+		/// <summary>
+		/// тип элемента
+		/// </summary>
 		public ElementType ELType=ElementType.NONE;
+
         /// <summary>
         /// Наложение маски
         /// </summary>
 		public void mask ()
-		{
+        {
+            this.AppPaintable = true;
 			Width = Math.Abs (Width);
 			Height = Math.Abs (Height);
 			Gdk.Pixmap pm = new Gdk.Pixmap (this.GdkWindow, (int)Width, (int)Height, 1);
@@ -209,10 +249,6 @@ namespace GtkControl.Control
 			ID = Guid.NewGuid ();
 			popup = new Gtk.Menu ();
 			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
-
-			//цвет фона draw area
-			//this.ModifyBg(StateType.Normal, new Gdk.Color());
-
 			Gtk.MenuItem text1 = new MenuItem ("Test1");
 			text1.Activated += new EventHandler (Menu1Clicked);
 			Gtk.MenuItem text2 = new MenuItem ("Test2");

@@ -48,7 +48,7 @@ public partial class MainWindow: Gtk.Window
 			303,
 			250
 		);
-		this.mvpanel1.AddMovingObject (
+		/*this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"flowArrowOpen",
 			276,
@@ -56,7 +56,7 @@ public partial class MainWindow: Gtk.Window
 			ElementType.SEQUENCE_FLOW_CONDITIONAL,
 			303,
 			225
-		);
+		);*/
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"gateway",
@@ -66,7 +66,7 @@ public partial class MainWindow: Gtk.Window
 			80,
 			80
 			);
-		this.mvpanel1.AddMovingObject (
+		/*this.mvpanel1.AddMovingObject (
 			name+(index++).ToString(),
 			"message_flow",
 			384,
@@ -74,7 +74,7 @@ public partial class MainWindow: Gtk.Window
 			ElementType.MESSAGE_FLOW,
 			303,
 			225
-			);
+			);*/
         this.mvpanel1.AddMovingObject(
             name + (index++).ToString(),
             "Pool and some text and other thinks",
