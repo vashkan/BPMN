@@ -6,16 +6,16 @@
       <File FileName="Control\Gateway.cs" Line="14" Column="4" />
       <File FileName="Control\BaseItem.cs" Line="301" Column="15" />
       <File FileName="Control\Task.cs" Line="42" Column="21" />
-      <File FileName="MainWindow.cs" Line="40" Column="1" />
       <File FileName="Control\Resizer.cs" Line="32" Column="26" />
       <File FileName="Main.cs" Line="25" Column="38" />
+      <File FileName="AssemblyInfo.cs" Line="36" Column="37" />
       <File FileName="Control\MVPanel.cs" Line="234" Column="22" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Option id="ShowVersionControlOverlays" value="True" />
           <Option id="ShowAllFiles" value="False" />
+          <Option id="ShowVersionControlOverlays" value="True" />
           <Node name="GtkControl" expanded="True">
             <Node name="UserInterface" expanded="True" />
             <Node name="Control" expanded="True">
