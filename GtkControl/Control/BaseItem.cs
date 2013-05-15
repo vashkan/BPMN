@@ -70,7 +70,12 @@ namespace GtkControl.Control
 			/// <summary>
 			/// Шлюз
 			/// </summary>
-			GATEWAY
+			GATEWAY,
+		
+			/// <summary>
+            /// Пул
+            /// </summary>
+	        POOL
 		};
 	
 	public class BaseItem : Gtk.DrawingArea 
@@ -97,16 +102,9 @@ namespace GtkControl.Control
         /// </summary>
         public virtual bool IsSelected { get; set; }
 		
-		protected enum ArrowStyle
-		{
-			ARROW_OPEN,
-			ARROW_SOLID,
-			ARROW_SOLID_FILLED,
-			ARROW_DIAMOND,
-			ARROW_DIAMOND_FILLED,
-			ARROW_CIRCLE,
-			ARROW_CIRCLE_FILLED
-		};
+		public int MinWidth { get; set; }
+		
+        public int MinHeight { get; set; }
 		
 		static Gdk.Cursor mCursor = new Gdk.Cursor (Gdk.CursorType.Fleur);
 		
@@ -129,16 +127,12 @@ namespace GtkControl.Control
 		public virtual double Width { get { return width; } set { width = value;}}
 		public virtual double Height { get { return height; } set { height = value;}}
 		public ElementType ELType=ElementType.NONE;
-		public void mask ()
+		public void mask (int width, int height)
 		{
-			Width = Math.Abs (Width);
-			Height = Math.Abs (Height);
+			Width = Math.Abs (width);
+			Height = Math.Abs (height);
 			Gdk.Pixmap pm = new Gdk.Pixmap (this.GdkWindow, (int)Width, (int)Height, 1);
-			using (ImageSurface draw = new ImageSurface (Format.Argb32,(int) Width,(int) Height)) {
-				using (Context gr = new Context(draw)) {
-					gr.Antialias = Antialias.None;
-					Paint (gr);
-				}
+
 				using (Context crPix = Gdk.CairoHelper.Create(pm)) {
 					crPix.Antialias = Antialias.None;
 					crPix.Operator = Operator.Source;
@@ -148,44 +142,11 @@ namespace GtkControl.Control
 
 					crPix.Operator = Operator.Over;
 					crPix.NewPath ();
-					Paint (crPix);
-					crPix.ClosePath ();
-					//Paint (crPix);
-				}
-				//save the image as a png image.
-				draw.WriteToPng (("mask_" + ELType.ToString () + ID.ToString () + ".png"));
+					PaintMask (crPix);
 			}
-			//var image = new Gtk.Image (pm, pm);
-				
-			//pm.Colormap = null;
-			Gdk.Pixmap map1, map2;
-			var px = new Gdk.Pixbuf ("mask_" + ELType.ToString () + ID.ToString () + ".png");
-			px.RenderPixmapAndMask (out map1, out map2, 255);
-			File.Delete ("mask_" + ELType.ToString () + ID.ToString () + ".png");
-				
-			this.ParentWindow.InputShapeCombineMask (map2, 0, 0);
-			this.ParentWindow.ShapeCombineMask (map2, 0, 0);
-			px.Dispose ();
+			this.ParentWindow.InputShapeCombineMask (pm, 0, 0);
+			this.ParentWindow.ShapeCombineMask (pm, 0, 0);
 			pm.Dispose ();
-			map1.Dispose ();
-			map2.Dispose ();
-				
-			/*var pix = new Gdk.Pixmap(this.ParentWindow,Allocation.Width,Allocation.Height,1);
-				using (Context crPix = Gdk.CairoHelper.Create(pix)){
-					crPix.Operator= Operator.Source;
-					crPix.Source = new SolidPattern(new Color(0,0,0,0));
-					crPix.Rectangle(0,0,Allocation.Width,Allocation.Height);
-					crPix.Paint();
-
-					crPix.Operator = Operator.Over;
-					crPix.NewPath();
-					Paint(crPix);
-					//crPix.Save();
-					GdkWindow.ShapeCombineMask(pix,0,0);
-					GdkWindow.InputShapeCombineMask(pix,0,0);
-					((IDisposable)crPix.Target).Dispose();
-				}
-				*/
 		}
 		public BaseItem (string pName, string cap, ElementType typeEl, double _width, double _height)
 		{
@@ -213,9 +174,19 @@ namespace GtkControl.Control
 			this.SetSizeRequest ((int)Width, (int)Height);
 			//mask
 			this.Realized += delegate {
-				mask ();				
+				mask ((int)Width,(int)Height);				
 			};
 		}
+
+		/// <summary>
+        /// 
+        /// </summary>
+        /// <param name="allocation"></param>
+        protected override void OnSizeAllocated(Gdk.Rectangle allocation)
+        {
+            base.OnSizeAllocated(allocation);
+            mask(allocation.Width, allocation.Height);
+        }
 
 		protected override void OnScreenChanged (Gdk.Screen previous_screen)
 		{
@@ -322,9 +293,7 @@ namespace GtkControl.Control
 		//перегружаемая функция отрисовки маски для элемента 
 		virtual public void PaintMask (Context g)
 		{
-
 		}
-
 
 		protected override bool OnExposeEvent (Gdk.EventExpose args)
 		{	

@@ -11,8 +11,7 @@ public partial class MainWindow
 	private global::Gtk.VPaned vpaned2;
 	private global::Gtk.HBox hbox2;
 	private global::Gtk.Toolbar toolbar2;
-	private global::Gtk.HButtonBox hbuttonbox2;
-	private global::Gtk.Button button31;
+	private global::Gtk.ColorButton colorbutton1;
 	private global::Gtk.HScale hscale1;
 	private global::GtkControl.MVPanel mvpanel1;
 	private global::Gtk.VPaned vpaned1;
@@ -78,21 +77,15 @@ public partial class MainWindow
 		global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.toolbar2]));
 		w2.Position = 0;
 		// Container child hbox2.Gtk.Box+BoxChild
-		this.hbuttonbox2 = new global::Gtk.HButtonBox ();
-		this.hbuttonbox2.Name = "hbuttonbox2";
-		// Container child hbuttonbox2.Gtk.ButtonBox+ButtonBoxChild
-		this.button31 = new global::Gtk.Button ();
-		this.button31.CanFocus = true;
-		this.button31.Name = "button31";
-		this.button31.UseUnderline = true;
-		this.button31.Label = global::Mono.Unix.Catalog.GetString ("GtkButton");
-		this.hbuttonbox2.Add (this.button31);
-		global::Gtk.ButtonBox.ButtonBoxChild w3 = ((global::Gtk.ButtonBox.ButtonBoxChild)(this.hbuttonbox2 [this.button31]));
+		this.colorbutton1 = new global::Gtk.ColorButton ();
+		this.colorbutton1.CanFocus = true;
+		this.colorbutton1.Events = ((global::Gdk.EventMask)(784));
+		this.colorbutton1.Name = "colorbutton1";
+		this.hbox2.Add (this.colorbutton1);
+		global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.colorbutton1]));
+		w3.Position = 1;
 		w3.Expand = false;
 		w3.Fill = false;
-		this.hbox2.Add (this.hbuttonbox2);
-		global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.hbuttonbox2]));
-		w4.Position = 1;
 		// Container child hbox2.Gtk.Box+BoxChild
 		this.hscale1 = new global::Gtk.HScale (null);
 		this.hscale1.CanFocus = true;
@@ -105,19 +98,19 @@ public partial class MainWindow
 		this.hscale1.Digits = 0;
 		this.hscale1.ValuePos = ((global::Gtk.PositionType)(2));
 		this.hbox2.Add (this.hscale1);
-		global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.hscale1]));
-		w5.Position = 2;
+		global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.hbox2 [this.hscale1]));
+		w4.Position = 2;
 		this.vpaned2.Add (this.hbox2);
-		global::Gtk.Paned.PanedChild w6 = ((global::Gtk.Paned.PanedChild)(this.vpaned2 [this.hbox2]));
-		w6.Resize = false;
+		global::Gtk.Paned.PanedChild w5 = ((global::Gtk.Paned.PanedChild)(this.vpaned2 [this.hbox2]));
+		w5.Resize = false;
 		// Container child vpaned2.Gtk.Paned+PanedChild
 		this.mvpanel1 = new global::GtkControl.MVPanel ();
 		this.mvpanel1.Events = ((global::Gdk.EventMask)(768));
 		this.mvpanel1.Name = "mvpanel1";
 		this.vpaned2.Add (this.mvpanel1);
 		this.hpaned1.Add (this.vpaned2);
-		global::Gtk.Paned.PanedChild w8 = ((global::Gtk.Paned.PanedChild)(this.hpaned1 [this.vpaned2]));
-		w8.Resize = false;
+		global::Gtk.Paned.PanedChild w7 = ((global::Gtk.Paned.PanedChild)(this.hpaned1 [this.vpaned2]));
+		w7.Resize = false;
 		// Container child hpaned1.Gtk.Paned+PanedChild
 		this.vpaned1 = new global::Gtk.VPaned ();
 		this.vpaned1.CanFocus = true;
@@ -128,8 +121,8 @@ public partial class MainWindow
 		this.label2.Name = "label2";
 		this.label2.LabelProp = global::Mono.Unix.Catalog.GetString ("label2");
 		this.vpaned1.Add (this.label2);
-		global::Gtk.Paned.PanedChild w9 = ((global::Gtk.Paned.PanedChild)(this.vpaned1 [this.label2]));
-		w9.Resize = false;
+		global::Gtk.Paned.PanedChild w8 = ((global::Gtk.Paned.PanedChild)(this.vpaned1 [this.label2]));
+		w8.Resize = false;
 		// Container child vpaned1.Gtk.Paned+PanedChild
 		this.GtkScrolledWindow = new global::Gtk.ScrolledWindow ();
 		this.GtkScrolledWindow.Name = "GtkScrolledWindow";

@@ -30,6 +30,7 @@
     <File subtype="Code" buildaction="Compile" name="Control\Event.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Gateway.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Resizer.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\Pool.cs" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />

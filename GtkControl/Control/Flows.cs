@@ -30,106 +30,8 @@ namespace GtkControl.Control
         private double arrow_lenght;
         protected double signX;
         protected double signY;
-        /// <summary>
-        /// 
-        /// </summary>
-        public double StartX
-        {
-            get
-            {
-                return m_StartX;
-            }
-            set
-            {
-                m_StartX = value;
-            }
-        }
-        private double m_StartX;
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double StartY
-        {
-            get
-            {
-                return m_StartY;
-            }
-            set
-            {
-                m_StartY = value;
-            }
-        }
-        private double m_StartY;
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double EndX
-        {
-            get
-            {
-                return m_EndX;
-            }
-            set
-            {
-                m_EndX = value;
-            }
-        }
-        private double m_EndX;
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double EndY
-        {
-            get
-            {
-                return m_EndY;
-            }
-            set
-            {
-                m_EndY = value;
-            }
-        }
-        private double m_EndY;
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double LastX
-        {
-            get
-            {
-                return m_LastX;
-            }
-            set
-            {
-                m_LastX = value;
-            }
-        }
-        private double m_LastX;
-        /// <summary>
-        /// 
-        /// </summary>
-        public double LastY
-        {
-            get
-            {
-                return m_LastY;
-            }
-            set
-            {
-                m_LastY = value;
-            }
-        }
-        private double m_LastY;
-
-
+		protected Color fill_color;
+        protected Color line_color;
         public List<Cairo.PointD> WayPoints;
         #endregion
 
@@ -142,34 +44,29 @@ namespace GtkControl.Control
 			WayPoints = new List<PointD> ();
 			arrow_degrees = 0.5;
 			arrow_lenght = 15;
-			StartX = start.X;
-			StartY = start.Y;
 			WayPoints.Clear ();
 			WayPoints.Add (start);
 			
 			WayPoints.Add (end);
-			EndX = end.X;
-			EndY = end.Y;
-			
-			var dX = EndX - StartX;
-			var dY = EndY - StartY;
+
+            var dX = WayPoints[WayPoints.Count - 1].X - WayPoints[0].X;
+            var dY = WayPoints[WayPoints.Count - 1].Y - WayPoints[0].Y;
 			signX = dX / Math.Abs (dX);
 			signY = dY / Math.Abs (dY);
 			
-			LastX = EndX - dX / 2 + 15 * signX;
-			LastY = EndY;
-			//todo path finder
 			
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + dX / 2, StartY));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + dX / 2, EndY));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 50));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 7 * dX / 8, EndY + 50));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 7 * dX / 8, EndY + 100));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 100));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 3 * dX / 4, EndY + 150));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 29 * dX / 32, EndY + 150));
-			WayPoints.Insert (WayPoints.Count - 1, new PointD (StartX + 29 * dX / 32, EndY));
+			//todo path finder
+
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + dX / 2, WayPoints[0].Y));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + dX / 2, WayPoints[WayPoints.Count-1].Y));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + 3 * dX / 4, WayPoints[WayPoints.Count - 1].Y));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + 3 * dX / 4, WayPoints[WayPoints.Count - 1].Y + 50));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + 7 * dX / 8, WayPoints[WayPoints.Count - 1].Y + 50));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + 7 * dX / 8, WayPoints[WayPoints.Count - 1].Y + 100));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + 3 * dX / 4, WayPoints[WayPoints.Count - 1].Y + 100));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + 3 * dX / 4, WayPoints[WayPoints.Count - 1].Y + 150));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + 29 * dX / 32, WayPoints[WayPoints.Count - 1].Y + 150));
+            WayPoints.Insert(WayPoints.Count - 1, new PointD(WayPoints[0].X + 29 * dX / 32, WayPoints[WayPoints.Count - 1].Y));
 		}
 
         #endregion
@@ -224,7 +121,6 @@ namespace GtkControl.Control
         public override void Paint (Cairo.Context gr)
 		{
 
-			//throw new Exception("The method or operation is not implemented.");
 			var radius = 15;
 			//gr.NewPath ();
 			gr.MoveTo (WayPoints [0]);
@@ -280,10 +176,12 @@ namespace GtkControl.Control
             //gr.Antialias = Antialias.Subpixel;
             gr.Stroke();
         }
-        public override void PaintMask(Context g)
-        {
-            g.LineWidth = 12;
-            Paint(g);
+        public override void PaintMask (Context g)
+		{
+			var temp_col = line_color;
+			line_color = new Color (1, 1, 1);
+			Paint (g);
+			line_color = (Cairo.Color)temp_col;
         }
     }
         #endregion
@@ -294,8 +192,6 @@ namespace GtkControl.Control
     /// </summary> 
     public class UnCondSeqFlow : Flow
     {
-        private Color line_color;
-        private Color fill_color;
         public UnCondSeqFlow(string pName, string cap, ElementType typeEl, double _width, double _height, PointD start, PointD end)
             : base(pName, cap, typeEl, _width, _height, start, end)
         {
@@ -325,14 +221,34 @@ namespace GtkControl.Control
             gr.Color = line_color;
             gr.Fill();
         }
+		/// <summary>
+        /// Отрисовка маски
+        /// </summary>
+        /// <param name="g"></param>
+        public override void PaintMask (Context g)
+		{
+			base.PaintMask (g);
+			var temp_col = line_color;
+			line_color = new Color (1, 1, 1);
+			Paint (g);
+			line_color = (Cairo.Color)temp_col;
+        }
     }
     /// <summary>
     /// Conditonal sequence flow.
     /// </summary>
     public class CondSeqFlow : Flow
     {
-        private Color line_color;
-        private Color fill_color;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pName"></param>
+        /// <param name="cap"></param>
+        /// <param name="typeEl"></param>
+        /// <param name="_width"></param>
+        /// <param name="_height"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
         public CondSeqFlow(string pName, string cap, ElementType typeEl, double _width, double _height, PointD start, PointD end)
             : base(pName, cap, typeEl, _width, _height, start, end)
         {
@@ -358,27 +274,27 @@ namespace GtkControl.Control
 				out x1, out y1, out x2, out y2
 			);
 			gr.MoveTo (WayPoints [WayPoints.Count - 1]);
-            gr.LineTo(x1, y1);
-            //gr.MoveTo(EndX,EndY);
-            gr.LineTo(x2, y2);
-            gr.ClosePath();
+			gr.LineTo (x1, y1);
+			//gr.MoveTo(EndX,EndY);
+			gr.LineTo (x2, y2);
+			gr.ClosePath ();
 
-            gr.Color = line_color;
-            gr.StrokePreserve();
-            gr.Color = line_color;
-            gr.Fill();
+			gr.Color = line_color;
+			gr.StrokePreserve ();
+			gr.Color = line_color;
+			gr.Fill ();
 
-            gr.NewPath();
-            double angle = Math.Atan2(WayPoints[0].Y - WayPoints[1].Y, WayPoints[0].X - WayPoints[1].X) + Math.PI;
-            var arrow_lenght = 10;
-            var arrow_degrees = 0.5;
-            x1 = StartX + arrow_lenght * Math.Cos(angle - arrow_degrees);
-            y1 = StartY + arrow_lenght * Math.Sin(angle - arrow_degrees);
-            x2 = StartX + arrow_lenght * Math.Cos(angle + arrow_degrees);
-            y2 = StartY + arrow_lenght * Math.Sin(angle + arrow_degrees);
-            x3 = StartX + arrow_lenght * 2 * Math.Cos(angle);
-            y3 = StartY + arrow_lenght * 2 * Math.Sin(angle);
-            gr.MoveTo(StartX, StartY);
+			gr.NewPath ();
+			double angle = Math.Atan2 (WayPoints [0].Y - WayPoints [1].Y, WayPoints [0].X - WayPoints [1].X) + Math.PI;
+			var arrow_lenght = 10;
+			var arrow_degrees = 0.5;
+			x1 = WayPoints [0].X + arrow_lenght * Math.Cos (angle - arrow_degrees);
+			y1 = WayPoints [0].Y + arrow_lenght * Math.Sin (angle - arrow_degrees);
+			x2 = WayPoints [0].X + arrow_lenght * Math.Cos (angle + arrow_degrees);
+			y2 = WayPoints [0].Y + arrow_lenght * Math.Sin (angle + arrow_degrees);
+			x3 = WayPoints [0].X + arrow_lenght * 2 * Math.Cos (angle);
+			y3 = WayPoints [0].Y + arrow_lenght * 2 * Math.Sin (angle);
+			gr.MoveTo (WayPoints [0]);
             gr.LineTo(x1, y1);
             gr.LineTo(x3, y3);
             gr.LineTo(x2, y2);
@@ -388,14 +304,25 @@ namespace GtkControl.Control
             gr.Color = fill_color;
             gr.Fill();
         }
+
+        /// <summary>
+        /// Отрисовка маски
+        /// </summary>
+        public override void PaintMask (Context g)
+		{
+			base.PaintMask (g);
+			var temp_col = line_color;
+			line_color = new Color (1, 1, 1);
+			Paint (g);
+			line_color = (Cairo.Color)temp_col;
+		
+        }
     }
     /// <summary>
     /// Поток сообщений.
     /// </summary>
     public class MessageFlow : Flow
     {
-        private Color line_color;
-        private Color fill_color;
         public MessageFlow(string pName, string cap, ElementType typeEl, double _width, double _height, PointD start, PointD end)
             : base(pName, cap, typeEl, _width, _height, start, end)
         {
@@ -438,6 +365,18 @@ namespace GtkControl.Control
             gr.StrokePreserve();
             gr.Color = fill_color;
             gr.Fill();
+        }
+
+        /// <summary>
+        /// Отрисовка маски
+        /// </summary>
+        public override void PaintMask (Context g)
+		{
+			base.PaintMask (g);
+			var temp_col = line_color;
+			line_color = new Color (1, 1, 1);
+			Paint (g);
+			line_color = (Cairo.Color)temp_col;
         }
     }
 

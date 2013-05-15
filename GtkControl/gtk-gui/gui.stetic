@@ -48,7 +48,7 @@
                   <widget class="Gtk.Toolbar" id="toolbar2">
                     <property name="MemberName" />
                     <property name="ShowArrow">False</property>
-                    <node name="__gtksharp_134_Stetic_Editor_ActionToolbar" type="Toolbar">
+                    <node name="toolbar2" type="Toolbar">
                       <node type="Toolitem" action="zoomOutAction" />
                       <node type="Toolitem" action="zoom100Action" />
                       <node type="Toolitem" action="zoomInAction" />
@@ -60,26 +60,17 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="Gtk.HButtonBox" id="hbuttonbox2">
+                  <widget class="Gtk.ColorButton" id="colorbutton1">
                     <property name="MemberName" />
-                    <property name="Size">1</property>
-                    <child>
-                      <widget class="Gtk.Button" id="button31">
-                        <property name="MemberName" />
-                        <property name="CanFocus">True</property>
-                        <property name="Type">TextOnly</property>
-                        <property name="Label" translatable="yes">GtkButton</property>
-                        <property name="UseUnderline">True</property>
-                      </widget>
-                      <packing>
-                        <property name="Expand">False</property>
-                        <property name="Fill">False</property>
-                      </packing>
-                    </child>
+                    <property name="CanFocus">True</property>
+                    <property name="Events">ButtonMotionMask, ButtonPressMask, ButtonReleaseMask</property>
+                    <property name="Alpha">-1</property>
                   </widget>
                   <packing>
                     <property name="Position">1</property>
                     <property name="AutoSize">True</property>
+                    <property name="Expand">False</property>
+                    <property name="Fill">False</property>
                   </packing>
                 </child>
                 <child>

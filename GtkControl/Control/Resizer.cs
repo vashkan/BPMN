@@ -100,7 +100,17 @@ namespace GtkControl.Control
         }
 		public  void PaintMask (Cairo.Context g)
 		{
-			Paint (g);
+			g.Save ();
+			g.MoveTo (8, 5);
+			g.Arc (5, 5, 4, 0, 2 * Math.PI);
+			g.Color = new Cairo.Color (1, 1, 1);
+			//g.ClosePath ();
+			g.FillPreserve ();
+			g.Color = new Cairo.Color (1, 1, 1);
+	 			
+			g.LineWidth = 2;
+			g.Stroke ();
+			g.Restore ();
 		}
     }
 }

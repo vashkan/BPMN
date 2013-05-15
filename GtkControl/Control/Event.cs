@@ -65,7 +65,14 @@ namespace GtkControl.Control
 		}
 		public override void PaintMask (Context g)
 		{
-			Paint(g);
+			g.Save ();
+			g.Arc (radius, radius, radius - line_width / 2, 0, 2 * Math.PI);
+			g.Color = new Color (1, 1, 1);
+			g.FillPreserve ();
+			g.Restore ();
+			g.Color = new Color (1, 1, 1);
+			g.LineWidth = line_width;
+			g.Stroke ();
 		}
 	}
 }

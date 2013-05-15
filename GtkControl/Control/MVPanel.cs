@@ -33,7 +33,7 @@ namespace GtkControl
 		private int pointX = 0;
 		private int pointY = 0;
 		private bool isDragged = false;
-		private Resizer resizer = null;
+		//private Resizer resizer = null;
 		public MVPanel ()
 		{
 			this.Build ();
@@ -127,6 +127,11 @@ namespace GtkControl
 			case ElementType.GATEWAY:
 				{
 					ctrl = new Gateway (name, caption, width, height);
+					break;
+				}
+			case ElementType.POOL:
+				{
+					ctrl = new Pool (name, caption, width, height, OrientationEnum.Horizontal);
 					break;
 				}
 			default:
@@ -232,7 +237,6 @@ namespace GtkControl
 							resizers.Add (new Resizer ());
 						}
 						butt.Add (res);
-						//butt.SetSizeRequest (10, 10);
 						butt.Events = (Gdk.EventMask)1020;//252;
 						
 						butt.ButtonPressEvent += delegate {
@@ -240,7 +244,7 @@ namespace GtkControl
 							isDragged = true;
 							butt.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
 							fixed1.GetPointer (out pointX, out pointY);
-							resizer = (Resizer)(butt as EventBox).Child;
+							//resizer = (Resizer)(butt as EventBox).Child;
 						};
 						butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args) {
 							resizing = false;
@@ -306,11 +310,6 @@ namespace GtkControl
 					pointY = p_y;
 					currCtrl.SetSizeRequest ((int)obj.Width, (int)obj.Height);
 					obj.SetSizeRequest ((int)obj.Width, (int)obj.Height);
-					
-					if ((obj.Width != 0) && (obj.Height != 0)) {
-						obj.mask ();
-					}
-					
 					Console.WriteLine ("Resizing: \n width: " + obj.Width.ToString () + "\n height: " + obj.Height.ToString ());
 					Console.WriteLine ("dx: " + dx.ToString () + "dy: " + dy.ToString ()
 						+ "\nPointer1(" + pointX.ToString () + ", " + pointY.ToString () + ")\n"
@@ -324,7 +323,7 @@ namespace GtkControl
 					origX += dx;
 					origY += dy;
 					Console.WriteLine ("Origin: (" + origX.ToString () + ", " + origY.ToString ()+")");
-					fixed1.Move(butt, origX,origY);
+					//fixed1.Move(butt, origX,origY);
 				}
 				else
 				if (currCtrl != null) {

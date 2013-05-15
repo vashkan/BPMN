@@ -30,7 +30,21 @@ namespace GtkControl.Control
 		}
 		public override void PaintMask (Context g)
 		{
-			Paint(g);
+			g.Save ();
+			var rad = min (new double[]{Height,Width}) / 2 - line_width / 2;
+			g.MoveTo (Width / 2, Height / 2);
+			g.RelMoveTo (-rad, 0);
+			g.RelLineTo (+rad, -rad);
+			g.RelLineTo (+rad, +rad);
+			g.RelLineTo (-rad, +rad);
+			g.RelLineTo (-rad, -rad);
+			g.ClosePath ();	
+			g.Color = new Color (1, 1, 1);
+			g.LineWidth = line_width;
+			g.StrokePreserve ();
+			g.Color = new Color (1, 1, 1);
+			g.Fill ();
+			g.Restore ();
 		}
 	}
 }

@@ -26,7 +26,16 @@ public partial class MainWindow: Gtk.Window
 		
 		string name = "MovingBox";
 		int index = 0;
-		this.hpaned1.Position =700;
+		this.hpaned1.Position = 700;
+		this.mvpanel1.AddMovingObject (
+			name + (index++).ToString (),
+			"Процесс 1",
+			30,
+			300,
+			ElementType.POOL,
+			600,
+			200
+		);
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"start",
@@ -65,16 +74,17 @@ public partial class MainWindow: Gtk.Window
 			ElementType.GATEWAY,
 			80,
 			80
-			);
+		);
 		this.mvpanel1.AddMovingObject (
-			name+(index++).ToString(),
+			name + (index++).ToString (),
 			"message_flow",
 			384,
 			289,
 			ElementType.MESSAGE_FLOW,
 			303,
 			225
-			);
+		);
+		
 		/*//Прозрачность окна  
 		this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		this.Colormap = this.Screen.RgbaColormap;

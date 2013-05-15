@@ -43,7 +43,32 @@ namespace GtkControl.Control
 		}
 		public override void PaintMask (Context g)
 		{
-			Paint(g);
+			g.Save ();
+			DrawRoundedRectangle (g, 2, 2, Width - 4, Height - 4, 40);
+
+			
+			g.Color = new Color (1, 1, 1);
+	 
+			// Fill the path with pattern
+			g.FillPreserve ();
+	 
+			// We "undo" the pattern setting here
+			g.Restore ();
+	 
+			// Color for the stroke
+			g.Color = new Color (1, 1, 1);
+	 
+			g.LineWidth = 4;
+			g.Stroke ();
+
+
+			g.Color = new Color (1, 1, 1);
+			g.SelectFontFace ("Georgia", FontSlant.Normal, FontWeight.Bold);
+			g.SetFontSize (36.0);
+			TextExtents te = g.TextExtents (body);
+			g.MoveTo (2 - te.Width / 2 + Width / 2,
+			         2 + te.Height / 2 + Height / 2);
+			g.ShowText (body);
 		}
 	}
 }
