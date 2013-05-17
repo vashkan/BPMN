@@ -42,12 +42,12 @@ public partial class MainWindow: Gtk.Window
 			92,
 			222,
 			ElementType.START_EVENT,
-			66,
-			66
+			40,
+			40
 		);
 
-		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "Task", 80, 50, ElementType.TASK, 300, 150);
-		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, ElementType.END_EVENT, 66, 66);
+		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "Task", 10, 10, ElementType.TASK, 140, 70);
+		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, ElementType.END_EVENT, 40, 40);
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"flow",
@@ -72,8 +72,8 @@ public partial class MainWindow: Gtk.Window
 			187,
 			212,
 			ElementType.GATEWAY,
-			80,
-			80
+			50,
+			50
 		);
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),

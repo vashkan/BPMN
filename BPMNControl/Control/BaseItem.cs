@@ -80,6 +80,9 @@ namespace GtkControl.Control
 	        POOL
 		};
 	
+	/// <summary>
+	/// 
+	/// </summary>
 	public class BaseItem : Gtk.DrawingArea 
 	{
 		string parentName = "";
@@ -139,7 +142,7 @@ namespace GtkControl.Control
                 if (this.Parent!=null)
                 {
                     Parent.WidthRequest = (int)w;
-                   Parent.SetSizeRequest((int)w,(int)Height);
+                   //Parent.SetSizeRequest((int)w,(int)Height);
                 }
                 return w;
 
@@ -158,7 +161,7 @@ namespace GtkControl.Control
                 if (this.Parent != null)
                 {
                     Parent.HeightRequest = (int)h;
-                    Parent.SetSizeRequest((int)width,(int)h);
+                    //Parent.SetSizeRequest((int)width,(int)h);
                 }
                 return h;
             }
@@ -173,76 +176,26 @@ namespace GtkControl.Control
         /// <summary>
         /// Наложение маски
         /// </summary>
-		public void mask ()
-        {
-            this.AppPaintable = true;
-			Width = Math.Abs (Width);
-			Height = Math.Abs (Height);
+		public void mask (int width, int height)
+		{
+			Width = Math.Abs (width);
+			Height = Math.Abs (height);
 			Gdk.Pixmap pm = new Gdk.Pixmap (this.GdkWindow, (int)Width, (int)Height, 1);
-			using (ImageSurface draw = new ImageSurface (Format.Argb32,(int) Width,(int) Height)) {
-				using (Context gr = new Context(draw)) {
-					gr.Antialias = Antialias.None;
-					Paint (gr);
-				}
+
 				using (Context crPix = Gdk.CairoHelper.Create(pm)) {
 					crPix.Antialias = Antialias.None;
 					crPix.Operator = Operator.Source;
 					crPix.Source = new SolidPattern (new Color (0, 0, 0, 0));
-					crPix.Rectangle (0, 0, (int)Width, (int)Height);
+					crPix.Rectangle (0, 0, Allocation.Width, Allocation.Height);
 					crPix.Paint ();
-                    crPix.SetSourceRGB(1.0, 1.0, 1.0);
+
 					crPix.Operator = Operator.Over;
 					crPix.NewPath ();
-					Paint (crPix);
-					crPix.ClosePath ();
-					//Paint (crPix);
-				}
-				//save the image as a png image.
-				draw.WriteToPng (("mask_" + ELType.ToString () + ID.ToString () + ".png"));
+					PaintMask (crPix);
 			}
-			//var image = new Gtk.Image (pm, pm);
-            /*
-		    Bitmap bmp = null;
-            //save bitmap to stream
-            var stream = new System.IO.MemoryStream();
-            bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-            //verry important: put stream on position 0
-            stream.Position = 0;
-            //get the pixmap mask
-            //var buf = new Gdk.Pixbuf(stream, bmp.Width, bmp.Height);
-            */
-            
-
-			//pm.Colormap = null;
-			Gdk.Pixmap map1, map2;
-			var px = new Gdk.Pixbuf ("mask_" + ELType.ToString () + ID.ToString () + ".png");
-			
-            px.RenderPixmapAndMask (out map1, out map2, 255);
-			File.Delete ("mask_" + ELType.ToString () + ID.ToString () + ".png");
-				
-			this.ParentWindow.InputShapeCombineMask (map2, 0, 0);
-			this.ParentWindow.ShapeCombineMask (map2, 0, 0);
-			//px.Dispose ();
+			this.ParentWindow.InputShapeCombineMask (pm, 0, 0);
+			this.ParentWindow.ShapeCombineMask (pm, 0, 0);
 			pm.Dispose ();
-		map1.Dispose ();
-			map2.Dispose ();
-			/*	
-			var pix = new Gdk.Pixmap(this.ParentWindow,Allocation.Width,Allocation.Height,1);
-				using (Context crPix = Gdk.CairoHelper.Create(pix)){
-					crPix.Operator= Operator.Source;
-					crPix.Source = new SolidPattern(new Color(0,0,0,0));
-					crPix.Rectangle(0,0,Allocation.Width,Allocation.Height);
-					crPix.Paint();
-
-					crPix.Operator = Operator.Over;
-					crPix.NewPath();
-					Paint(crPix);
-					//crPix.Save();
-                    ParentWindow.ShapeCombineMask(pix, 0, 0);
-                    ParentWindow.InputShapeCombineMask(pix, 0, 0);
-					((IDisposable)crPix.Target).Dispose();
-				}
-			*/	
 		}
 		public BaseItem (string pName, string cap, ElementType typeEl, double _width, double _height)
 		{
@@ -266,7 +219,7 @@ namespace GtkControl.Control
 			this.SetSizeRequest ((int)Width, (int)Height);
 			//mask
 			this.Realized += delegate {
-				mask ();				
+				mask ((int)Width,(int)Height);				
 			};
 		}
 

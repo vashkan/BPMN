@@ -18,6 +18,7 @@
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Gtk;
 using Cairo;
 
@@ -106,6 +107,8 @@ namespace GtkControl.Control
 		
         public int MinHeight { get; set; }
 		
+		public List<EventBox> Resizers;
+		
 		static Gdk.Cursor mCursor = new Gdk.Cursor (Gdk.CursorType.Fleur);
 		
 		
@@ -154,9 +157,6 @@ namespace GtkControl.Control
 			popup = new Gtk.Menu ();
 			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
 
-			//цвет фона draw area
-			//this.ModifyBg(StateType.Normal, new Gdk.Color());
-
 			Gtk.MenuItem text1 = new MenuItem ("Test1");
 			text1.Activated += new EventHandler (Menu1Clicked);
 			Gtk.MenuItem text2 = new MenuItem ("Test2");
@@ -170,6 +170,13 @@ namespace GtkControl.Control
 			this.Width = _width;
 			this.Height = _height;
 			this.Name = parentName + "MVObject";
+			
+			Resizers = new List<EventBox> ();
+			for (var i=0; i<8; i++) {
+				var evn = new EventBox ();
+				evn.Add (new Resizer ());
+				Resizers.Add (evn);
+			}
 			
 			this.SetSizeRequest ((int)Width, (int)Height);
 			//mask

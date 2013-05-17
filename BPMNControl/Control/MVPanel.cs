@@ -357,6 +357,9 @@ namespace GtkControl
         {
             this.fixed1.GdkWindow.Background = new Gdk.Color(0, 0, 0); //ModifyBg(StateType.Normal,new Gdk.Color(0,0,0));
             this.scrolledwindow1.GdkWindow.Background = new Gdk.Color(128, 0, 0); //ModifyBg(StateType.Normal,new Gdk.Color(0,0,0));
+            Gdk.GC gc = new Gdk.GC(fixed1.GdkWindow);
+            gc.RgbFgColor = new Gdk.Color(131, 153, 182);
+            fixed1.GdkWindow.DrawRectangle(gc, false, 1, 0, this.Allocation.Width - 1, this.Allocation.Height - 1);
             this.fixed1.QueueDraw();
             if (isDragged)
             {
@@ -387,11 +390,6 @@ namespace GtkControl
                                 pointY = p_y;
                                 currCtrl.SetSizeRequest((int) obj.Width, (int) obj.Height);
                                 obj.SetSizeRequest((int) obj.Width, (int) obj.Height);
-
-                                if ((obj.Width != 0) && (obj.Height != 0))
-                                {
-                                    obj.mask();
-                                }
 
                                 Console.WriteLine("Resizing: \n width: " + obj.Width.ToString() + "\n height: " +
                                                   obj.Height.ToString());

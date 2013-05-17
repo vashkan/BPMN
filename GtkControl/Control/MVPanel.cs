@@ -33,10 +33,12 @@ namespace GtkControl
 		private int pointX = 0;
 		private int pointY = 0;
 		private bool isDragged = false;
+		private List <BaseItem> selectedItems;
 		//private Resizer resizer = null;
 		public MVPanel ()
 		{
 			this.Build ();
+			selectedItems = new List<BaseItem> ();
 		}
 		
 		//Set the controls to be redrawn
@@ -225,37 +227,47 @@ namespace GtkControl
 					currCtrl.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
 					((currCtrl as EventBox).Child  as BaseItem).X = (int)origX;
 					((currCtrl as EventBox).Child  as BaseItem).Y = (int)origY;
+					selectedItems.Clear ();
+					selectedItems.Add ((currCtrl as EventBox).Child  as BaseItem);
 					fixed1.GetPointer (out pointX, out pointY);
 					Console.WriteLine ("MovingBox KeyPressed on " + ((currCtrl as EventBox).Child as BaseItem).Caption);
 					Console.WriteLine ("Pointer:" + pointX.ToString () + "-" + pointY.ToString ());
 					Console.WriteLine ("Origin:" + origX.ToString () + "-" + origY.ToString ());
 					if (butt == null) {
-						butt = new EventBox ();
-						var res = new Resizer ();
-						var resizers = new List<Resizer> ();
-						for (var i=0; i<8; i++) {
-							resizers.Add (new Resizer ());
+						//var res = new Resizer ();
+						foreach (var selected_item in selectedItems) {
+							int index = 0;
+							for (var j = 0; j<3; j++) {
+								for (var i = 0; i<3; i++) {
+									if ((i == 1) && (j == 1)) {
+										continue;
+									}
+									selected_item.Resizers [index].Events = (Gdk.EventMask)1020;//252;
+									selected_item.Resizers [index].ButtonPressEvent += delegate (object o, ButtonPressEventArgs args) {
+										resizing = true;
+										isDragged = true;
+										(o as EventBox).TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
+										fixed1.GetPointer (out pointX, out pointY);
+									};
+									selected_item.Resizers [index].ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args) {
+										resizing = false;
+										isDragged = false;
+										fixed1.Move (butt, origX, origY);
+									};
+								
+									//evn.Add (selectedItems [0].Resizers [index++]);
+									fixed1.Add (selected_item.Resizers [index]);
+									fixed1.Move (
+										selected_item.Resizers [index++],
+										origX + j * currCtrl.Allocation.Width / 2-5,//evn.WidthRequest/2,
+										origY + i * currCtrl.Allocation.Height / 2 -5//evn.HeightRequest/2
+									);
+								}
+							}
 						}
-						butt.Add (res);
-						butt.Events = (Gdk.EventMask)1020;//252;
-						
-						butt.ButtonPressEvent += delegate {
-							resizing = true;
-							isDragged = true;
-							butt.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
-							fixed1.GetPointer (out pointX, out pointY);
-							//resizer = (Resizer)(butt as EventBox).Child;
-						};
-						butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args) {
-							resizing = false;
-							isDragged = false;
-							fixed1.Move(butt, origX, origY);
-							//resizer = null;
-						};
-						
-						fixed1.Add (butt);
-						fixed1.Move (butt, origX + (int)(((currCtrl as EventBox).Child) as BaseItem).Width,
-						    (int)(((currCtrl as EventBox).Child)  as BaseItem).Height + origY);
+						//fixed1.Add (butt);
+						//fixed1.Move (butt, origX + (int)(((currCtrl as EventBox).Child) as BaseItem).Width,
+						//    (int)(((currCtrl as EventBox).Child)  as BaseItem).Height + origY);
 						fixed1.ShowAll ();
 					}
 				}
@@ -266,7 +278,7 @@ namespace GtkControl
 		{
 			//Final destination of the control
 			if (a.Event.Button == 1) {
-				MoveControl (currCtrl, a.Event.X , a.Event.Y, false);
+				MoveControl (currCtrl, a.Event.X, a.Event.Y, false);
 				isDragged = false;
 				//currCtrl = null;
 				if (currClone != null) {
@@ -278,8 +290,14 @@ namespace GtkControl
 				var dx = (origX + System.Convert.ToInt32 (a.Event.X) - pointX);
 				var dy = (origY + System.Convert.ToInt32 (a.Event.Y) - pointY);
 				if ((dx != 0) || (dy != 0)) {
-					fixed1.Remove (butt);
-					butt.Dispose ();
+					//fixed1.Remove (butt);
+					
+					for (var i=0; i<8; i++) {
+						foreach (var selected_item in selectedItems) {
+							fixed1.Remove (selected_item.Resizers [i]);
+						}						
+					}
+					
 					butt = null;
 				}
 			}
@@ -329,8 +347,6 @@ namespace GtkControl
 				if (currCtrl != null) {
 					if ((currCtrl as EventBox).Child  is BaseItem)
 						MoveClone (ref currClone, args.Event.X, args.Event.Y);
-					
-					
 				}
 			}
 		}

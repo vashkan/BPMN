@@ -30,8 +30,8 @@ namespace GtkControl.Control
         private double arrow_lenght;
         protected double signX;
         protected double signY;
-
-
+        protected Color fill_color;
+        protected Color line_color;
         public List<Cairo.PointD> WayPoints;
         #endregion
 
@@ -179,13 +179,11 @@ namespace GtkControl.Control
         }
         public override void PaintMask(Context g)
         {
-            g.LineWidth = 12;
+            //g.LineWidth = 12;
+			g.Color = new Color(1, 1, 1);
             Paint(g);
         }
 
-        protected Color fill_color;
-
-        protected Color line_color;
     }
         #endregion
 
@@ -224,7 +222,6 @@ namespace GtkControl.Control
             gr.Color = line_color;
             gr.Fill();
         }
-
         /// <summary>
         /// Отрисовка маски
         /// </summary>
