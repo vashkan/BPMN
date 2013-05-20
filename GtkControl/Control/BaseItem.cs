@@ -79,7 +79,7 @@ namespace GtkControl.Control
 	        POOL
 		};
 	
-	public class BaseItem : Gtk.DrawingArea 
+	public class BaseItem : Gtk.DrawingArea,ISelectable 
 	{
 		string parentName = "";
 		
@@ -101,7 +101,7 @@ namespace GtkControl.Control
         /// <summary>
         /// Признак выбора
         /// </summary>
-        public virtual bool IsSelected { get; set; }
+		public virtual bool IsSelected { get; set; }
 		
 		public int MinWidth { get; set; }
 		

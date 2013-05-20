@@ -31,6 +31,8 @@
     <File subtype="Code" buildaction="Compile" name="Control\Gateway.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Resizer.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Pool.cs" />
+    <File subtype="Code" buildaction="Compile" name="ISelectable.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\SelectionService.cs" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
@@ -42,6 +44,7 @@
     <ProjectReference type="Package" localcopy="True" refto="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference specificVersion="False" type="Package" localcopy="False" refto="Mono.Cairo, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
     <ProjectReference specificVersion="False" type="Package" localcopy="False" refto="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference specificVersion="False" type="Package" localcopy="False" refto="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </References>
   <LanguageParameters StartupObject="GtkControl.MainClass" ctype="CSharpProjectParameters" />
 </Project>

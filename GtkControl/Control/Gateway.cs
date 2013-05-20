@@ -6,6 +6,7 @@ namespace GtkControl.Control
 	public class Gateway:BaseItem
 	{
 		double line_width = 4.5;
+		
 		public Gateway (string pName, string cap, double _width, double _height)
 		:base(pName,cap,ElementType.GATEWAY,_width,_height)
 		{

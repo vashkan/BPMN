@@ -16,413 +16,412 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 using System;
+using System.Collections.Generic;
 using Gtk;
 using GtkControl.Control;
 
 namespace GtkControl
 {
-    [System.ComponentModel.Category("GtkControl")]
-    [System.ComponentModel.ToolboxItem(true)]
-    public partial class MVPanel : Gtk.Bin
-    {
-        private Widget currCtrl = null;
-        private Widget currClone = null;
-        private int origX = 0;
-        private int origY = 0;
-        private int pointX = 0;
-        private int pointY = 0;
-        private bool isDragged = false;
-        private Resizer resizer = null;
-        public MVPanel()
+	[System.ComponentModel.Category("GtkControl")]
+	[System.ComponentModel.ToolboxItem(true)]
+	public partial class MVPanel : Gtk.Bin
+	{
+		#region Переменные
+		
+		private Widget currCtrl = null;
+		private Widget currClone = null;
+		private int origX = 0;
+		private int origY = 0;
+		private int pointX = 0;
+		private int pointY = 0;
+		private bool isDragged = false;
+		private SelectionService m_selectionService; 
+		private List <ISelectable> selectedItems;
+		
+		#endregion
+		
+		#region Свойства
+		
+		internal List<ISelectable> CurrentSelection {
+			get { 
+				return selectedItems ?? (selectedItems = new List<ISelectable> ()); 
+			}
+        } 
+		internal SelectionService SelectionService
         {
-            this.Build();
+            get { return m_selectionService ?? (m_selectionService = new SelectionService(this.fixed1)); }
         }
+		
+		#endregion
+		/// <summary>
+		/// 
+		/// </summary>
+		public MVPanel ()
+		{
+			this.Build ();
+		}
+		
+		/// <summary>
+        /// Set the controls to be redrawn
+		/// </summary>
+		public void RefreshChildren ()
+		{
+			this.fixed1.QueueDraw ();
+		}
+		
+		/// <summary>
+        /// Add a movable control to the panel
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="caption"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="typeEl"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		public void AddMovingObject (string name, string caption, int x, int y, ElementType typeEl, int width, int height)
+		{
+			//Prevent the object to be displayed outside the panel
+			if (x < 0) {
+				x = 0;
+			}
+			
+			if (y < 0) {
+				y = 0;
+			}
+			
+			//Create the box where the custom object is rendered
+			EventBox ev = GetMovingBox (name, caption, typeEl, width, height);
 
-        //Set the controls to be redrawn
-        public void RefreshChildren()
-        {
-            this.fixed1.QueueDraw();
-        }
-
-        //Add a movable control to the panel
-        public void AddMovingObject(string name, string caption, int x, int y, ElementType typeEl, int width, int height)
-        {
-            //Prevent the object to be displayed outside the panel
-            if (x < 0)
-            {
-                x = 0;
-            }
-
-            if (y < 0)
-            {
-                y = 0;
-            }
-
-            //Create the box where the custom object is rendered
-            EventBox ev = GetMovingBox(name, caption, typeEl, width, height);
-
-            //Add the events to control the movement of the box
-            ev.ButtonPressEvent += new ButtonPressEventHandler(OnButtonPressed);
-            ev.ButtonReleaseEvent += new ButtonReleaseEventHandler(OnButtonReleased);
-
-            //Add the control to the panel
-            this.fixed1.Put(ev, x, y);
-            this.ShowAll();
-        }
-
-        //Create the event box for the custom control
-        private EventBox GetMovingBox(string name, string caption, ElementType typeEl, double width, double height)
-        {
-            BaseItem ctrl;
-            switch (typeEl)
-            {
-                case ElementType.START_EVENT:
-                case ElementType.END_EVENT:
-                    {
-                        ctrl = new Event(name, caption, typeEl, height / 2);
-                        break;
-                    }
-                case ElementType.TASK:
-                    {
-                        ctrl = new Task(name, caption, width, height);
-                        break;
-                    }
-                case ElementType.SEQUENCE_FLOW_UNCONDITIONAL:
-                    {
-                        ctrl = new UnCondSeqFlow(
-                            name,
-                            caption,
-                            typeEl,
-                            width,
-                            height,
-                            new Cairo.PointD(15, 200),
-                            new Cairo.PointD(300, 20)
-                        );
-                        break;
-                    }
-                case ElementType.SEQUENCE_FLOW_CONDITIONAL:
-                    {
-                        ctrl = new CondSeqFlow(
-                            name,
-                            caption,
-                            typeEl,
-                            width,
-                            height,
-                            new Cairo.PointD(15, 200),
-                            new Cairo.PointD(300, 20)
-                        );
-                        break;
-                    }
-                case ElementType.MESSAGE_FLOW:
-                    {
-                        ctrl = new MessageFlow(
-                            name,
-                            caption,
-                            typeEl,
-                            width,
-                            height,
-                            new Cairo.PointD(20, 100),
-                            new Cairo.PointD(150, 20)
-                        );
-                        break;
-                    }
-                case ElementType.GATEWAY:
-                    {
-                        ctrl = new Gateway(name, caption, width, height);
-                        break;
-                    }
-                case ElementType.POOL:
-                    {
-                        ctrl = new Pool(name, caption, width, height,OrientationEnum.Horizontal);
-                        break;
-                    }
-                default:
-                    {
-                        ctrl = new BaseItem(name, caption, typeEl, width, height);
-                        break;
-                    }
-            }
-            EventBox rev = new EventBox();
-            rev.Name = name;
-            Fixed frame = new Fixed();
-            frame.SetSizeRequest((int)width, (int)height);
-            frame.Put(ctrl, 0, 0);
-            frame.ShowAll();
-            rev.Add(frame);
-            Console.WriteLine("Creating new moving object" + rev.Name);
-            return rev;
-        }
-
-        //Create a clone of the selected object that will be shown until the destination of the control is reached
-        private Widget CloneCurrCtrl()
-        {
-            Widget re = null;
-
-            if (this.currCtrl != null)
-            {
-                if (currCtrl is EventBox)
-                {
-                    Widget fr = (currCtrl as EventBox).Child;
-                    if (fr is Fixed)
-                    {
-                        Widget mv = (fr as Fixed).Children[0];
-                        re = GetMovingBox(
-                            (currCtrl as EventBox).Name + "Clone",
-                            (mv as BaseItem).Caption,
-                            (mv as BaseItem).ELType,
-                            (mv as BaseItem).Width,
-                            (mv as BaseItem).Height
-                        );
-                    }
-                }
-            }
-            if (re == null)
-            {
-                //This should not really happen but that would prevent an exception
-                re = GetMovingBox("Unknown", "Unknown", 0, 0, 0);
-            }
-            return re;
-        }
-
-        //Render the clone of the selected object at the intermediate position
-        private void MoveClone(ref Widget wdg, object eventX, object eventY)
-        {
-            if (wdg == null)
-            {
-                wdg = CloneCurrCtrl();
-                this.fixed1.Add(wdg);
-                this.ShowAll();
-            }
-            MoveControl(wdg, eventX, eventY, true);
-        }
-
-        //Move a control to the specified event location
-        private void MoveControl(Widget wdg, object eventX, object eventY, bool isClone)
-        {
-            int destX = origX + System.Convert.ToInt32(eventX) + origX - pointX;
-            int destY = origY + System.Convert.ToInt32(eventY) + origY - pointY;
-            if (destX < 0)
-            {
-                destX = 0;
-            }
-            if (destY < 0)
-            {
-                destY = 0;
-            }
-            this.fixed1.Move(wdg, destX, destY);
-            if (!isClone)
-            {
-                Console.WriteLine("MovingBox KeyReleased:" + destX.ToString() + "-" + destY.ToString());
-            }
-            this.fixed1.QueueDraw();
-        }
-
-        EventBox butt;
-        bool resizing;
-        //Mouse click on the controls of the panel  
+			//Add the events to control the movement of the box
+			ev.ButtonPressEvent += new ButtonPressEventHandler (OnButtonPressed);
+			ev.ButtonReleaseEvent += new ButtonReleaseEventHandler (OnButtonReleased);
+			
+			//Add the control to the panel
+			this.fixed1.Put (ev, x, y);
+			this.ShowAll ();
+		}
+		
+		//Create the event box for the custom control
+		private EventBox GetMovingBox (string name, string caption, ElementType typeEl, double width, double height)
+		{ 
+			BaseItem ctrl;
+			switch (typeEl) {
+			case ElementType.START_EVENT:
+			case ElementType.END_EVENT:
+				{
+					ctrl = new Event (name, caption, typeEl, height / 2);
+					break;
+				}
+			case ElementType.TASK:
+				{
+					ctrl = new Task (name, caption, width, height);
+					break;
+				}
+			case ElementType.SEQUENCE_FLOW_UNCONDITIONAL:
+				{
+					ctrl = new UnCondSeqFlow (
+						name,
+						caption,
+						typeEl,
+						width,
+						height,
+						new Cairo.PointD (15, 200),
+						new Cairo.PointD (300, 20)
+					);
+					break;
+				}
+			case ElementType.SEQUENCE_FLOW_CONDITIONAL:
+				{
+					ctrl = new CondSeqFlow (
+						name,
+						caption,
+						typeEl,
+						width,
+						height,
+						new Cairo.PointD (15, 200),
+						new Cairo.PointD (300, 20)
+					);
+					break;
+				}
+			case ElementType.MESSAGE_FLOW:
+				{
+					ctrl = new MessageFlow (
+						name,
+						caption,
+						typeEl,
+						width,
+						height,
+						new Cairo.PointD (20, 100),
+						new Cairo.PointD (150, 20)
+					);
+					break;
+				}
+			case ElementType.GATEWAY:
+				{
+					ctrl = new Gateway (name, caption, width, height);
+					break;
+				}
+			case ElementType.POOL:
+				{
+					ctrl = new Pool (name, caption, width, height, OrientationEnum.Horizontal);
+					break;
+				}
+			default:
+				{
+					ctrl = new BaseItem (name, caption, typeEl, width, height);
+					break;
+				}
+			}
+			EventBox rev = new EventBox ();
+			rev.Name = name;
+			rev.Add (ctrl);
+			Console.WriteLine ("Creating new moving object" + rev.Name);
+			return rev;
+		}
+		
+		//Create a clone of the selected object that will be shown until the destination of the control is reached
+		private Widget CloneCurrCtrl ()
+		{
+			Widget re = null;
+			
+			if (this.currCtrl != null) {
+				if (currCtrl is EventBox) {
+					Widget mv = (currCtrl as EventBox).Child;
+							re = GetMovingBox (
+							(currCtrl as EventBox).Name+"Clone",
+							(mv as  BaseItem).Caption,
+							(mv as BaseItem).ELType,
+							(mv as BaseItem).Width,
+							(mv as BaseItem).Height
+						);
+				}
+			}
+			if (re == null) {
+				//This should not really happen but that would prevent an exception
+				re = GetMovingBox ("Unknown", "Unknown", 0, 0, 0);
+			}
+			return re;
+		}
+		
+		//Render the clone of the selected object at the intermediate position
+		private void MoveClone (ref Widget wdg, object eventX, object eventY)
+		{
+			if (wdg == null) {
+				wdg = CloneCurrCtrl ();
+				this.fixed1.Add (wdg);		
+				this.ShowAll ();
+			}
+			MoveControl (wdg, eventX, eventY, true);
+		}
+		
+		//Move a control to the specified event location
+		private void MoveControl (Widget wdg, object eventX, object eventY, bool isClone)
+		{
+			int destX = origX + System.Convert.ToInt32 (eventX) + origX - pointX;
+			int destY = origY + System.Convert.ToInt32 (eventY) + origY - pointY;
+			if (destX < 0) {
+				destX = 0;
+			}
+			if (destY < 0) {
+				destY = 0;
+			}			
+			this.fixed1.Move (wdg, destX, destY);
+			if (!isClone) {
+				Console.WriteLine ("MovingBox KeyReleased:" + destX.ToString () + "-" + destY.ToString ());
+			}
+			this.fixed1.QueueDraw ();	
+		}
+		
+		
+		bool resizing;
+        /// <summary>
+        /// Mouse click on the controls of the panel  
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="a"></param>
         protected void OnButtonPressed(object sender, ButtonPressEventArgs a)
         {
 
-            if (a.Event.Button == 3)
+            if (sender is EventBox)
             {
-                if (sender is EventBox)
+                var baseItem = (sender as EventBox).Child as BaseItem;
+                if (baseItem != null)
                 {
-                    Widget fr = (sender as EventBox).Child;
-                    if (fr is Fixed)
+                    if (a.Event.Button == 3)
                     {
-                        var baseItem = (fr as Fixed).Children[0] as BaseItem;
-                        if (baseItem != null)
-                            baseItem.ShowMenu();
-                    }
-                }
-            }
-            else if (a.Event.Button == 1)
-            {
 
-                if (a.Event.Type == Gdk.EventType.TwoButtonPress)
-                {
-                    if (sender is EventBox)
-                    {
-                        //Calling the edit method of the control
-                        var @fixed = (sender as EventBox).Child as Fixed;
-                        if (@fixed != null)
-                        {
-                            var baseItem = @fixed.Children[0] as BaseItem;
-                            if (baseItem != null) baseItem.Edit();
-                        }
+                        baseItem.ShowMenu();
                     }
-                }
-                else
-                {
-                    //Setup the origin of the move
-                    isDragged = true;
-                    currCtrl = sender as Widget;
-                    if (currCtrl != null)
-                    {
-                        currCtrl.TranslateCoordinates(fixed1, 0, 0, out origX, out origY);
-                        var eventBox = currCtrl as EventBox;
-                        if (eventBox != null)
-                        {
-                            var @fixed = eventBox.Child as Fixed;
-                            if (@fixed != null)
+                    else
+                        if (a.Event.Button == 1)
+                            if (a.Event.Type == Gdk.EventType.TwoButtonPress)
                             {
-                                var baseItem = @fixed.Children[0] as BaseItem;
-                                if (baseItem != null)
+                                baseItem.Edit();
+                            }
+
+                            else
+                            {
+                                //Setup the origin of the move
+                                isDragged = true;
+                                currCtrl = sender as Widget;
+                                if (currCtrl != null)
                                 {
+                                    currCtrl.TranslateCoordinates(this.fixed1, 0, 0, out origX, out origY);
                                     baseItem.X = origX;
                                     baseItem.Y = origY;
+
+                                    CurrentSelection.Clear();
+                                    CurrentSelection.Add(baseItem);
+                                    fixed1.GetPointer(out pointX, out pointY);
+                                    Console.WriteLine("MovingBox KeyPressed on " + baseItem.Caption);
+                                    Console.WriteLine("Pointer:" + pointX.ToString() + "-" + pointY.ToString());
+                                    Console.WriteLine("Origin:" + origX.ToString() + "-" + origY.ToString());
+                                }
+                            }
+
+                    //var res = new Resizer ();
+                    foreach (var selected_item in CurrentSelection)
+                    {
+                        int index = 0;
+                        if (selected_item is EventBox)
+                        {
+                            var baseItem1 = (selected_item as EventBox).Child as BaseItem;
+                            if (baseItem1 != null)
+                            {
+                                for (var j = 0; j < 3; j++)
+                                {
+                                    for (var i = 0; i < 3; i++)
+                                    {
+                                        if ((i == 1) && (j == 1))
+                                        {
+                                            continue;
+                                        }
+
+
+                                        baseItem1.Resizers[index].Events = (Gdk.EventMask) 1020; //252;
+                                        baseItem1.Resizers[index].ButtonPressEvent +=
+                                            delegate(object o, ButtonPressEventArgs args)
+                                                {
+                                                    resizing = true;
+                                                    isDragged = true;
+                                                    var eventBox = o as EventBox;
+                                                    if (eventBox != null)
+                                                        eventBox.TranslateCoordinates(this.fixed1, 0, 0,
+                                                                                      out origX,
+                                                                                      out origY);
+                                                    fixed1.GetPointer(out pointX, out pointY);
+                                                };
+                                        baseItem1.Resizers[index].ButtonReleaseEvent +=
+                                            delegate(object o, ButtonReleaseEventArgs args)
+                                                {
+                                                    resizing = false;
+                                                    isDragged = false;
+                                                    // fixed1.Move(butt, origX, origY);
+                                                };
+
+                                        fixed1.Add(baseItem1.Resizers[index]);
+                                        fixed1.Move(
+                                            baseItem1.Resizers[index++],
+                                            origX + j*currCtrl.Allocation.Width/2 - 5,
+                                            origY + i*currCtrl.Allocation.Height/2 - 5
+                                            );
+                                    }
                                 }
                             }
                         }
                     }
-                    fixed1.GetPointer(out pointX, out pointY);
-                    Console.WriteLine("MovingBox KeyPressed on " + (((currCtrl as EventBox).Child as Fixed).Children[0] as BaseItem).Caption);
-                    Console.WriteLine("Pointer:" + pointX.ToString() + "-" + pointY.ToString());
-                    Console.WriteLine("Origin:" + origX.ToString() + "-" + origY.ToString());
-                    if (butt == null)
-                    {
-                        butt = new EventBox();
-                        var res = new Resizer();
-                        var fix = new Fixed();
-                        fix.Put(res, 0, 0);
-                        butt.Add(fix);
-                        //butt.SetSizeRequest (10, 10);
-                        butt.Events = (Gdk.EventMask)1020;//252;
-
-                        butt.ButtonPressEvent += delegate
-                        {
-                            resizing = true;
-                            isDragged = true;
-                            butt.TranslateCoordinates(this.fixed1, 0, 0, out origX, out origY);
-                            fixed1.GetPointer(out pointX, out pointY);
-                            var @fixed = butt.Child as Fixed;
-                            if (@fixed != null)
-                                resizer = (Resizer)@fixed.Children[0];
-                        };
-                        butt.ButtonReleaseEvent += delegate(object o, ButtonReleaseEventArgs args)
-                        {
-                            resizing = false;
-                            isDragged = false;
-                            fixed1.Move(butt, origX, origY/*args.Event.Y*/);
-                            //resizer = null;
-                        };
-                        //butt.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
-                        fixed1.Add(butt);
-                        var eventBox = currCtrl as EventBox;
-                        if (eventBox != null)
-                        {
-                            var fixed2 = (eventBox.Child) as Fixed;
-                            if (fixed2 != null)
-                            {
-                                var baseItem = fixed2.Children[0] as BaseItem;
-                                if (baseItem != null)
-                                    fixed1.Move(butt, origX + (int)baseItem.Width,
-                                                (int)baseItem.Height + origY);
-                            }
-                        }
-                        fixed1.ShowAll();
-                    }
+                    fixed1.ShowAll();
                 }
             }
         }
 
-        protected void OnButtonReleased(object sender, ButtonReleaseEventArgs a)
-        {
-            //Final destination of the control
-            if (a.Event.Button == 1)
-            {
-                MoveControl(currCtrl, a.Event.X, a.Event.Y, false);
-                isDragged = false;
-                //currCtrl = null;
-                if (currClone != null)
-                {
-                    this.fixed1.Remove(currClone);
-                    Console.WriteLine("Deleting moving object" + currClone.Name);
-                    currClone.Destroy();
-                    currClone = null;
-                }
-                var dx = (origX + System.Convert.ToInt32(a.Event.X) - pointX);
-                var dy = (origY + System.Convert.ToInt32(a.Event.Y) - pointY);
-                if ((dx != 0) || (dy != 0))
-                {
-                    fixed1.Remove(butt);
-                    butt.Dispose();
-                    butt = null;
-                }
-            }
-        }
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="a"></param>
+		protected void OnButtonReleased (object sender, ButtonReleaseEventArgs a)
+		{
+			//Final destination of the control
+			if (a.Event.Button == 1) {
+				MoveControl (currCtrl, a.Event.X, a.Event.Y, false);
+				isDragged = false;
+				//currCtrl = null;
+				if (currClone != null) {
+					this.fixed1.Remove (currClone);
+					Console.WriteLine ("Deleting moving object" + currClone.Name);
+					currClone.Destroy ();
+					currClone = null;
+				}
+				var dx = (origX + System.Convert.ToInt32 (a.Event.X) - pointX);
+				var dy = (origY + System.Convert.ToInt32 (a.Event.Y) - pointY);
+				if ((dx != 0) || (dy != 0)) {
+					for (var i=0; i<8; i++) {
+						/*foreach (var selected_item in selectedItems) {
+							fixed1.Remove ((selected_item as BaseItem).Resizers [i]);
+						}	*/					
+					}
+				}
+			}
+		}
 
-        //Called whenever a control is moved
-        protected virtual void OnFixed1MotionNotifyEvent(object o, Gtk.MotionNotifyEventArgs args)
-        {
-            this.fixed1.GdkWindow.Background = new Gdk.Color(0, 0, 0); //ModifyBg(StateType.Normal,new Gdk.Color(0,0,0));
-            this.scrolledwindow1.GdkWindow.Background = new Gdk.Color(128, 0, 0); //ModifyBg(StateType.Normal,new Gdk.Color(0,0,0));
-            Gdk.GC gc = new Gdk.GC(fixed1.GdkWindow);
-            gc.RgbFgColor = new Gdk.Color(131, 153, 182);
-            fixed1.GdkWindow.DrawRectangle(gc, false, 1, 0, this.Allocation.Width - 1, this.Allocation.Height - 1);
-            this.fixed1.QueueDraw();
-            if (isDragged)
-            {
-                //Render of a clone at the desired location
-                if (/*(resizer != null) &&*/ resizing && (currCtrl != null))
-                {
-                    //MoveControl (butt, args.Event.XRoot, args.Event.YRoot, true);
-                    var eventBox = currCtrl as EventBox;
-                    if (eventBox != null)
-                    {
-                        var @fixed = eventBox.Child as Fixed;
-                        if (@fixed != null)
-                        {
-                            var obj = (@fixed.Children[0] as BaseItem);
-                            if (obj != null)
-                            {
-                                int p_x, p_y;
-                                fixed1.GetPointer(out p_x, out p_y);
-                                int dx = p_x - pointX;
-                                int dy = p_y - pointY;
-                                var temp = obj.height + dy;
-                                temp = (temp > 10) ? temp : 10;
-                                obj.Height = temp;
-                                temp = obj.width + dx;
-                                temp = (temp > 10) ? temp : 10;
-                                obj.Width = temp;
-                                pointX = p_x;
-                                pointY = p_y;
-                                currCtrl.SetSizeRequest((int) obj.Width, (int) obj.Height);
-                                obj.SetSizeRequest((int) obj.Width, (int) obj.Height);
-
-                                Console.WriteLine("Resizing: \n width: " + obj.Width.ToString() + "\n height: " +
-                                                  obj.Height.ToString());
-                                Console.WriteLine("dx: " + dx.ToString() + "dy: " + dy.ToString()
-                                                  + "\nPointer1(" + pointX.ToString() + ", " + pointY.ToString() + ")\n"
-                                                  + "pointer current (" + p_x + ", " + p_y + ")"
-                                    );
-                                Console.WriteLine("x_root: " + args.Event.XRoot.ToString() + " y_root: " +
-                                                  args.Event.YRoot.ToString());
-
-                                obj.X = Math.Min((int) obj.X, (int) args.Event.X);
-                                obj.Y = Math.Min((int) obj.Y, (int) args.Event.Y);
-                                //MoveControl (currCtrl,obj.X , obj.Y, true);
-                                origX += dx;
-                                origY += dy;
-                            }
-                        }
-                    }
-                    Console.WriteLine("Origin: (" + origX.ToString() + ", " + origY.ToString() + ")");
-                    fixed1.Move(butt, origX, origY);
-                }
-                else
-                    if (currCtrl != null)
-                    {
-                        var eventBox = currCtrl as EventBox;
-                        if (eventBox != null)
-                        {
-                            var @fixed = eventBox.Child as Fixed;
-                            if (@fixed != null && (@fixed.Children[0] is BaseItem))
-                                MoveClone(ref currClone, args.Event.X, args.Event.Y);
-                        }
-                    }
-            }
-        }
-    }
+		/// <summary>
+        /// Called whenever a control is moved
+		/// </summary>
+		/// <param name="o"></param>
+		/// <param name="args"></param>
+		protected virtual void OnFixed1MotionNotifyEvent (object o, Gtk.MotionNotifyEventArgs args)
+		{
+			this.fixed1.GdkWindow.Background = new Gdk.Color (0, 0, 0); //ModifyBg(StateType.Normal,new Gdk.Color(0,0,0));
+			this.scrolledwindow1.GdkWindow.Background = new Gdk.Color (128, 0, 0); //ModifyBg(StateType.Normal,new Gdk.Color(0,0,0));
+			this.fixed1.QueueDraw ();
+			if (isDragged) {
+				//Render of a clone at the desired location
+				if (/*(resizer != null) &&*/ resizing && (currCtrl != null)) {
+					//MoveControl (butt, args.Event.XRoot, args.Event.YRoot, true);
+				    var eventBox = currCtrl as EventBox;
+				    if (eventBox != null)
+				    {
+				        var obj = (eventBox.Child  as BaseItem);
+				        int p_x, p_y, dx, dy;
+				        fixed1.GetPointer (out p_x, out p_y);
+				        dx = p_x - pointX;
+				        dy = p_y - pointY;
+				        var temp = obj.Height + dy;
+				        temp = (temp > 10) ? temp : 10;
+				        obj.Height = temp;
+				        temp = obj.Width + dx;
+				        temp = (temp > 10) ? temp : 10;
+				        obj.Width = temp;
+				        pointX = p_x;
+				        pointY = p_y;
+				        currCtrl.SetSizeRequest ((int)obj.Width, (int)obj.Height);
+				        obj.SetSizeRequest ((int)obj.Width, (int)obj.Height);
+				        Console.WriteLine ("Resizing: \n width: " + obj.Width.ToString () + "\n height: " + obj.Height.ToString ());
+				        Console.WriteLine ("dx: " + dx.ToString () + "dy: " + dy.ToString ()
+				                           + "\nPointer1(" + pointX.ToString () + ", " + pointY.ToString () + ")\n"
+				                           + "pointer current (" + p_x + ", " + p_y + ")"
+				            );
+				        Console.WriteLine ("x_root: " + args.Event.XRoot.ToString () + " y_root: " + args.Event.YRoot.ToString ());
+					
+				        obj.X = Math.Min ((int)obj.X, (int)args.Event.X);
+				        obj.Y = Math.Min ((int)obj.Y, (int)args.Event.Y);
+				        //MoveControl (currCtrl,obj.X , obj.Y, true);
+				        origX += dx;
+				        origY += dy;
+				    }
+				    Console.WriteLine ("Origin: (" + origX.ToString () + ", " + origY.ToString ()+")");
+					//fixed1.Move(butt, origX,origY);
+				}
+				else
+				if (currCtrl != null)
+				{
+				    var eventBox = currCtrl as EventBox;
+				    if (eventBox != null && eventBox.Child  is BaseItem)
+						MoveClone (ref currClone, args.Event.X, args.Event.Y);
+				}
+			}
+		}
+	}	
 }

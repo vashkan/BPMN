@@ -3,22 +3,24 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Control\MVPanel.cs">
     <Files>
       <File FileName="Control\Event.cs" Line="37" Column="43" />
-      <File FileName="Control\Gateway.cs" Line="29" Column="16" />
-      <File FileName="Control\BaseItem.cs" Line="164" Column="20" />
-      <File FileName="Control\Task.cs" Line="64" Column="1" />
+      <File FileName="Control\Gateway.cs" Line="9" Column="3" />
+      <File FileName="Control\BaseItem.cs" Line="175" Column="29" />
+      <File FileName="Control\Task.cs" Line="47" Column="31" />
       <File FileName="Control\Resizer.cs" Line="95" Column="19" />
-      <File FileName="AssemblyInfo.cs" Line="36" Column="37" />
-      <File FileName="Control\Flows.cs" Line="184" Column="39" />
-      <File FileName="Control\Pool.cs" Line="97" Column="29" />
-      <File FileName="Control\MVPanel.cs" Line="297" Column="49" />
-      <File FileName="MainWindow.cs" Line="70" Column="17" />
+      <File FileName="Control\Flows.cs" Line="262" Column="14" />
+      <File FileName="Control\Pool.cs" Line="26" Column="5" />
+      <File FileName="Control\MVPanel.cs" Line="196" Column="22" />
+      <File FileName="MainWindow.cs" Line="44" Column="28" />
+      <File FileName="ISelectable.cs" Line="11" Column="23" />
+      <File FileName="Control\SelectionService.cs" Line="36" Column="34" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Option id="ShowAllFiles" value="False" />
           <Option id="ShowVersionControlOverlays" value="True" />
+          <Option id="ShowAllFiles" value="False" />
           <Node name="GtkControl" expanded="True">
+            <Node name="References" expanded="True" />
             <Node name="UserInterface" expanded="True" />
             <Node name="Control" expanded="True">
               <Option id="ShowAllFiles" value="True" />
@@ -42,9 +44,7 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="279" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="Control\MVPanel.cs" line="300" offsetX="645" offsetY="4777" expression="selected_item.Resizers" liveUpdate="False" />
