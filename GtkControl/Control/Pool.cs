@@ -45,6 +45,10 @@ namespace GtkControl.Control
 
         private OrientationEnum Orientation { get; set; }
 
+        /// <summary>
+        /// перегружаемая функция отрисовки элемента
+        /// </summary>
+        /// <param name="g"></param>
         public override void Paint (Context g)
 		{
 			g.Save ();
@@ -64,8 +68,8 @@ namespace GtkControl.Control
 			g.SelectFontFace ("Georgia", FontSlant.Normal, FontWeight.Bold);
 			g.SetFontSize (18.0);
 
-			TextExtents te = g.TextExtents (body);
-			PointD titlePoint;
+			TextExtents te = g.TextExtents (Body);
+			PointD titlePoint = new PointD();
 			switch (Orientation) {
 			case OrientationEnum.Horizontal: 
 				{
@@ -99,7 +103,7 @@ namespace GtkControl.Control
 			
 			g.Antialias = Antialias.Subpixel;
             g.Color = line_color;
-            g.ShowText(body);
+            g.ShowText(Body);
             g.IdentityMatrix();
             g.Restore();
         }

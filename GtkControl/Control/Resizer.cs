@@ -6,21 +6,34 @@ using Gtk;
 //using Gdk;
 namespace GtkControl.Control
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Resizer : Gtk.DrawingArea
 	{
 		static Gdk.Cursor hresizeCursor = new Gdk.Cursor (Gdk.CursorType.Sizing);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="previous_screen"></param>
 		protected override void OnScreenChanged (Gdk.Screen previous_screen)
 		{
 			base.OnScreenChanged (previous_screen);
 		}
 		
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Redraw ()
 		{
 			Console.WriteLine ("Redrawing");
 			this.QueueDraw ();
 		}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
 		protected override bool OnExposeEvent (Gdk.EventExpose args)
 		{	
 			using (Context g = Gdk.CairoHelper.Create (args.Window)) {
@@ -30,9 +43,12 @@ namespace GtkControl.Control
 			return true;
 		}
 		
+		/// <summary>
+		/// 
+		/// </summary>
 		public Resizer ()
 		{
-			this.SetSizeRequest ((int)10, (int)10);
+			SetSizeRequest (10, 10);
 			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
 			//mask
 			this.Realized += delegate {				
@@ -53,20 +69,32 @@ namespace GtkControl.Control
 				pm.Dispose ();
 			};
 		}
-			
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="evnt"></param>
+		/// <returns></returns>
 		protected override bool OnEnterNotifyEvent (Gdk.EventCrossing evnt)
 		{
 			
 			GdkWindow.Cursor = hresizeCursor;
 			return base.OnEnterNotifyEvent (evnt);
 		}
-		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="evnt"></param>
+		/// <returns></returns>
 		protected override bool OnLeaveNotifyEvent (Gdk.EventCrossing evnt)
 		{
 			GdkWindow.Cursor = null;
 			return base.OnLeaveNotifyEvent (evnt);
 		}
 		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="g"></param>
 		public void Paint (Cairo.Context g)
 		{
 			g.Save ();
@@ -82,16 +110,18 @@ namespace GtkControl.Control
 			g.Restore ();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="g"></param>
 		public  void PaintMask (Cairo.Context g)
 		{
 			g.Save ();
 			g.MoveTo (8, 5);
 			g.Arc (5, 5, 4, 0, 2 * Math.PI);
 			g.Color = new Cairo.Color (1, 1, 1);
-			//g.ClosePath ();
 			g.FillPreserve ();
 			g.Color = new Cairo.Color (1, 1, 1);
-	 			
 			g.LineWidth = 1;
 			g.Stroke ();
 			g.Restore ();

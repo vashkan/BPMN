@@ -4,12 +4,26 @@ using Cairo;
 
 namespace GtkControl.Control
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Task:BaseItem
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="pName"></param>
+		/// <param name="cap"></param>
+		/// <param name="_width"></param>
+		/// <param name="_height"></param>
 		public Task (string pName, string cap, double _width, double _height)
 		:base(pName,cap,ElementType.TASK,_width,_height)
 		{
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="g"></param>
 		public override void Paint (Context g)
 		{
 			g.Save();
@@ -36,12 +50,17 @@ namespace GtkControl.Control
 			g.Color = new Color(0, 0, 0);
 			g.SelectFontFace("Georgia", FontSlant.Normal, FontWeight.Bold);
 			g.SetFontSize(14.0);
-			TextExtents te = g.TextExtents(body);
+			TextExtents te = g.TextExtents(Body);
 			g.MoveTo(1 - te.Width/2+Width/2,
 			         1 + te.Height/2+Height/2);
-			g.ShowText(body);
+			g.ShowText(Body);
 		}
-		public override void PaintMask (Context g)
+
+	    /// <summary>
+	    /// перегружаемая функция отрисовки маски для элемента
+	    /// </summary>
+	    /// <param name="g"></param>
+	    public override void PaintMask (Context g)
 		{
 			g.Save ();
 			DrawRoundedRectangle (g, 1, 1, Width - 2, Height - 2, 10);
@@ -65,10 +84,10 @@ namespace GtkControl.Control
 			g.Color = new Color (1, 1, 1);
 			g.SelectFontFace ("Georgia", FontSlant.Normal, FontWeight.Bold);
 			g.SetFontSize (14.0);
-			TextExtents te = g.TextExtents (body);
+			TextExtents te = g.TextExtents (Body);
 			g.MoveTo (1 - te.Width / 2 + Width / 2,
 			         1 + te.Height / 2 + Height / 2);
-			g.ShowText (body);
+			g.ShowText (Body);
 		}
 	}
 }

@@ -3,18 +3,32 @@ using Cairo;
 using Gtk;
 namespace GtkControl.Control
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Gateway:BaseItem
 	{
-		double line_width = 4.5;
-		
+	    private const double line_width = 4.5;
+
+	    /// <summary>
+		/// 
+		/// </summary>
+		/// <param name="pName"></param>
+		/// <param name="cap"></param>
+		/// <param name="_width"></param>
+		/// <param name="_height"></param>
 		public Gateway (string pName, string cap, double _width, double _height)
 		:base(pName,cap,ElementType.GATEWAY,_width,_height)
 		{
 		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="g"></param>
 		public override void Paint (Context g)
 		{
 			g.Save ();
-			var rad = min(new double[]{Height,Width})/2-line_width/2;
+			var rad = Min(new double[]{Height,Width})/2-line_width/2;
 			g.MoveTo (Width / 2,Height / 2);
 			g.RelMoveTo (-rad, 0);
 			g.RelLineTo (+rad, -rad);
@@ -29,10 +43,14 @@ namespace GtkControl.Control
 			g.Fill();
 			g.Restore();
 		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="g"></param>
 		public override void PaintMask (Context g)
 		{
 			g.Save ();
-			var rad = min (new double[]{Height,Width}) / 2 - line_width / 2;
+			var rad = Min (new double[]{Height,Width}) / 2 - line_width / 2;
 			g.MoveTo (Width / 2, Height / 2);
 			g.RelMoveTo (-rad, 0);
 			g.RelLineTo (+rad, -rad);

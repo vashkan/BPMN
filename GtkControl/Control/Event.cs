@@ -3,13 +3,19 @@ using Gtk;
 using Cairo;
 namespace GtkControl.Control
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Event:BaseItem
 	{
-		Cairo.Gradient pat;
+	    readonly Cairo.Gradient pat;
 		double radius;
-		double line_width;
-		Cairo.Color fill_color;
+	    readonly double line_width;
+	    Cairo.Color fill_color;
 		Cairo.Color line_color;
+        /// <summary>
+        /// 
+        /// </summary>
 		public override double Height {
 			get {
 				return base.Height;
@@ -18,6 +24,9 @@ namespace GtkControl.Control
 				base.Height = value;
 			}
 		}
+        /// <summary>
+        /// 
+        /// </summary>
 		public override double Width {
 			get {
 				return base.Width;
@@ -26,11 +35,18 @@ namespace GtkControl.Control
 				base.Width = value;
 			}
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="pName"></param>
+		/// <param name="cap"></param>
+		/// <param name="typeEl"></param>
+		/// <param name="radius"></param>
 		public Event (string pName, string cap, ElementType typeEl, double radius)
 		:base(pName,cap,typeEl,2*radius,2*radius)
 		{
 			this.radius = radius;
-			switch ((ElementType)ELType) {
+			switch (ELType) {
 			case ElementType.START_EVENT:{
 				line_width = 4;
 				fill_color = new Cairo.Color (0.8,1,0.5,1);
@@ -49,7 +65,12 @@ namespace GtkControl.Control
 	        pat.AddColorStop (0, new Cairo.Color (1,1,1,1));
 	        pat.AddColorStop (1, fill_color);
 		}
-		public override void Paint (Context g)
+
+	    /// <summary>
+	    /// перегружаемая функция отрисовки элемента
+	    /// </summary>
+	    /// <param name="g"></param>
+	    public override void Paint (Context g)
 		{
 
 			g.Save ();
@@ -63,7 +84,12 @@ namespace GtkControl.Control
 	        g.Stroke ();
 		
 		}
-		public override void PaintMask (Context g)
+
+	    /// <summary>
+	    /// перегружаемая функция отрисовки маски для элемента
+	    /// </summary>
+	    /// <param name="g"></param>
+	    public override void PaintMask (Context g)
 		{
 			g.Save ();
 			g.Arc (radius, radius, radius - line_width / 2, 0, 2 * Math.PI);
