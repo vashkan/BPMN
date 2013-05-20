@@ -18,27 +18,42 @@
 using System;
 using Gtk;
 using GtkControl.Control;
+/// <summary>
+/// 
+/// </summary>
 public partial class MainWindow: Gtk.Window
 {	
+	/// <summary>
+	/// 
+	/// </summary>
 	public MainWindow (): base (Gtk.WindowType.Toplevel)
 	{
 		Build ();
 		
 		string name = "MovingBox";
 		int index = 0;
-		this.hpaned1.Position =700;
+		this.hpaned1.Position = 700;
+		this.mvpanel1.AddMovingObject (
+			name + (index++).ToString (),
+			"Процесс 1",
+			30,
+			300,
+			ElementType.POOL,
+			600,
+			200
+		);
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"start",
 			92,
 			222,
 			ElementType.START_EVENT,
-			66,
-			66
+			40,
+			40
 		);
 
-		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "Task", 80, 50, ElementType.TASK, 300, 150);
-		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, ElementType.END_EVENT, 66, 66);
+		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "Task", 10, 10, ElementType.TASK, 140, 70);
+		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, ElementType.END_EVENT, 40, 40);
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"flow",
@@ -48,7 +63,7 @@ public partial class MainWindow: Gtk.Window
 			303,
 			250
 		);
-		/*this.mvpanel1.AddMovingObject (
+		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"flowArrowOpen",
 			276,
@@ -56,61 +71,77 @@ public partial class MainWindow: Gtk.Window
 			ElementType.SEQUENCE_FLOW_CONDITIONAL,
 			303,
 			225
-		);*/
+		);
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"gateway",
 			187,
 			212,
 			ElementType.GATEWAY,
-			80,
-			80
-			);
-		/*this.mvpanel1.AddMovingObject (
-			name+(index++).ToString(),
+			50,
+			50
+		);
+		this.mvpanel1.AddMovingObject (
+			name + (index++).ToString (),
 			"message_flow",
 			384,
 			289,
 			ElementType.MESSAGE_FLOW,
 			303,
 			225
-			);*/
-        this.mvpanel1.AddMovingObject(
-            name + (index++).ToString(),
-            "Pool and some text and other thinks",
-            10,
-            212,
-            ElementType.POOL,
-            600,
-            100
-            );
+		);
+		
 		/*//Прозрачность окна  
 		this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		this.Colormap = this.Screen.RgbaColormap;
 		this.Opacity = 0.5;
-        */
+		*/
+		//this.mvpanel1.AddMovingObject(name+(index++).ToString(),"Gtk#",10,145);
+		//this.mvpanel1.AddMovingObject(name+(index++).ToString(),"MonoDevelop",10,190);
+		//this.mvpanel1.AddMovingObject(name+(index++).ToString(),"Pango",10,235);
+		//this.mvpanel1.AddMovingObject(name+(index++).ToString(),"Test",10,280);
 	}
 
 
-	
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="a"></param>
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 	{
 		Application.Quit ();
 		a.RetVal = true;
 	}
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="o"></param>
+    /// <param name="args"></param>
 	protected virtual void OnMvpanel1KeyPressEvent (object o, Gtk.KeyPressEventArgs args)
 	{
 	}
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="o"></param>
+    /// <param name="args"></param>
 	protected virtual void OnMvpanel1KeyReleaseEvent (object o, Gtk.KeyReleaseEventArgs args)
 	{
 	}
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="o"></param>
+    /// <param name="args"></param>
 	protected virtual void OnMvpanel1ButtonPressEvent (object o, Gtk.ButtonPressEventArgs args)
 	{
 	}
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="o"></param>
+    /// <param name="args"></param>
 	protected virtual void OnMvpanel1ButtonReleaseEvent (object o, Gtk.ButtonReleaseEventArgs args)
 	{
 	}

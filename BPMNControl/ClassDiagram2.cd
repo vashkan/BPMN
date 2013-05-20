@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="GtkControl.Control.BaseItem" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAgBAFAAAkEAAEIAhAEEIAAABAgEKCADwQAgJYgA=</HashCode>
+      <FileName>Control\BaseItem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GtkControl.Control.Event" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAACDAAAAAAAAAAAAEEACAAAAgAAAAAAAAAIAAA=</HashCode>
+      <FileName>Control\Event.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.Control.Flow" Collapsed="true">
+    <Position X="9.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAEAgAAAAAACAMEAgCAAEAAEAAIAAA=</HashCode>
+      <FileName>Control\Flows.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.Control.UnCondSeqFlow" Collapsed="true">
+    <Position X="11.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAIAAA=</HashCode>
+      <FileName>Control\Flows.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.Control.CondSeqFlow" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAIAAA=</HashCode>
+      <FileName>Control\Flows.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.Control.MessageFlow" Collapsed="true">
+    <Position X="9.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAIAAA=</HashCode>
+      <FileName>Control\Flows.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.Control.Gateway" Collapsed="true">
+    <Position X="5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAgAAAAAAAAAIAAA=</HashCode>
+      <FileName>Control\Gateway.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.Control.Pool" Collapsed="true">
+    <Position X="14" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAQAAAAAAAAAAAAAACAAAAgAAAAAAAAAIAAA=</HashCode>
+      <FileName>Control\Pool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.Control.Resizer" Collapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAEAAAAAAgAAAABAQAgIAAA=</HashCode>
+      <FileName>Control\Resizer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.Control.Task" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAIAAA=</HashCode>
+      <FileName>Control\Task.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.MVPanel" Collapsed="true">
+    <Position X="20" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEQAiECAAAACAAAAACAAAAAAQAAAoQABAgAIEBSAEAg=</HashCode>
+      <FileName>Control\MVPanel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.SelectionService" Collapsed="true">
+    <Position X="18.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCAAAAgAAAAAAAAAAAAAARAAAAQCAAAAAgA=</HashCode>
+      <FileName>Control\SelectionService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GtkControl.MainClass" Collapsed="true">
+    <Position X="16.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Main.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Stetic.Gui" Collapsed="true">
+    <Position X="20" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gtk-gui\generated.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Stetic.BinContainer" Collapsed="true">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAACAAAAAAAAAAAiAAgAAAIABEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gtk-gui\generated.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Stetic.ActionGroups" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>gtk-gui\generated.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MainWindow" Collapsed="true">
+    <Position X="18.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACQmASAABIAABCoAoAAAAABAAAEgAAgAAAAgAAAAAA=</HashCode>
+      <FileName>gtk-gui\MainWindow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="GtkControl.ISelectable" Collapsed="true">
+    <Position X="16.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ISelectable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="GtkControl.Control.ElementType" Collapsed="true">
+    <Position X="16.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAEAAEAAQAAAAAAAABAAAQACAIAAABCAAI=</HashCode>
+      <FileName>Control\BaseItem.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="GtkControl.Control.OrientationEnum" Collapsed="true">
+    <Position X="18.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Control\Pool.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

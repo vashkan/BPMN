@@ -17,16 +17,21 @@
 //
 
 using System;
-using System.Drawing;
 using System.IO;
+using System.Collections.Generic;
 using Gtk;
 using Cairo;
-using Color = Cairo.Color;
 
 namespace GtkControl.Control
 {
+	/// <summary>
+	/// Тип элемента
+	/// </summary>
 	public enum ElementType
 		{
+			/// <summary>
+			/// Неопределеннный
+			/// </summary>
 			NONE,
 			
 			/// <summary>
@@ -73,8 +78,8 @@ namespace GtkControl.Control
 			/// Шлюз
 			/// </summary>
 			GATEWAY,
-
-            /// <summary>
+		
+			/// <summary>
             /// Пул
             /// </summary>
 	        POOL
@@ -83,7 +88,7 @@ namespace GtkControl.Control
 	/// <summary>
 	/// 
 	/// </summary>
-	public class BaseItem : Gtk.DrawingArea 
+	public class BaseItem : Gtk.DrawingArea,ISelectable 
 	{
 		string parentName = "";
 		
@@ -105,82 +110,69 @@ namespace GtkControl.Control
         /// <summary>
         /// Признак выбора
         /// </summary>
-        public virtual bool IsSelected { get; set; }
+		public virtual bool IsSelected { get; set; }
+		
+		/// <summary>
+		/// Минимальная ширина
+		/// </summary>
+		public int MinWidth { get; set; }
+		
+        /// <summary>
+        /// Минимальная высота
+        /// </summary>
+        public int MinHeight { get; set; }
+		
+		/// <summary>
+		/// Ресайзеры
+		/// </summary>
+		public List<EventBox> Resizers;
 		
 		static Gdk.Cursor mCursor = new Gdk.Cursor (Gdk.CursorType.Fleur);
-		
-		
-		private int x;
-		private int y;
-		public int X {
-			get { return x;}
-			set{ x = value;}
-		}
-		public int Y {
-			get { return y;}
-			set{ y = value;}
-		}
-
-        public int MinWidth { get; set; }
-        public int MinHeight { get; set; }
 
 
-	    //string caption = "";
-		protected Gtk.Menu popup = null;
-		protected string body = "";
-	    public double width=0;
-	    public double height=0;
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    public int X { get; set; }
 
-        /// <summary>
-        /// Ширина элемента
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    public int Y { get; set; }
+
+	    /// <summary>
+        /// 
         /// </summary>
-        public virtual double Width { 
-            get {
-                var w = (width<MinWidth)?MinWidth:width; 
-                SetSizeRequest((int)w,(int)height);
-                WidthRequest = (int)w;
-                if (this.Parent!=null)
-                {
-                    Parent.WidthRequest = (int)w;
-                   //Parent.SetSizeRequest((int)w,(int)Height);
-                }
-                return w;
-
-            } set { width = value; } }
-
+		protected Gtk.Menu Popup = null;
         /// <summary>
-        /// Высота элемента
+        /// 
         /// </summary>
-        public virtual double Height
-        {
-            get
-            {
-                var h = (width < MinHeight) ? MinHeight : height;
-                SetSizeRequest((int)width,(int)h);
-                HeightRequest = (int)h;
-                if (this.Parent != null)
-                {
-                    Parent.HeightRequest = (int)h;
-                    //Parent.SetSizeRequest((int)width,(int)h);
-                }
-                return h;
-            }
-            set { height = value; }
-        }
+		protected string Body = "";
 
-		/// <summary>
-		/// тип элемента
+	    /// <summary>
+	    /// Ширина
+	    /// </summary>
+	    public virtual double Width { get; set; }
+
+	    /// <summary>
+	    /// Высота
+	    /// </summary>
+	    public virtual double Height { get; set; }
+
+	    /// <summary>
+		/// Тип элемента
 		/// </summary>
 		public ElementType ELType=ElementType.NONE;
-
-        /// <summary>
-        /// Наложение маски
-        /// </summary>
-		public void mask (int width, int height)
+		/// <summary>
+		/// Наложение маска
+		/// </summary>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		public void Mask (int width, int height)
 		{
 			Width = Math.Abs (width);
 			Height = Math.Abs (height);
-			Gdk.Pixmap pm = new Gdk.Pixmap (this.GdkWindow, (int)Width, (int)Height, 1);
+			var pm = new Gdk.Pixmap (this.GdkWindow, (int)Width, (int)Height, 1);
 
 				using (Context crPix = Gdk.CairoHelper.Create(pm)) {
 					crPix.Antialias = Antialias.None;
@@ -197,73 +189,123 @@ namespace GtkControl.Control
 			this.ParentWindow.ShapeCombineMask (pm, 0, 0);
 			pm.Dispose ();
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="pName"></param>
+		/// <param name="cap"></param>
+		/// <param name="typeEl"></param>
+		/// <param name="_width"></param>
+		/// <param name="_height"></param>
 		public BaseItem (string pName, string cap, ElementType typeEl, double _width, double _height)
 		{
 			ID = Guid.NewGuid ();
-			popup = new Gtk.Menu ();
+			Popup = new Gtk.Menu ();
 			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
+
 			Gtk.MenuItem text1 = new MenuItem ("Test1");
 			text1.Activated += new EventHandler (Menu1Clicked);
 			Gtk.MenuItem text2 = new MenuItem ("Test2");
 			text2.Activated += new EventHandler (Menu2Clicked);
 			ELType = typeEl;
-			popup.Add (text1);			
-			popup.Add (text2);
+			Popup.Add (text1);			
+			Popup.Add (text2);
 			
 			parentName = pName;
-			body = cap;
+			Body = cap;
 			this.Width = _width;
 			this.Height = _height;
 			this.Name = parentName + "MVObject";
 			
+			Resizers = new List<EventBox> ();
+			for (var i=0; i<8; i++) {
+				var evn = new EventBox ();
+				evn.Add (new Resizer ());
+				Resizers.Add (evn);
+			}
+			
 			this.SetSizeRequest ((int)Width, (int)Height);
 			//mask
 			this.Realized += delegate {
-				mask ((int)Width,(int)Height);				
+				Mask ((int)Width,(int)Height);				
 			};
 		}
 
+		/// <summary>
+        /// 
+        /// </summary>
+        /// <param name="allocation"></param>
+        protected override void OnSizeAllocated(Gdk.Rectangle allocation)
+        {
+            base.OnSizeAllocated(allocation);
+            Mask(allocation.Width, allocation.Height);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="previous_screen"></param>
 		protected override void OnScreenChanged (Gdk.Screen previous_screen)
 		{
 			base.OnScreenChanged (previous_screen);
 			//this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="evnt"></param>
+        /// <returns></returns>
 		protected override bool OnEnterNotifyEvent (Gdk.EventCrossing evnt)
 		{
 			
 			GdkWindow.Cursor = mCursor;
 			return base.OnEnterNotifyEvent (evnt);
         }
-		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="evnt"></param>
+		/// <returns></returns>
 		protected override bool OnLeaveNotifyEvent (Gdk.EventCrossing evnt)
 		{
 			GdkWindow.Cursor = null;
 			return base.OnLeaveNotifyEvent (evnt);
             }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public void ShowMenu()
 		{
-			if (popup!=null)
+			if (Popup!=null)
 			{
-				popup.Popup();
-				popup.ShowAll();
+				Popup.Popup();
+				Popup.ShowAll();
 			}
 		}
 		
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Edit()
 		{
-			body="Edit";
+			Body="Edit";
 			this.QueueDraw();
 		}
 		
+		/// <summary>
+		/// Загаловок
+		/// </summary>
 		public string Caption
 		{
 			get
 			{
-				return body;
+				return Body;
 			}
 		}
 		
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Redraw()
 		{
 			Console.WriteLine("Redrawing");
@@ -277,22 +319,34 @@ namespace GtkControl.Control
 			layout.SetMarkup("<span color=\"black\">" + text + "</span>");
 			return layout;
 		}
-		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		protected void Menu1Clicked(object sender, EventArgs args)
 		{
 			Console.WriteLine("Test");
-			body = "Test1";
+			Body = "Test1";
 			this.QueueDraw();
 		}
-		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		protected void Menu2Clicked(object sender, EventArgs args)
 		{
 			Console.WriteLine("Test");
-			body = "Test2";
+			Body = "Test2";
 			this.QueueDraw();
 		}
-
-		protected double min (params double[] arr)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arr"></param>
+        /// <returns></returns>
+		protected double Min (params double[] arr)
 	    {
 			int minp = 0;
 			for (int i = 1; i < arr.Length; i++)
@@ -301,13 +355,22 @@ namespace GtkControl.Control
 		 
 			return arr[minp];
 	    }
+		/// <summary>
+		/// Скругленный прямоугольник
+		/// </summary>
+		/// <param name="gr"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		/// <param name="radius"></param>
 		public void DrawRoundedRectangle (Cairo.Context gr, double x, double y, double width, double height, double radius)
 	    {
 			gr.Antialias=Antialias.Subpixel;
 			gr.Save ();
 		 
 			if ((radius > height / 2) || (radius > width / 2))
-			    radius = min (height / 2, width / 2);
+			    radius = Min (height / 2, width / 2);
 		 
 			gr.MoveTo (x, y + radius);
 			gr.Arc (x + radius, y + radius, radius, Math.PI, -Math.PI / 2);
@@ -320,33 +383,28 @@ namespace GtkControl.Control
 			gr.ClosePath ();
 			gr.Restore ();
 	    }
-		//перегружаемая функция отрисовки элемента
+		/// <summary>
+        /// перегружаемая функция отрисовки элемента
+		/// </summary>
+		/// <param name="g"></param>
 		virtual public void Paint (Context g)
 		{
 				
 		}
-		//перегружаемая функция отрисовки маски для элемента 
+		/// <summary>
+        /// перегружаемая функция отрисовки маски для элемента
+		/// </summary>
+		/// <param name="g"></param>
 		virtual public void PaintMask (Context g)
 		{
-
 		}
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
 		protected override bool OnExposeEvent (Gdk.EventExpose args)
 		{	
-					/*
-						Gradient linpat = new LinearGradient(0, 0,width , height);
-						linpat.AddColorStop(0, new Color(0, 0.3, 0.8));
-						linpat.AddColorStop(1, new Color(1, 0.8, 0.3));
-
-
-
-						Gradient radpat = new RadialGradient(width/2,height/2 , 0, width/2,height/2, height/2);
-						radpat.AddColorStop(0, new Color(1, 1, 1, 1));
-						radpat.AddColorStop(1, new Color(1, 1, 1, 0));
-						gr.Source = linpat;
-						gr.Mask(radpat);
-					 */
 					using (Context g = Gdk.CairoHelper.Create (args.Window)) {
 						g.Antialias = Antialias.Subpixel;
 						Paint(g);

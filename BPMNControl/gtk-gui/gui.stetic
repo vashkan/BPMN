@@ -6,9 +6,26 @@
   </configuration>
   <import>
     <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
-    <widget-library name="../bin/Release/GtkControl.exe" internal="true" />
+    <widget-library name="../bin/Debug/GtkControl.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="675 464">
+  <widget class="Gtk.Window" id="MainWindow" design-size="1239 681">
+    <action-group name="Default">
+      <action id="zoomOutAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-zoom-out</property>
+      </action>
+      <action id="zoom100Action">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-zoom-100</property>
+      </action>
+      <action id="zoomInAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-zoom-in</property>
+      </action>
+    </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -17,16 +34,62 @@
       <widget class="Gtk.HPaned" id="hpaned1">
         <property name="MemberName" />
         <property name="CanFocus">True</property>
-        <property name="Position">170</property>
+        <property name="Position">955</property>
         <child>
           <widget class="Gtk.VPaned" id="vpaned2">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="Position">28</property>
+            <property name="Position">58</property>
             <child>
-              <widget class="Gtk.Label" id="label1">
+              <widget class="Gtk.HBox" id="hbox2">
                 <property name="MemberName" />
-                <property name="LabelProp" translatable="yes">label1</property>
+                <property name="Spacing">6</property>
+                <child>
+                  <widget class="Gtk.Toolbar" id="toolbar2">
+                    <property name="MemberName" />
+                    <property name="ShowArrow">False</property>
+                    <node name="toolbar2" type="Toolbar">
+                      <node type="Toolitem" action="zoomOutAction" />
+                      <node type="Toolitem" action="zoom100Action" />
+                      <node type="Toolitem" action="zoomInAction" />
+                    </node>
+                  </widget>
+                  <packing>
+                    <property name="Position">0</property>
+                    <property name="AutoSize">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="Gtk.ColorButton" id="colorbutton1">
+                    <property name="MemberName" />
+                    <property name="CanFocus">True</property>
+                    <property name="Events">ButtonMotionMask, ButtonPressMask, ButtonReleaseMask</property>
+                    <property name="Alpha">-1</property>
+                  </widget>
+                  <packing>
+                    <property name="Position">1</property>
+                    <property name="AutoSize">True</property>
+                    <property name="Expand">False</property>
+                    <property name="Fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="Gtk.HScale" id="hscale1">
+                    <property name="MemberName" />
+                    <property name="CanFocus">True</property>
+                    <property name="Upper">500</property>
+                    <property name="PageIncrement">10</property>
+                    <property name="StepIncrement">1</property>
+                    <property name="Value">100</property>
+                    <property name="DrawValue">True</property>
+                    <property name="Digits">0</property>
+                    <property name="ValuePos">Top</property>
+                  </widget>
+                  <packing>
+                    <property name="Position">2</property>
+                    <property name="AutoSize">True</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="Resize">False</property>
