@@ -9,8 +9,13 @@ namespace GtkControl.Control
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Resizer : Gtk.DrawingArea
+	public class Resizer : Gtk.DrawingArea,IDragged
 	{
+		// <summary>
+		/// Признак перемещения
+		/// </summary>
+		public virtual bool IsDragged { get; set; }
+
 		static Gdk.Cursor hresizeCursor = new Gdk.Cursor (Gdk.CursorType.Sizing);
         /// <summary>
         /// 
@@ -70,7 +75,7 @@ namespace GtkControl.Control
 			};
 		}
 		/// <summary>
-		/// 
+		/// Изменение курсора при наведении указателя мыши
 		/// </summary>
 		/// <param name="evnt"></param>
 		/// <returns></returns>
@@ -81,7 +86,7 @@ namespace GtkControl.Control
 			return base.OnEnterNotifyEvent (evnt);
 		}
 		/// <summary>
-		/// 
+		/// Восстановление курсора
 		/// </summary>
 		/// <param name="evnt"></param>
 		/// <returns></returns>
@@ -101,7 +106,6 @@ namespace GtkControl.Control
 			g.MoveTo (8, 5);
 			g.Arc (5, 5, 4, 0, 2 * Math.PI);
 			g.Color = new Cairo.Color (0.98, 0.98, 0.98);
-			//g.ClosePath ();
 			g.FillPreserve ();
 			g.Color = new Cairo.Color (0.01, 0.4, 0.6);
 	 			

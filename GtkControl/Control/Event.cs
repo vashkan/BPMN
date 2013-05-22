@@ -48,13 +48,13 @@ namespace GtkControl.Control
 			this.radius = radius;
 			switch (ELType) {
 			case ElementType.START_EVENT:{
-				line_width = 4;
+				line_width = 2;
 				fill_color = new Cairo.Color (0.8,1,0.5,1);
 				line_color = new Color (0.35,0.65,0.08);
 				break;
 			}
 			case ElementType.END_EVENT:{
-				line_width = 5;
+				line_width = 3;
 				fill_color = new Cairo.Color (0.93,0.7,0.7,1);
 				line_color = new Color (0.6,0,0);
 				break;

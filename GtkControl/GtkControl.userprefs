@@ -1,31 +1,25 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="Mono 2.10.6" />
+﻿<Properties GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="Mono 2.10.6" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Control\MVPanel.cs">
     <Files>
-      <File FileName="Control\Event.cs" Line="94" Column="14" />
-      <File FileName="Control\Gateway.cs" Line="53" Column="16" />
-      <File FileName="Control\BaseItem.cs" Line="415" Column="2" />
-      <File FileName="Control\Task.cs" Line="95" Column="1" />
-      <File FileName="Control\Resizer.cs" Line="130" Column="2" />
-      <File FileName="Control\Flows.cs" Line="262" Column="14" />
-      <File FileName="Control\Pool.cs" Line="126" Column="2" />
-      <File FileName="Control\MVPanel.cs" Line="298" Column="54" />
-      <File FileName="MainWindow.cs" Line="44" Column="28" />
-      <File FileName="ISelectable.cs" Line="11" Column="23" />
-      <File FileName="Control\SelectionService.cs" Line="43" Column="26" />
+      <File FileName="Control\Event.cs" Line="1" Column="1" />
+      <File FileName="Control\Gateway.cs" Line="1" Column="1" />
+      <File FileName="Control\BaseItem.cs" Line="1" Column="1" />
+      <File FileName="Control\Task.cs" Line="1" Column="1" />
+      <File FileName="Control\Resizer.cs" Line="1" Column="1" />
+      <File FileName="Control\Flows.cs" Line="1" Column="1" />
+      <File FileName="Control\MVPanel.cs" Line="368" Column="9" />
+      <File FileName="ISelectable.cs" Line="1" Column="1" />
+      <File FileName="Control\SelectionService.cs" Line="1" Column="1" />
+      <File FileName="MainWindow.cs" Line="21" Column="29" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Option id="ShowAllFiles" value="False" />
-          <Option id="ShowVersionControlOverlays" value="True" />
-          <Node name="GtkControl" expanded="True">
+          <Node name="GtkControl" expanded="True" selected="True">
             <Node name="References" expanded="True" />
             <Node name="UserInterface" expanded="True" />
-            <Node name="Control" expanded="True">
-              <Option id="ShowAllFiles" value="True" />
-              <Node name="MVPanel.cs" selected="True" />
-            </Node>
+            <Node name="Control" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -45,7 +39,10 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="323" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="&quot;Element type is {ELType}&quot;" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\BaseItem.cs" line="213" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="resizer[{index}] added to fixed" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="313" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="End  button released delegat" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="373" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="&quot;orig ({origX}, {origY})&quot;" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="373" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>

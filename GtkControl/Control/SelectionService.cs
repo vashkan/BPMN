@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Gtk;
+using GtkControl.Control;
 namespace GtkControl
 {
 	public class SelectionService
@@ -40,8 +41,8 @@ namespace GtkControl
         /// 
         /// </summary>
         /// <param name="item"></param>
-        internal void AddToSelection(ISelectable item)
-        {
+        internal void AddToSelection (ISelectable item)
+		{
 			/*
             if (item is IGroupable)
             {
@@ -55,10 +56,46 @@ namespace GtkControl
             }
             else
             {*/
-                item.IsSelected = true;
-                CurrentSelection.Add(item);
-            //}
-        }
+			int origX, origY, pointX, pointY;
+			var baseItem = (item as BaseItem);
+			if (baseItem != null) {
+				int index = 0;
+				for (var j = 0; j < 3; j++) {
+					for (var i = 0; i < 3; i++) {
+						if ((i == 1) && (j == 1)) {
+							continue;
+						}
+						baseItem.Resizers [index].Events = (Gdk.EventMask)1020; //252;
+						baseItem.Resizers [index].ButtonPressEvent +=
+						delegate(object o, ButtonPressEventArgs args) {
+							//resizing = true;
+							var eventBox = o as EventBox;
+							if (eventBox != null)
+							{
+								eventBox.TranslateCoordinates (m_panel, 0, 0,
+							                              out origX,
+							                              out origY);
+								(eventBox.Child as IDragged).IsDragged = true;
+							}
+							m_panel.GetPointer (out pointX, out pointY);
+						};
+						baseItem.Resizers [index].ButtonReleaseEvent +=
+						delegate(object o, ButtonReleaseEventArgs args) {
+							var eventBox = (o as EventBox);
+							if ((eventBox != null)&&(eventBox.Child is IDragged))
+							{
+								(eventBox.Child as IDragged).IsDragged = false;
+							}
+						};
+						m_panel.Add (baseItem.Resizers [index++]);
+					}
+				}
+			}
+			m_panel.ShowAll ();
+			item.IsSelected = true;
+			CurrentSelection.Add (item);
+			//}
+		}
 
         /// <summary>
         /// 
@@ -78,6 +115,7 @@ namespace GtkControl
             }
             else
             {*/
+
                 item.IsSelected = false;
                 CurrentSelection.Remove(item);
             //}
@@ -88,7 +126,12 @@ namespace GtkControl
         /// </summary>
         internal void ClearSelection()
         {
-            CurrentSelection.ForEach(item => item.IsSelected = false);
+            CurrentSelection.ForEach(item => {
+				item.IsSelected = false;
+				foreach (var resizer in (item as BaseItem).Resizers) {
+					m_panel.Remove(resizer);
+				}
+			});
             CurrentSelection.Clear();
         }
 

@@ -88,7 +88,7 @@ namespace GtkControl.Control
 	/// <summary>
 	/// 
 	/// </summary>
-	public class BaseItem : Gtk.DrawingArea,ISelectable 
+	public class BaseItem : Gtk.DrawingArea,ISelectable, IDragged
 	{
 		string parentName = "";
 		
@@ -111,6 +111,11 @@ namespace GtkControl.Control
         /// Признак выбора
         /// </summary>
 		public virtual bool IsSelected { get; set; }
+
+		// <summary>
+		/// Признак перемещения
+		/// </summary>
+		public virtual bool IsDragged { get; set; }
 		
 		/// <summary>
 		/// Минимальная ширина
