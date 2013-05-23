@@ -35,25 +35,18 @@ namespace GtkControl
 		private int origY = 0;
 		private int pointX = 0;
 		private int pointY = 0;
-		private bool isDragged = false;
 		private SelectionService m_selectionService;
-		//private List <ISelectable> selectedItems;
-		
+	
 		#endregion
 		
 		#region Свойства
-		
-		/*internal List<ISelectable> CurrentSelection {
-			get { 
-				return selectedItems ?? (selectedItems = new List<ISelectable> ()); 
-			}
-		}*/
 
 		internal SelectionService SelectionService {
 			get { return m_selectionService ?? (m_selectionService = new SelectionService (this.fixed1)); }
 		}
 		
 		#endregion
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -250,7 +243,6 @@ namespace GtkControl
 			this.fixed1.QueueDraw ();	
 		}
 		
-		bool resizing;
 		/// <summary>
 		/// Mouse click on the controls of the panel  
 		/// </summary>
@@ -276,10 +268,6 @@ namespace GtkControl
 							currCtrl.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
 							baseItem.X = origX;
 							baseItem.Y = origY;
-
-							//CurrentSelection.Clear ();
-							//CurrentSelection.Add (baseItem);
-
 							SelectionService.SelectItem (baseItem);
 							fixed1.GetPointer (out pointX, out pointY);
 							Console.WriteLine ("MovingBox KeyPressed on " + baseItem.Caption);
@@ -288,7 +276,6 @@ namespace GtkControl
 						}
 					}
 
-					//var res = new Resizer ();
 					foreach (var selected_item in SelectionService.CurrentSelection) {
 						int index = 0;
 
@@ -299,33 +286,6 @@ namespace GtkControl
 									if ((i == 1) && (j == 1)) {
 										continue;
 									}
-/*
-
-                                        baseItem1.Resizers[index].Events = (Gdk.EventMask) 1020; //252;
-                                        baseItem1.Resizers[index].ButtonPressEvent +=
-                                            delegate(object o, ButtonPressEventArgs args)
-                                                {
-                                                    resizing = true;
-                                                    isDragged = true;
-                                                    var eventBox = o as EventBox;
-                                                    if (eventBox != null)
-                                                        eventBox.TranslateCoordinates(this.fixed1, 0, 0,
-                                                                                      out origX,
-                                                                                      out origY);
-                                                    fixed1.GetPointer(out pointX, out pointY);
-                                                };
-                                        baseItem1.Resizers[index].ButtonReleaseEvent +=
-                                            delegate(object o, ButtonReleaseEventArgs args)
-                                                {
-                                                    resizing = false;
-                                                    isDragged = false;
-                                                    // fixed1.Move(butt, origX, origY);
-                                                };
-									if (!baseItem.IsSelected)
-									{
-                                       	fixed1.Add(baseItem1.Resizers[index]);
-										baseItem.IsSelected = index > 7;
-									}*/
 									fixed1.Move (
                                             baseItem1.Resizers [index++],
                                             origX + j * currCtrl.Allocation.Width / 2 - 5,
