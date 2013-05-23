@@ -24,68 +24,7 @@ using Cairo;
 
 namespace GtkControl.Control
 {
-	/// <summary>
-	/// Тип элемента
-	/// </summary>
-	public enum ElementType
-		{
-			/// <summary>
-			/// Неопределеннный
-			/// </summary>
-			NONE,
-			
-			/// <summary>
-			/// Начало процесса.
-			/// </summary>
-			/// 
-			START_EVENT,
-			/// <summary>
-			/// Конец процесса.
-			/// </summary>
-			END_EVENT,
-			
-			/// <summary>
-			/// Задача
-			/// </summary>
-			TASK,
-			
-			/// <summary>
-			/// Безусловный поток операций
-			/// </summary>
-			SEQUENCE_FLOW_UNCONDITIONAL,
-			
-			/// <summary>
-			/// Условный поток операций
-			/// </summary>
-			SEQUENCE_FLOW_CONDITIONAL,
-			
-			/// <summary>
-			/// Поток операций по умолчанию.
-			/// </summary>
-			SEQUENCE_FLOW_DEFAULT,
-			
-			/// <summary>
-			/// Ассоциация
-			/// </summary>
-			ASSOCIATION,
-			
-			/// <summary>
-			/// Поток сообщений
-			/// </summary>
-			MESSAGE_FLOW,
-			
-			/// <summary>
-			/// Шлюз
-			/// </summary>
-			GATEWAY,
-		
-			/// <summary>
-            /// Пул
-            /// </summary>
-	        POOL
-		};
-	
-	/// <summary>
+		/// <summary>
 	/// 
 	/// </summary>
 	public class BaseItem : Gtk.DrawingArea,ISelectable, IDragged
@@ -167,7 +106,7 @@ namespace GtkControl.Control
 	    /// <summary>
 		/// Тип элемента
 		/// </summary>
-		public ElementType ELType=ElementType.NONE;
+		public BPMNElementType ELType=BPMNElementType.NONE;
 		/// <summary>
 		/// Наложение маска
 		/// </summary>
@@ -202,10 +141,11 @@ namespace GtkControl.Control
 		/// <param name="typeEl"></param>
 		/// <param name="_width"></param>
 		/// <param name="_height"></param>
-		public BaseItem (string pName, string cap, ElementType typeEl, double _width, double _height)
+		public BaseItem (string pName, string cap, BPMNElementType typeEl, double _width, double _height)
 		{
 			ID = Guid.NewGuid ();
 			Popup = new Gtk.Menu ();
+
 			this.Events |= Gdk.EventMask.EnterNotifyMask | Gdk.EventMask.LeaveNotifyMask;
 
 			Gtk.MenuItem text1 = new MenuItem ("Test1");
@@ -225,8 +165,20 @@ namespace GtkControl.Control
 			Resizers = new List<EventBox> ();
 			for (var i=0; i<8; i++) {
 				var evn = new EventBox ();
-				evn.Add (new Resizer ());
+				Resizer resizer = new Resizer();
+				resizer.Parent = this;
+				evn.Add (resizer);
+				evn.Events = (Gdk.EventMask)1020; 
+
+				evn.ButtonReleaseEvent +=
+				delegate(object o, ButtonReleaseEventArgs args) {
+					var eventBox = (o as EventBox);
+					if ((eventBox != null) && (eventBox.Child is IDragged)) {
+						(eventBox.Child as IDragged).IsDragged = false;
+					}
+				};
 				Resizers.Add (evn);
+
 			}
 			
 			this.SetSizeRequest ((int)Width, (int)Height);

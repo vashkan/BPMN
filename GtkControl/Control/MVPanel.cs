@@ -33,8 +33,8 @@ namespace GtkControl
 		private Widget currClone = null;
 		private int origX = 0;
 		private int origY = 0;
-		private int pointX = 0;
-		private int pointY = 0;
+		public int pointX = 0;
+		public int pointY = 0;
 		private SelectionService m_selectionService;
 	
 		#endregion
@@ -73,7 +73,7 @@ namespace GtkControl
 		/// <param name="typeEl"></param>
 		/// <param name="width"></param>
 		/// <param name="height"></param>
-		public void AddMovingObject (string name, string caption, int x, int y, ElementType typeEl, int width, int height)
+		public void AddMovingObject (string name, string caption, int x, int y, BPMNElementType typeEl, int width, int height)
 		{
 			//Prevent the object to be displayed outside the panel
 			if (x < 0) {
@@ -97,22 +97,22 @@ namespace GtkControl
 		}
 		
 		//Create the event box for the custom control
-		private EventBox GetMovingBox (string name, string caption, ElementType typeEl, double width, double height)
+		private EventBox GetMovingBox (string name, string caption, BPMNElementType typeEl, double width, double height)
 		{ 
 			BaseItem ctrl;
 			switch (typeEl) {
-			case ElementType.START_EVENT:
-			case ElementType.END_EVENT:
+			case BPMNElementType.START_EVENT:
+			case BPMNElementType.END_EVENT:
 				{
 					ctrl = new Event (name, caption, typeEl, height / 2);
 					break;
 				}
-			case ElementType.TASK:
+			case BPMNElementType.TASK:
 				{
 					ctrl = new Task (name, caption, width, height);
 					break;
 				}
-			case ElementType.SEQUENCE_FLOW_UNCONDITIONAL:
+			case BPMNElementType.SEQUENCE_FLOW_UNCONDITIONAL:
 				{
 					ctrl = new UnCondSeqFlow (
 						name,
@@ -125,7 +125,7 @@ namespace GtkControl
 					);
 					break;
 				}
-			case ElementType.SEQUENCE_FLOW_CONDITIONAL:
+			case BPMNElementType.SEQUENCE_FLOW_CONDITIONAL:
 				{
 					ctrl = new CondSeqFlow (
 						name,
@@ -138,7 +138,7 @@ namespace GtkControl
 					);
 					break;
 				}
-			case ElementType.MESSAGE_FLOW:
+			case BPMNElementType.MESSAGE_FLOW:
 				{
 					ctrl = new MessageFlow (
 						name,
@@ -151,12 +151,12 @@ namespace GtkControl
 					);
 					break;
 				}
-			case ElementType.GATEWAY:
+			case BPMNElementType.GATEWAY:
 				{
 					ctrl = new Gateway (name, caption, width, height);
 					break;
 				}
-			case ElementType.POOL:
+			case BPMNElementType.POOL:
 				{
 					ctrl = new Pool (name, caption, width, height, OrientationEnum.Horizontal);
 					break;
@@ -178,18 +178,19 @@ namespace GtkControl
 		private Widget CloneCurrCtrl ()
 		{
 			Widget re = null;
-			
-			if (this.currCtrl != null) {
-				if (currCtrl is EventBox) {
-					Widget mv = (currCtrl as EventBox).Child;
+			var mve = (currCtrl as EventBox);
+			if (mve != null) {
+				BaseItem mv;
+				if ((mv = mve.Child as BaseItem) != null) 
 					re = GetMovingBox (
-							(currCtrl as EventBox).Name + "Clone",
-							(mv as  BaseItem).Caption,
-							(mv as BaseItem).ELType,
-							(mv as BaseItem).Width,
-							(mv as BaseItem).Height
+							mve.Name + "Clone",
+							mv.Caption,
+							mv.ELType,
+							mv.Width,
+							mv.Height
 					);
-				}
+			
+	
 			}
 			if (re == null) {
 				//This should not really happen but that would prevent an exception
@@ -268,7 +269,14 @@ namespace GtkControl
 							currCtrl.TranslateCoordinates (this.fixed1, 0, 0, out origX, out origY);
 							baseItem.X = origX;
 							baseItem.Y = origY;
-							SelectionService.SelectItem (baseItem);
+							if ((a.Event.State == Gdk.ModifierType.ControlMask))
+							{
+								if (!baseItem.IsSelected)
+									SelectionService.AddToSelection(baseItem);
+								else 
+									SelectionService.RemoveFromSelection(baseItem);
+							}else
+								SelectionService.SelectItem (baseItem);
 							fixed1.GetPointer (out pointX, out pointY);
 							Console.WriteLine ("MovingBox KeyPressed on " + baseItem.Caption);
 							Console.WriteLine ("Pointer:" + pointX.ToString () + "-" + pointY.ToString ());
@@ -315,7 +323,6 @@ namespace GtkControl
 					baseItem.IsDragged = false;
 				if (currClone != null) {
 					this.fixed1.Remove (currClone);
-
 					Console.WriteLine ("Deleting moving object" + currClone.Name);
 					currClone.Destroy ();
 					currClone = null;
@@ -326,7 +333,7 @@ namespace GtkControl
 
 
 		/// <summary>
-		/// Called whenever a control is moved
+		/// Вызывается когда элементы двигаются
 		/// </summary>
 		/// <param name="o"></param>
 		/// <param name="args"></param>
@@ -339,31 +346,27 @@ namespace GtkControl
 			var eventBox = currCtrl as EventBox;
 			if (eventBox != null) {
 				var obj = (eventBox.Child  as BaseItem);
-
-				/*var IsDragged = obj.Resizers.Exists((EventBox n) => {
-					var result = false;
-					if (n.Child is Resizer)
-						result = (n.Child as Resizer).IsDragged;
-					return result;
-				});*/
 				if (obj.IsDragged) {
 					if (eventBox != null && eventBox.Child  is BaseItem)
 						MoveClone (ref currClone, args.Event.X, args.Event.Y);
 				} else {
 					var IsDragged = false;
+					Resizer actRes = null;
 					foreach (var item in obj.Resizers) {
 						if (item.Child is IDragged) {
 							IsDragged = (item.Child as IDragged).IsDragged; 
 						}
-						if (IsDragged)
+						if (IsDragged){
+							actRes = item.Child as Resizer;
 							break;
+						}
 					}
-					if (IsDragged && (currCtrl != null)) {
+					if (IsDragged) {
 					
 						int p_x, p_y, dx, dy;
 						fixed1.GetPointer (out p_x, out p_y);
-						dx = p_x - pointX;
-						dy = p_y - pointY;
+						dx = p_x - actRes.X;
+						dy = p_y - actRes.Y;
 						var temp = obj.Height + dy;
 						temp = (temp > 10) ? temp : 10;
 						obj.Height = temp;

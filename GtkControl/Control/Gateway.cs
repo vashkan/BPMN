@@ -18,7 +18,7 @@ namespace GtkControl.Control
 		/// <param name="_width"></param>
 		/// <param name="_height"></param>
 		public Gateway (string pName, string cap, double _width, double _height)
-		:base(pName,cap,ElementType.GATEWAY,_width,_height)
+		:base(pName,cap,BPMNElementType.GATEWAY,_width,_height)
 		{
 		}
         /// <summary>

@@ -1,17 +1,18 @@
 ﻿<Properties GitUserInfo="UsingGIT">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="Mono 2.10.6" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Control\MVPanel.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ActiveRuntime="Mono 2.10.6" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Control\BaseItem.cs">
     <Files>
       <File FileName="Control\Event.cs" Line="76" Column="14" />
       <File FileName="Control\Gateway.cs" Line="11" Column="34" />
-      <File FileName="Control\BaseItem.cs" Line="272" Column="26" />
+      <File FileName="Control\BaseItem.cs" Line="177" Column="1" />
       <File FileName="Control\Task.cs" Line="1" Column="1" />
-      <File FileName="Control\Resizer.cs" Line="17" Column="1" />
-      <File FileName="Control\Flows.cs" Line="1" Column="1" />
-      <File FileName="Control\MVPanel.cs" Line="246" Column="1" />
+      <File FileName="Control\Resizer.cs" Line="17" Column="17" />
+      <File FileName="Control\Flows.cs" Line="278" Column="45" />
+      <File FileName="Control\MVPanel.cs" Line="279" Column="48" />
       <File FileName="ISelectable.cs" Line="14" Column="2" />
-      <File FileName="Control\SelectionService.cs" Line="68" Column="57" />
-      <File FileName="MainWindow.cs" Line="26" Column="3" />
+      <File FileName="Control\SelectionService.cs" Line="110" Column="47" />
+      <File FileName="MainWindow.cs" Line="49" Column="97" />
+      <File FileName="IDragged.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -22,7 +23,7 @@
               <Node name="MainWindow" expanded="True" />
             </Node>
             <Node name="Control" expanded="True">
-              <Node name="MVPanel.cs" selected="True" />
+              <Node name="BaseItem.cs" selected="True" />
             </Node>
           </Node>
         </State>
@@ -42,7 +43,19 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint hitAction="PrintExpression" traceExpression="Resizer press {eventBox.Child.IsDragged}" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\BaseItem.cs" line="179" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="Resizer press {eventBox.Child.IsDragged} point ({res.X}, {res.Y})" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\SelectionService.cs" line="87" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="{Events}" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\BaseItem.cs" line="151" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="Event: state={a.Event.State}; type={a.Event.Type};" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="272" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="SelectionService.SelectItem (baseItem);" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="279" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="AddToSelection" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="279" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="Selestion" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="279" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="Item({baseItem.Name}).IsSelected: {baseItem.IsSelected}" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="274" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="Remove resizers" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\SelectionService.cs" line="124" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="rezizers move" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\MVPanel.cs" line="291" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="Resizer Parent: {eventBox.Child.Parent.ELType}" file="C:\Users\shahmatov\Documents\GitHub\BPMN\GtkControl\Control\BaseItem.cs" line="177" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="Control\MVPanel.cs" line="300" offsetX="645" offsetY="4777" expression="selected_item.Resizers" liveUpdate="False" />

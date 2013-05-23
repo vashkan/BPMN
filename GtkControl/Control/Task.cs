@@ -17,7 +17,7 @@ namespace GtkControl.Control
 		/// <param name="_width"></param>
 		/// <param name="_height"></param>
 		public Task (string pName, string cap, double _width, double _height)
-		:base(pName,cap,ElementType.TASK,_width,_height)
+		:base(pName,cap,BPMNElementType.TASK,_width,_height)
 		{
 		}
 		/// <summary>

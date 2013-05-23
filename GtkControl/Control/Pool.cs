@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Gtk;
 using Cairo;
 
@@ -36,7 +36,7 @@ namespace GtkControl.Control
         /// <param name="height"></param>
         /// <param name="orientation"></param>
         public Pool (string pName, string cap, double width, double height, OrientationEnum orientation)
-            : base(pName, cap, ElementType.POOL, width, height)
+            : base(pName, cap, BPMNElementType.POOL, width, height)
 		{
 			fill_color = new Color (0.94, 0.94, 0.94);
 			line_color = new Color (0.0, 0.0, 0.0);

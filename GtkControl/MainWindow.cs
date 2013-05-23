@@ -32,7 +32,7 @@ public partial class MainWindow: Gtk.Window
 			"Процесс 1",
 			30,
 			300,
-			ElementType.POOL,
+			BPMNElementType.POOL,
 			600,
 			200
 		);
@@ -41,19 +41,19 @@ public partial class MainWindow: Gtk.Window
 			"start",
 			92,
 			222,
-			ElementType.START_EVENT,
+			BPMNElementType.START_EVENT,
 			40,
 			40
 		);
 
-		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "Task", 10, 10, ElementType.TASK, 140, 70);
-		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, ElementType.END_EVENT, 40, 40);
+		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "Task", 10, 10, BPMNElementType.TASK, 140, 70);
+		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, BPMNElementType.END_EVENT, 40, 40);
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"flow",
 			246,
 			115,
-			ElementType.SEQUENCE_FLOW_UNCONDITIONAL,
+			BPMNElementType.SEQUENCE_FLOW_UNCONDITIONAL,
 			303,
 			250
 		);
@@ -62,7 +62,7 @@ public partial class MainWindow: Gtk.Window
 			"flowArrowOpen",
 			276,
 			169,
-			ElementType.SEQUENCE_FLOW_CONDITIONAL,
+			BPMNElementType.SEQUENCE_FLOW_CONDITIONAL,
 			303,
 			225
 		);
@@ -71,7 +71,7 @@ public partial class MainWindow: Gtk.Window
 			"gateway",
 			187,
 			212,
-			ElementType.GATEWAY,
+			BPMNElementType.GATEWAY,
 			50,
 			50
 		);
@@ -80,7 +80,7 @@ public partial class MainWindow: Gtk.Window
 			"message_flow",
 			384,
 			289,
-			ElementType.MESSAGE_FLOW,
+			BPMNElementType.MESSAGE_FLOW,
 			303,
 			225
 		);

@@ -56,46 +56,36 @@ namespace GtkControl
             }
             else
             {*/
-			int origX, origY, pointX, pointY;
+
 			var baseItem = (item as BaseItem);
 			if (baseItem != null) {
-				int index = 0;
-				for (var j = 0; j < 3; j++) {
-					for (var i = 0; i < 3; i++) {
-						if ((i == 1) && (j == 1)) {
-							continue;
-						}
-						baseItem.Resizers [index].Events = (Gdk.EventMask)1020; //252;
-						baseItem.Resizers [index].ButtonPressEvent +=
-						delegate(object o, ButtonPressEventArgs args) {
-							//resizing = true;
-							var eventBox = o as EventBox;
-							if (eventBox != null)
-							{
-								eventBox.TranslateCoordinates (m_panel, 0, 0,
-							                              out origX,
-							                              out origY);
-								(eventBox.Child as IDragged).IsDragged = true;
-							}
-							m_panel.GetPointer (out pointX, out pointY);
-						};
-						baseItem.Resizers [index].ButtonReleaseEvent +=
-						delegate(object o, ButtonReleaseEventArgs args) {
-							var eventBox = (o as EventBox);
-							if ((eventBox != null)&&(eventBox.Child is IDragged))
-							{
-								(eventBox.Child as IDragged).IsDragged = false;
-							}
-						};
-						m_panel.Add (baseItem.Resizers [index++]);
-					}
+				foreach (var resizer in baseItem.Resizers) {
+					resizer.ButtonPressEvent -= HandleButtonPressEvent;
+					resizer.ButtonPressEvent += HandleButtonPressEvent;
+					m_panel.Add (resizer);
 				}
 			}
 			m_panel.ShowAll ();
 			item.IsSelected = true;
 			CurrentSelection.Add (item);
-			//}
 		}
+
+        void HandleButtonPressEvent (object o, ButtonPressEventArgs args)
+        {
+			int X, Y;
+			var eventBox = o as EventBox;
+			if ((eventBox != null) && (eventBox.Child is IDragged)) {
+				var res = eventBox.Child as Resizer;
+				if (res != null) {
+					eventBox.TranslateCoordinates (m_panel, 0, 0,
+					                               out X,
+					                               out Y);
+					res.X = X;
+					res.Y = Y;
+				}
+				(eventBox.Child as IDragged).IsDragged = true;
+			}
+        }
 
         /// <summary>
         /// 
