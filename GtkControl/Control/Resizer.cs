@@ -11,7 +11,7 @@ namespace GtkControl.Control
 	/// </summary>
 	public class Resizer : Gtk.DrawingArea,IDragged
 	{
-		public BaseItem Parent{ get; set;}
+		public BaseItem baseItem{ get; set;}
 		/// <summary>
 		/// Gets or sets the x.
 		/// </summary>

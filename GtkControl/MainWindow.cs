@@ -84,7 +84,8 @@ public partial class MainWindow: Gtk.Window
 			303,
 			225
 		);
-		
+		var ctrl = new Task (name,"", 10, 15);
+		eventbox2.Add (ctrl);
 		/*//Прозрачность окна  
 		this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		this.Colormap = this.Screen.RgbaColormap;

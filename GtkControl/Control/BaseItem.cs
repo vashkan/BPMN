@@ -166,7 +166,7 @@ namespace GtkControl.Control
 			for (var i=0; i<8; i++) {
 				var evn = new EventBox ();
 				Resizer resizer = new Resizer();
-				resizer.Parent = this;
+				resizer.baseItem = this;
 				evn.Add (resizer);
 				evn.Events = (Gdk.EventMask)1020; 
 
