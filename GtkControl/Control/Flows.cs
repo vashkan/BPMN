@@ -275,7 +275,7 @@ namespace GtkControl.Control
 			);
 			gr.MoveTo (WayPoints [WayPoints.Count - 1]);
 			gr.LineTo (x1, y1);
-			gr.MoveTo(WayPoints [WayPoints.Count - 1]);
+			//gr.MoveTo(WayPoints [WayPoints.Count - 1]);
 			gr.LineTo (x2, y2);
 			gr.ClosePath ();
 

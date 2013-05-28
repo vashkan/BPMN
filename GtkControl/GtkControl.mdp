@@ -38,6 +38,10 @@
     <File subtype="Code" buildaction="Exclude" name="Pool_24.jpg" DeployService.UseProjectRelativePath="True" />
     <File subtype="Code" buildaction="Compile" name="IDragged.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\BPMNElementType.cs" />
+    <File subtype="Code" buildaction="Compile" name="IConnectingObject.cs" />
+    <File subtype="Code" buildaction="Compile" name="IElement.cs" />
+    <File subtype="Code" buildaction="Compile" name="ElementId.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\ConnectingObjectType.cs" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
