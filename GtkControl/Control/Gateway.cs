@@ -17,7 +17,7 @@ namespace GtkControl.Control
 		/// <param name="cap"></param>
 		/// <param name="_width"></param>
 		/// <param name="_height"></param>
-		public Gateway (string pName, string cap, double _width, double _height)
+		public Gateway (string pName, string cap, float _width, float _height)
 		:base(pName,cap,BPMNElementType.GATEWAY,_width,_height)
 		{
 		}
@@ -28,7 +28,7 @@ namespace GtkControl.Control
 		public override void Paint (Context g)
 		{
 			g.Save ();
-			var rad = Min(new double[]{Height,Width})/2-line_width/2;
+			var rad = Math.Min(Height,Width)/2-line_width/2;
 			g.MoveTo (Width / 2,Height / 2);
 			g.RelMoveTo (-rad, 0);
 			g.RelLineTo (+rad, -rad);
@@ -50,7 +50,7 @@ namespace GtkControl.Control
 		public override void PaintMask (Context g)
 		{
 			g.Save ();
-			var rad = Min (new double[]{Height,Width}) / 2 - line_width / 2;
+			var rad = Math.Min (Height,Width) / 2 - line_width / 2;
 			g.MoveTo (Width / 2, Height / 2);
 			g.RelMoveTo (-rad, 0);
 			g.RelLineTo (+rad, -rad);

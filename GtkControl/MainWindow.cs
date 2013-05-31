@@ -24,6 +24,7 @@ public partial class MainWindow: Gtk.Window
 	{
 		Build ();
 		ItemPanelInit ();
+
 		string name = "MovingBox";
 		int index = 0;
 		this.hpaned1.Position = 700;
@@ -107,12 +108,12 @@ public partial class MainWindow: Gtk.Window
 		String,
 		RootWindow
 	};
-	
+/*	
 	private static TargetEntry [] target_table = new TargetEntry [] {
 		new TargetEntry ("STRING", 0, (uint) TargetType.String ),
 		new TargetEntry ("text/plain", 0, (uint) TargetType.String),
 		new TargetEntry ("application/x-rootwindow-drop", 0, (uint) TargetType.RootWindow)
-	};
+	};*/
 	//Инизиализация панели инструментов
 	private void ItemPanelInit()
 	{
@@ -127,7 +128,7 @@ public partial class MainWindow: Gtk.Window
 
 		};
 
-		Button pool = new Button()
+		EventBox pool = new EventBox()
 		{
 			TooltipMarkup = "<b>Пул</b>\nПул представляет \nучастника процесса.",
 			WidthRequest = 30,
@@ -135,10 +136,24 @@ public partial class MainWindow: Gtk.Window
 			Name = "pool"
 		};
 
-		Gtk.Drag.SourceSet (pool, Gdk.ModifierType.Button1Mask | Gdk.ModifierType.Button3Mask,
-		                    target_table, Gdk.DragAction.Copy | Gdk.DragAction.Move);
+		Gtk.Drag.SourceSet (pool, Gdk.ModifierType.Button1Mask ,
+		                    new[] { new TargetEntry("text/plain", TargetFlags.Widget, 1)} ,
+							Gdk.DragAction.Copy | Gdk.DragAction.Move);
+		//var temp  = new Pool ("", "", 40, 30,OrientationEnum.Horizontal);
+		Gdk.Pixbuf icon = new Gdk.Pixbuf("Pool_24.jpg");
+
+		Gdk.Pixmap pool_icon, pool_mask;
+		icon.RenderPixmapAndMask(out pool_icon,out pool_mask,255);
+		Gtk.Drag.SourceSetIcon(pool,this.Colormap,pool_icon, pool_mask);
+
 		pool.DragDataGet += new DragDataGetHandler (HandleSourceDragDataGet);
+		pool.DragDataDelete += HandleSourceDragDataDelete;
 		pool.DragBegin += HandleDragBegin;
+		pool.DragMotion += HandleDragMotion;
+		pool.DragDrop += HandleDragDrop;
+		//button.DragDataGet += new DragDataGetHandler (HandleSourceDragDataGet);
+
+
 		using (Alignment a = new Alignment (0.5f, 0.5f, 0f, 0f))
 		{
 			a.Add (new EventBox{new Pool ("", "", 40, 30,OrientationEnum.Horizontal)});
@@ -275,9 +290,29 @@ public partial class MainWindow: Gtk.Window
 		ItemPanel.ShowAll ();
 	}
 
+	void HandleSourceDragDataDelete (object o, DragDataDeleteArgs args)
+	{
+		Console.WriteLine ("Delete the data!");
+	}
+
+	void HandleDragDrop (object o, DragDropArgs args)
+	{
+		Console.WriteLine("DragDrop");
+	}
+
+	void HandleDragMotion (object o, DragMotionArgs args)
+	{
+		Gtk.Drag.SetIconWidget(args.Context ,new Pool ("", "", 40, 30,OrientationEnum.Horizontal),0,0);
+	}
+	/// <summary>
+	/// Подготовка аргументов для переноса элемента на панель 
+	/// </summary>
+	/// <param name="o">источник</param>
+	/// <param name="args">аргументы</param>
+	[GLib.ConnectBefore]
 	void HandleDragBegin (object o, DragBeginArgs args)
 	{
-		var assault = args.Context.DragProtocol;
+		Console.WriteLine("DragBegin");
 	}
 
 	

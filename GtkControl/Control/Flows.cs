@@ -38,7 +38,7 @@ namespace GtkControl.Control
 
         #region Public methods
 
-        public Flow (string pName, string cap, BPMNElementType typeEl, double _width, double _height, PointD start, PointD end)
+        public Flow (string pName, string cap, BPMNElementType typeEl, float _width, float _height, PointD start, PointD end)
             : base(pName, cap, typeEl, _width, _height)
 		{
 			WayPoints = new List<PointD> ();
@@ -192,7 +192,7 @@ namespace GtkControl.Control
     /// </summary> 
     public class UnCondSeqFlow : Flow
     {
-        public UnCondSeqFlow(string pName, string cap, BPMNElementType typeEl, double _width, double _height, PointD start, PointD end)
+        public UnCondSeqFlow(string pName, string cap, BPMNElementType typeEl, float _width, float _height, PointD start, PointD end)
             : base(pName, cap, typeEl, _width, _height, start, end)
         {
             line_color = new Color(0, 0, 0);
@@ -249,7 +249,7 @@ namespace GtkControl.Control
         /// <param name="_height"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        public CondSeqFlow(string pName, string cap, BPMNElementType typeEl, double _width, double _height, PointD start, PointD end)
+        public CondSeqFlow(string pName, string cap, BPMNElementType typeEl, float _width, float _height, PointD start, PointD end)
             : base(pName, cap, typeEl, _width, _height, start, end)
         {
             line_color = new Color(0, 0, 0);
@@ -323,7 +323,7 @@ namespace GtkControl.Control
     /// </summary>
     public class MessageFlow : Flow
     {
-        public MessageFlow(string pName, string cap, BPMNElementType typeEl, double _width, double _height, PointD start, PointD end)
+        public MessageFlow(string pName, string cap, BPMNElementType typeEl, float _width, float _height, PointD start, PointD end)
             : base(pName, cap, typeEl, _width, _height, start, end)
         {
             line_color = new Color(0, 0, 0);

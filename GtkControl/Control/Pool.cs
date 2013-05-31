@@ -35,7 +35,7 @@ namespace GtkControl.Control
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="orientation"></param>
-        public Pool (string pName, string cap, double width, double height, OrientationEnum orientation)
+        public Pool (string pName, string cap, float width, float height, OrientationEnum orientation)
             : base(pName, cap, BPMNElementType.POOL, width, height)
 		{
 			fill_color = new Color (0.94, 0.94, 0.94);

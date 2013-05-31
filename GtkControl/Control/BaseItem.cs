@@ -19,6 +19,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Drawing;
 using Gtk;
 using Cairo;
 
@@ -65,7 +66,17 @@ namespace GtkControl.Control
         /// Минимальная высота
         /// </summary>
         public int MinHeight { get; set; }
+
+		/// <summary>
+		/// Максимальная ширина
+		/// </summary>
+		public int MaxWidth { get; set; }
 		
+		/// <summary>
+		/// Максимальная высота
+		/// </summary>
+		public int MaxHeight { get; set; }
+
 		/// <summary>
 		/// Ресайзеры
 		/// </summary>
@@ -77,12 +88,49 @@ namespace GtkControl.Control
 	    /// <summary>
 	    /// 
 	    /// </summary>
-	    public int X { get; set; }
+	    public float X { get; set; }
 
 	    /// <summary>
 	    /// 
 	    /// </summary>
-	    public int Y { get; set; }
+	    public float Y { get; set; }
+
+		/// <summary>
+		/// Gets or sets the location.
+		/// </summary>
+		/// <value>The location.</value>
+		public PointF Location 
+		{
+			get{
+				return new PointF(this.X,this.Y);
+			}
+			set{
+				this.X=value.X;
+				this.Y=value.Y;
+			}
+		}
+		public PointF Center
+		{
+			get
+			{
+				return new PointF(this.X+this.Width/2,this.Y+this.Height/2);
+			}
+		}
+
+		public float Bottom
+		{
+			get
+			{
+				return this.Y + this.Height;
+			}
+		}
+		public float Right
+		{
+			get{
+				return this.X + this.Width;
+			}
+
+		}
 
 	    /// <summary>
         /// 
@@ -96,17 +144,17 @@ namespace GtkControl.Control
 	    /// <summary>
 	    /// Ширина
 	    /// </summary>
-	    public virtual double Width { get; set; }
+	    public virtual float Width { get; set; }
 
 	    /// <summary>
 	    /// Высота
 	    /// </summary>
-	    public virtual double Height { get; set; }
+	    public virtual float Height { get; set; }
 
 	    /// <summary>
 		/// Тип элемента
 		/// </summary>
-		public BPMNElementType ELType=BPMNElementType.NONE;
+		public BPMNElementType ElementType=BPMNElementType.NONE;
 		/// <summary>
 		/// Наложение маска
 		/// </summary>
@@ -121,7 +169,7 @@ namespace GtkControl.Control
 				using (Context crPix = Gdk.CairoHelper.Create(pm)) {
 					crPix.Antialias = Antialias.None;
 					crPix.Operator = Operator.Source;
-					crPix.Source = new SolidPattern (new Color (0, 0, 0, 0));
+					crPix.Source = new SolidPattern (new Cairo.Color (0, 0, 0, 0));
 					crPix.Rectangle (0, 0, Allocation.Width, Allocation.Height);
 					crPix.Paint ();
 
@@ -141,7 +189,7 @@ namespace GtkControl.Control
 		/// <param name="typeEl"></param>
 		/// <param name="_width"></param>
 		/// <param name="_height"></param>
-		public BaseItem (string pName, string cap, BPMNElementType typeEl, double _width, double _height)
+		public BaseItem (string pName, string cap, BPMNElementType typeEl, float _width, float _height)
 		{
 			ID = Guid.NewGuid ();
 			Popup = new Gtk.Menu ();
@@ -152,7 +200,7 @@ namespace GtkControl.Control
 			text1.Activated += new EventHandler (Menu1Clicked);
 			Gtk.MenuItem text2 = new MenuItem ("Test2");
 			text2.Activated += new EventHandler (Menu2Clicked);
-			ELType = typeEl;
+			ElementType = typeEl;
 			Popup.Add (text1);			
 			Popup.Add (text2);
 			
@@ -161,7 +209,7 @@ namespace GtkControl.Control
 			this.Width = _width;
 			this.Height = _height;
 			this.Name = parentName + "MVObject";
-			
+			SetMaxMin (this);
 			Resizers = new List<EventBox> ();
 			for (var i=0; i<8; i++) {
 				var evn = new EventBox ();
@@ -298,20 +346,44 @@ namespace GtkControl.Control
 			Body = "Test2";
 			this.QueueDraw();
 		}
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="arr"></param>
-        /// <returns></returns>
-		protected double Min (params double[] arr)
-	    {
-			int minp = 0;
-			for (int i = 1; i < arr.Length; i++)
-			    if (arr[i] < arr[minp])
-				minp = i;
-		 
-			return arr[minp];
-	    }
+       	/// <summary>
+		/// Установка минимально и максимального размера элемента
+		/// </summary>
+		/// <param name="item"></param>
+		private void SetMaxMin(BaseItem item)
+		{
+			switch (item.ElementType)
+			{
+			case BPMNElementType.TASK:
+				item.MinWidth = 60;
+				item.MinHeight = 40;
+				item.MaxWidth = 300;
+				item.MaxHeight = 180;
+				break;
+			case BPMNElementType.GATEWAY:
+				item.MinWidth = 40;
+				item.MinHeight = 40;
+				item.MaxWidth = 60;
+				item.MaxHeight = 60;
+				break;
+			case BPMNElementType.START_EVENT:
+			case BPMNElementType.END_EVENT:
+				item.MinWidth = 35;
+				item.MinHeight = 35;
+				item.MaxWidth = 60;
+				item.MaxHeight = 60;
+				break;
+			case BPMNElementType.POOL:
+				item.MinWidth = 90;
+				item.MinHeight = 60;
+				break;
+			case BPMNElementType.NONE:
+				item.MinWidth = 20;
+				item.MinHeight = 20;
+				break;
+			}
+		}
+
 		/// <summary>
 		/// Скругленный прямоугольник
 		/// </summary>
@@ -327,7 +399,7 @@ namespace GtkControl.Control
 			gr.Save ();
 		 
 			if ((radius > height / 2) || (radius > width / 2))
-			    radius = Min (height / 2, width / 2);
+			    radius = Math.Min(height / 2, width / 2);
 		 
 			gr.MoveTo (x, y + radius);
 			gr.Arc (x + radius, y + radius, radius, Math.PI, -Math.PI / 2);

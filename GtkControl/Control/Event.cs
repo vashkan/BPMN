@@ -16,7 +16,7 @@ namespace GtkControl.Control
         /// <summary>
         /// 
         /// </summary>
-		public override double Height {
+		public override float Height {
 			get {
 				return base.Height;
 			}
@@ -27,7 +27,7 @@ namespace GtkControl.Control
         /// <summary>
         /// 
         /// </summary>
-		public override double Width {
+		public override float Width {
 			get {
 				return base.Width;
 			}
@@ -42,11 +42,11 @@ namespace GtkControl.Control
 		/// <param name="cap"></param>
 		/// <param name="typeEl"></param>
 		/// <param name="radius"></param>
-		public Event (string pName, string cap, BPMNElementType typeEl, double radius)
+		public Event (string pName, string cap, BPMNElementType typeEl, float radius)
 		:base(pName,cap,typeEl,2*radius,2*radius)
 		{
 			this.radius = radius;
-			switch (ELType) {
+			switch (ElementType) {
 			case BPMNElementType.START_EVENT:{
 				line_width = 2;
 				fill_color = new Cairo.Color (0.8,1,0.5,1);

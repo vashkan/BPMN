@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 using Gtk;
 using GtkControl.Control;
 
@@ -35,7 +36,10 @@ namespace GtkControl
 		private int origY = 0;
 		public int pointX = 0;
 		public int pointY = 0;
+		private static bool have_drag;
 		private SelectionService m_selectionService;
+
+
 	
 		#endregion
 		
@@ -53,8 +57,54 @@ namespace GtkControl
 		public MVPanel ()
 		{
 			this.Build ();
+			this.DragDataReceived += new DragDataReceivedHandler (HandleLabelDragDataReceived);
+			this.DragDrop += new DragDropHandler (HandleTargetDragDrop);
+			this.DragMotion += HandleTargetDragMotion;
+			Gtk.Drag.DestSet (this, DestDefaults.All, 
+			                  new[] { new TargetEntry("text/plain", TargetFlags.OtherWidget, 1)} ,
+								 Gdk.DragAction.Move);
 		}
-		
+
+		void HandleLabelDragDataReceived (object o, DragDataReceivedArgs args)
+		{
+
+			Console.WriteLine ("FixedDragDataReceived");
+		}
+		private static void HandleTargetDragMotion (object sender, DragMotionArgs args)
+		{
+			if (! have_drag) {
+				have_drag = true;
+				// FIXME?  Kinda wonky binding.
+				//(sender as Gtk.Image).FromPixbuf = trashcan_open_pixbuf;
+				//fixed1.Add(
+			}
+			
+			Widget source_widget = Gtk.Drag.GetSourceWidget (args.Context);
+			Console.WriteLine ("motion, source {0}", source_widget == null ? "null" : source_widget.ToString ());
+			
+			Gdk.Atom [] targets = args.Context.Targets;
+			foreach (Gdk.Atom a in targets)
+				Console.WriteLine (a.Name); 
+			
+			Gdk.Drag.Status (args.Context, args.Context.SuggestedAction, args.Time);
+			args.RetVal = true;
+		}
+
+		private static void HandleTargetDragDrop (object sender, DragDropArgs args)
+		{
+			Console.WriteLine ("drop");
+			have_drag = false;
+			//(sender as Gtk.Image).FromPixbuf = trashcan_closed_pixbuf;
+			
+			#if BROKEN			// Context.Targets is not defined in the bindings
+			if (Context.Targets.Length != 0) {
+				Drag.GetData (sender, context, Context.Targets.Data as Gdk.Atom, args.Time);
+				args.RetVal = true;
+			}
+			#endif
+			
+			args.RetVal = false;
+		}
 		/// <summary>
 		/// Set the controls to be redrawn
 		/// </summary>
@@ -97,7 +147,7 @@ namespace GtkControl
 		}
 		
 		//Create the event box for the custom control
-		private EventBox GetMovingBox (string name, string caption, BPMNElementType typeEl, double width, double height)
+		private EventBox GetMovingBox (string name, string caption, BPMNElementType typeEl, float width, float height)
 		{ 
 			BaseItem ctrl;
 			switch (typeEl) {
@@ -185,7 +235,7 @@ namespace GtkControl
 					re = GetMovingBox (
 							mve.Name + "Clone",
 							mv.Caption,
-							mv.ELType,
+							mv.ElementType,
 							mv.Width,
 							mv.Height
 					);
@@ -222,6 +272,15 @@ namespace GtkControl
 				destY = 0;
 			}			
 			this.fixed1.Move (wdg, destX, destY);
+			if (wdg is EventBox) 
+			{
+				var baseItem = (wdg as EventBox).Child as BaseItem;
+				if (baseItem != null)
+				{
+					baseItem.Location = new PointF(destX,destY);
+				}
+			}
+
 			if (!isClone) {
 				foreach (var baseItem in SelectionService.CurrentSelection) {
 					int index = 0;
@@ -296,8 +355,8 @@ namespace GtkControl
 									}
 									fixed1.Move (
                                             baseItem1.Resizers [index++],
-                                            origX + j * currCtrl.Allocation.Width / 2 - 5,
-                                            origY + i * currCtrl.Allocation.Height / 2 - 5
+                                            (int)baseItem1.X + j * currCtrl.Allocation.Width / 2 - 5,
+                                            (int)baseItem1.Y + i * currCtrl.Allocation.Height / 2 - 5
 									);
 								}
 							}
@@ -363,27 +422,20 @@ namespace GtkControl
 					}
 					if (IsDragged) {
 					
-						int p_x, p_y, dx, dy;
+						int p_x, p_y;
+						float dx, dy;
 						fixed1.GetPointer (out p_x, out p_y);
-						dx = p_x - actRes.X;
-						dy = p_y - actRes.Y;
-						var temp = obj.Height + dy;
-						temp = (temp > 10) ? temp : 10;
-						obj.Height = temp;
-						temp = obj.Width + dx;
-						temp = (temp > 10) ? temp : 10;
-						obj.Width = temp;
-						pointX = p_x;
-						pointY = p_y;
+						dx = p_x - obj.X;
+						dy = p_y - obj.Y;
+
+						obj.Height = (dy > obj.MinHeight) ? ((obj.MaxHeight!=0 && dy>obj.MaxHeight)?obj.MaxHeight: dy) : obj.MinHeight;
+						obj.Width = (dx > obj.MinWidth) ? ((obj.MaxWidth!=0 && dx>obj.MaxWidth)?obj.MaxWidth: dx) : obj.MinWidth;;
+
 						currCtrl.SetSizeRequest ((int)obj.Width, (int)obj.Height);
 						obj.SetSizeRequest ((int)obj.Width, (int)obj.Height);
-						
-					
-						obj.X = Math.Min ((int)obj.X, (int)args.Event.X);
-						obj.Y = Math.Min ((int)obj.Y, (int)args.Event.Y);
 						//MoveControl (currCtrl,obj.X , obj.Y, true);
-						origX += dx;
-						origY += dy;
+						origX += (int)dx;
+						origY += (int)dy;
 					}
 				}
 			}

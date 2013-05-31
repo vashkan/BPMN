@@ -16,10 +16,13 @@ namespace GtkControl.Control
 		/// <param name="cap"></param>
 		/// <param name="_width"></param>
 		/// <param name="_height"></param>
-		public Task (string pName, string cap, double _width, double _height)
+		public Task (string pName, string cap, float _width, float _height)
 		:base(pName,cap,BPMNElementType.TASK,_width,_height)
 		{
+
 		}
+
+
 		/// <summary>
 		/// 
 		/// </summary>
