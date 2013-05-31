@@ -65,7 +65,7 @@ namespace GtkControl
 					m_panel.Add (resizer);
 				}
 			}
-			m_panel.ShowAll ();
+			//m_panel.ShowAll ();
 			item.IsSelected = true;
 			CurrentSelection.Add (item);
 		}
@@ -106,10 +106,13 @@ namespace GtkControl
             else
             {*/
 
-                item.IsSelected = false;
-                CurrentSelection.Remove(item);
-            //}
-        }
+		item.IsSelected = false;
+		CurrentSelection.Remove (item);
+		foreach (var resizer in (item as BaseItem).Resizers) {
+				m_panel.Remove(resizer);
+		}
+		//}
+		}
 
         /// <summary>
         /// 

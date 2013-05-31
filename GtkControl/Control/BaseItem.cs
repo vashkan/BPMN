@@ -177,7 +177,7 @@ namespace GtkControl.Control
 					crPix.NewPath ();
 					PaintMask (crPix);
 			}
-			this.ParentWindow.InputShapeCombineMask (pm, 0, 0);
+			//this.ParentWindow.InputShapeCombineMask (pm, 0, 0);
 			this.ParentWindow.ShapeCombineMask (pm, 0, 0);
 			pm.Dispose ();
 		}

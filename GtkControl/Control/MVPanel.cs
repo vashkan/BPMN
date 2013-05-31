@@ -282,17 +282,18 @@ namespace GtkControl
 			}
 
 			if (!isClone) {
-				foreach (var baseItem in SelectionService.CurrentSelection) {
+				foreach (var selectedItem in SelectionService.CurrentSelection) {
 					int index = 0;
+					var baseItem = selectedItem  as BaseItem;
 					for (var j = 0; j < 3; j++) {
 						for (var i = 0; i < 3; i++) {
 							if ((i == 1) && (j == 1)) {
 								continue;
 							}
 							fixed1.Move (
-								(baseItem as BaseItem).Resizers [index++],
-								destX + j * currCtrl.Allocation.Width / 2 - 5,
-								destY + i * currCtrl.Allocation.Height / 2 - 5
+								baseItem.Resizers [index++],
+								(int)baseItem.X   + j * (int)baseItem.Width / 2 - 5,
+								(int)baseItem.Y   + i * (int)baseItem.Height / 2 - 5
 								
 							);
 						}
@@ -355,8 +356,8 @@ namespace GtkControl
 									}
 									fixed1.Move (
                                             baseItem1.Resizers [index++],
-                                            (int)baseItem1.X + j * currCtrl.Allocation.Width / 2 - 5,
-                                            (int)baseItem1.Y + i * currCtrl.Allocation.Height / 2 - 5
+                                            (int)baseItem1.X + j * (int)baseItem1.Width / 2 - 5,
+                                            (int)baseItem1.Y + i * (int)baseItem1.Height / 2 - 5
 									);
 								}
 							}
