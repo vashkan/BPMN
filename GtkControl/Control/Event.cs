@@ -18,10 +18,12 @@ namespace GtkControl.Control
         /// </summary>
 		public override float Height {
 			get {
-				return base.Height;
+				return (float)radius*2;
 			}
 			set {
 				base.Height = value;
+				radius = Math.Min (base.Height,base.Width)/2;
+
 			}
 		}
         /// <summary>
@@ -29,10 +31,12 @@ namespace GtkControl.Control
         /// </summary>
 		public override float Width {
 			get {
-				return base.Width;
+				return (float)radius*2;
 			}
 			set {
 				base.Width = value;
+				radius = Math.Min (base.Height,base.Width)/2;
+
 			}
 		}
 		/// <summary>
