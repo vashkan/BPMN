@@ -27,8 +27,8 @@ namespace GtkControl
 		{
 			m_panel = panel;			
 		}
-		        /// <summary>
-        /// 
+		/// <summary>
+        /// Выделить элемент
         /// </summary>
         /// <param name="item"></param>
         internal void SelectItem(ISelectable item)
@@ -38,7 +38,7 @@ namespace GtkControl
         }
 
         /// <summary>
-        /// 
+        /// Добавить элемент к выделению
         /// </summary>
         /// <param name="item"></param>
         internal void AddToSelection (ISelectable item)

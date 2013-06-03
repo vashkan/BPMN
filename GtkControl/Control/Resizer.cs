@@ -7,10 +7,11 @@ using Gtk;
 namespace GtkControl.Control
 {
 	/// <summary>
-	/// 
+	/// Ресайзер
 	/// </summary>
 	public class Resizer : Gtk.DrawingArea,IDragged
 	{
+		//Элемент к которому привязан ресайзер
 		public BaseItem baseItem{ get; set;}
 		/// <summary>
 		/// Gets or sets the x.
@@ -61,7 +62,7 @@ namespace GtkControl.Control
 		}
 		
 		/// <summary>
-		/// 
+		/// Ресайзер
 		/// </summary>
 		public Resizer ()
 		{
@@ -109,7 +110,7 @@ namespace GtkControl.Control
 		}
 		
 		/// <summary>
-		/// 
+		/// Отрисовка графики элемента
 		/// </summary>
 		/// <param name="g"></param>
 		public void Paint (Cairo.Context g)
