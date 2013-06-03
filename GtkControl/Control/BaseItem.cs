@@ -223,6 +223,23 @@ namespace GtkControl.Control
 					var eventBox = (o as EventBox);
 					if ((eventBox != null) && (eventBox.Child is IDragged)) {
 						(eventBox.Child as IDragged).IsDragged = false;
+						var fixed1 = (this.Parent.Parent as Fixed);
+						if (fixed1 !=null)
+						{
+							var index = 0;
+							for (var l = 0; l < 3; l++) {
+								for (var k = 0; k < 3; k++) {
+									if ((k == 1) && (l == 1)) {
+										continue;
+									}
+									fixed1.Move (
+										this.Resizers [index++],
+										(int)this.X + l * (int)this.Width / 2 - 5,
+										(int)this.Y + k * (int)this.Height / 2 - 5
+										);
+								}
+							}
+						}
 					}
 				};
 				Resizers.Add (evn);
