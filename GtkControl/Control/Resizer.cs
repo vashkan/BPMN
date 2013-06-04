@@ -54,6 +54,7 @@ namespace GtkControl.Control
         /// <returns></returns>
 		protected override bool OnExposeEvent (Gdk.EventExpose args)
 		{	
+			//перерисовка элемента 
 			using (Context g = Gdk.CairoHelper.Create (args.Window)) {
 				g.Antialias = Antialias.Subpixel;
 				Paint (g);
@@ -128,7 +129,7 @@ namespace GtkControl.Control
 		}
 
 		/// <summary>
-		/// 
+		/// отрисовка маски
 		/// </summary>
 		/// <param name="g"></param>
 		public  void PaintMask (Cairo.Context g)

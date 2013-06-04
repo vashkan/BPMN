@@ -1,6 +1,6 @@
 using System;
 
-namespace GtkControl
+namespace GtkControl.Control
 {
 	public enum ConnectingObjectType
 	{

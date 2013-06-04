@@ -42,13 +42,13 @@ public partial class MainWindow: Gtk.Window
 			"оаро",
 			92,
 			222,
-			BPMNElementType.START_EVENT,
+			BPMNElementType.START_NONE,
 			40,
 			40
 		);
 
 		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "Task", 10, 10, BPMNElementType.TASK, 140, 70);
-		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, BPMNElementType.END_EVENT, 40, 40);
+		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, BPMNElementType.END_NONE, 40, 40);
 		this.mvpanel1.AddMovingObject (
 			name + (index++).ToString (),
 			"flow",
@@ -224,7 +224,7 @@ public partial class MainWindow: Gtk.Window
 		};
 		using (Alignment a = new Alignment (0.5f, 0.5f, 0f, 0f))
 		{
-			a.Add (new EventBox{new Event("","",BPMNElementType.START_EVENT,15)});
+			a.Add (new EventBox{new StartEvent("","",15)});
 			startEvent.Add (a);
 		}
 		//завершение
@@ -239,7 +239,7 @@ public partial class MainWindow: Gtk.Window
 		};
 		using (Alignment a = new Alignment (0.5f, 0.5f, 0f, 0f))
 		{
-			a.Add (new EventBox{new Event("","",BPMNElementType.END_EVENT,15)});
+			a.Add (new EventBox{new EndEvent("","",15)});
 			endEvent.Add (a);
 		}
 		VBox vb3 = new VBox {startEvent,endEvent};

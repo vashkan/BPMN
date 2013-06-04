@@ -28,7 +28,7 @@ namespace GtkControl.Control
 		/// <summary>
 	/// 
 	/// </summary>
-	public class BaseItem : Gtk.DrawingArea,ISelectable, IDragged
+	public abstract class BaseItem : Gtk.DrawingArea,ISelectable, IDragged
 	{
 		string parentName = "";
 		
@@ -109,6 +109,10 @@ namespace GtkControl.Control
 				this.Y=value.Y;
 			}
 		}
+		/// <summary>
+		/// Gets the center.
+		/// </summary>
+		/// <value>The center.</value>
 		public PointF Center
 		{
 			get
@@ -116,7 +120,10 @@ namespace GtkControl.Control
 				return new PointF(this.X+this.Width/2,this.Y+this.Height/2);
 			}
 		}
-
+		/// <summary>
+		/// Gets the bottom.
+		/// </summary>
+		/// <value>The bottom.</value>
 		public float Bottom
 		{
 			get
@@ -124,6 +131,10 @@ namespace GtkControl.Control
 				return this.Y + this.Height;
 			}
 		}
+		/// <summary>
+		/// Gets the right.
+		/// </summary>
+		/// <value>The right.</value>
 		public float Right
 		{
 			get{
@@ -154,9 +165,9 @@ namespace GtkControl.Control
 	    /// <summary>
 		/// Тип элемента
 		/// </summary>
-		public BPMNElementType ElementType=BPMNElementType.NONE;
+		public abstract BPMNElementType ElementType { get;}
 		/// <summary>
-		/// Наложение маска
+		/// Наложение маски
 		/// </summary>
 		/// <param name="width"></param>
 		/// <param name="height"></param>
@@ -177,7 +188,7 @@ namespace GtkControl.Control
 					crPix.NewPath ();
 					PaintMask (crPix);
 			}
-			//this.ParentWindow.InputShapeCombineMask (pm, 0, 0);
+			this.ParentWindow.InputShapeCombineMask (pm, 0, 0);
 			this.ParentWindow.ShapeCombineMask (pm, 0, 0);
 			pm.Dispose ();
 		}
@@ -189,7 +200,7 @@ namespace GtkControl.Control
 		/// <param name="typeEl"></param>
 		/// <param name="_width"></param>
 		/// <param name="_height"></param>
-		public BaseItem (string pName, string cap, BPMNElementType typeEl, float _width, float _height)
+		public BaseItem (string pName, string cap,float _width, float _height)
 		{
 			ID = Guid.NewGuid ();
 			Popup = new Gtk.Menu ();
@@ -200,7 +211,6 @@ namespace GtkControl.Control
 			text1.Activated += new EventHandler (Menu1Clicked);
 			Gtk.MenuItem text2 = new MenuItem ("Test2");
 			text2.Activated += new EventHandler (Menu2Clicked);
-			ElementType = typeEl;
 			Popup.Add (text1);			
 			Popup.Add (text2);
 			
@@ -254,7 +264,7 @@ namespace GtkControl.Control
 		}
 
 		/// <summary>
-        /// 
+		/// наложение маски при изменении размеров элемента
         /// </summary>
         /// <param name="allocation"></param>
         protected override void OnSizeAllocated(Gdk.Rectangle allocation)
@@ -383,8 +393,8 @@ namespace GtkControl.Control
 				item.MaxWidth = 60;
 				item.MaxHeight = 60;
 				break;
-			case BPMNElementType.START_EVENT:
-			case BPMNElementType.END_EVENT:
+			case BPMNElementType.START_NONE:
+			case BPMNElementType.END_NONE:
 				item.MinWidth = 35;
 				item.MinHeight = 35;
 				item.MaxWidth = 60;

@@ -4,17 +4,25 @@ using Cairo;
 namespace GtkControl.Control
 {
 	/// <summary>
-	/// 
+	/// События
 	/// </summary>
-	public class Event:BaseItem
+	public abstract class Event:BaseItem
 	{
-	    readonly Cairo.Gradient pat;
+
+		#region Переменные
+	    
+		protected Cairo.Gradient pat;
 		double radius;
-	    readonly double line_width;
-	    Cairo.Color fill_color;
-		Cairo.Color line_color;
+	    protected double line_width;
+	    protected Cairo.Color fill_color;
+		protected Cairo.Color line_color;
+
+		#endregion
+
+		#region Свойства
+
         /// <summary>
-        /// 
+        /// Высота
         /// </summary>
 		public override float Height {
 			get {
@@ -23,11 +31,10 @@ namespace GtkControl.Control
 			set {
 				base.Height = value;
 				radius = Math.Min (base.Height,base.Width)/2;
-
 			}
 		}
         /// <summary>
-        /// 
+        /// Ширина
         /// </summary>
 		public override float Width {
 			get {
@@ -36,38 +43,29 @@ namespace GtkControl.Control
 			set {
 				base.Width = value;
 				radius = Math.Min (base.Height,base.Width)/2;
-
 			}
 		}
 		/// <summary>
-		/// 
+		/// Gets the type of the event.
+		/// </summary>
+		/// <value>The type of the event.</value>
+		public abstract EventType EventType {
+			get;
+		}
+
+		#endregion
+		/// <summary>
+		/// События
 		/// </summary>
 		/// <param name="pName"></param>
 		/// <param name="cap"></param>
 		/// <param name="typeEl"></param>
 		/// <param name="radius"></param>
-		public Event (string pName, string cap, BPMNElementType typeEl, float radius)
-		:base(pName,cap,typeEl,2*radius,2*radius)
+		public Event (string pName, string cap, float radius)
+		:base(pName,cap,2*radius,2*radius)
 		{
 			this.radius = radius;
-			switch (ElementType) {
-			case BPMNElementType.START_EVENT:{
-				line_width = 2;
-				fill_color = new Cairo.Color (0.8,1,0.5,1);
-				line_color = new Color (0.35,0.65,0.08);
-				break;
-			}
-			case BPMNElementType.END_EVENT:{
-				line_width = 3;
-				fill_color = new Cairo.Color (0.93,0.7,0.7,1);
-				line_color = new Color (0.6,0,0);
-				break;
-			}
-			}
-			var x = line_width/2;
-			pat = new Cairo.LinearGradient(x,x, x+2*radius, x+2*radius);
-	        pat.AddColorStop (0, new Cairo.Color (1,1,1,1));
-	        pat.AddColorStop (1, fill_color);
+
 		}
 
 	    /// <summary>
@@ -76,17 +74,14 @@ namespace GtkControl.Control
 	    /// <param name="g"></param>
 	    public override void Paint (Context g)
 		{
-
 			g.Save ();
 			g.Arc(radius,radius,radius-line_width/2,0,2*Math.PI);
 	        g.Pattern = pat;
 	        g.FillPreserve ();
-	 
 	        g.Restore ();
 			g.Color = line_color;
 	        g.LineWidth = line_width;
 	        g.Stroke ();
-		
 		}
 
 	    /// <summary>

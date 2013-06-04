@@ -25,7 +25,7 @@
     <File subtype="Code" buildaction="Compile" name="gtk-gui\GtkControl.MVPanel.cs" />
     <File subtype="Code" buildaction="EmbedAsResource" name="gtk-gui\objects.xml" />
     <File subtype="Code" buildaction="Compile" name="Control\BaseItem.cs" />
-    <File subtype="Code" buildaction="Compile" name="Control\Flows.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\ConnectingObjects.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Task.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Event.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\Gateway.cs" />
@@ -42,6 +42,15 @@
     <File subtype="Code" buildaction="Compile" name="IElement.cs" />
     <File subtype="Code" buildaction="Compile" name="ElementId.cs" />
     <File subtype="Code" buildaction="Compile" name="Control\ConnectingObjectType.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\SwimlaneType.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\Swimlane.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\Lane.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\EndEvent.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\StartEvent.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\EventType.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\IntermediateEvent.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\ConditionType.cs" />
+    <File subtype="Code" buildaction="Compile" name="Control\GatewayType.cs" />
   </Contents>
   <References>
     <ProjectReference type="Package" localcopy="True" refto="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />

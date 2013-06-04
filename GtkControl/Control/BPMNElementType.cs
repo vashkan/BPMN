@@ -15,11 +15,11 @@ namespace GtkControl.Control
 		/// Начало процесса.
 		/// </summary>
 		/// 
-		START_EVENT,
+		START_NONE,
 		/// <summary>
 		/// Конец процесса.
 		/// </summary>
-		END_EVENT,
+		END_NONE,
 		/// <summary>
 		/// Задача
 		/// </summary>
@@ -37,6 +37,10 @@ namespace GtkControl.Control
 		/// </summary>
 		SEQUENCE_FLOW_DEFAULT,
 		/// <summary>
+		/// Промежуточное событие
+		/// </summary>
+		INTERMEDIATE_NONE,
+		/// <summary>
 		/// Ассоциация
 		/// </summary>
 		ASSOCIATION,
@@ -51,6 +55,10 @@ namespace GtkControl.Control
 		/// <summary>
 		/// Пул
 		/// </summary>
-		POOL
+		POOL,
+		/// <summary>
+		/// Дорожка
+		/// </summary>
+		LANE
 	};
 }
