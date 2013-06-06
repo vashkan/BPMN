@@ -150,7 +150,7 @@ public partial class MainWindow: Gtk.Window
 		                    new[] { new TargetEntry("text/plain", TargetFlags.Widget, 1)} ,
 							Gdk.DragAction.Copy | Gdk.DragAction.Move);
 		//var temp  = new Pool ("", "", 40, 30,OrientationEnum.Horizontal);
-		Gdk.Pixbuf icon = new Gdk.Pixbuf("Pool_24.jpg");
+		Gdk.Pixbuf icon = new Gdk.Pixbuf("Pool_24.png");
 
 		Gdk.Pixmap pool_icon, pool_mask;
 		icon.RenderPixmapAndMask(out pool_icon,out pool_mask,255);
