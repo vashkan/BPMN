@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using Gtk;
 using Cairo;
 
@@ -10,12 +11,12 @@ namespace GtkControl.Control
     public enum OrientationEnum
     {
         /// <summary>
-        /// 
+        /// Горизонтальная ориентация
         /// </summary>
         Horizontal,
 
         /// <summary>
-        /// 
+        /// Вертикальная ориетация
         /// </summary>
         Vertical
     }
@@ -23,27 +24,67 @@ namespace GtkControl.Control
     /// <summary>
     /// Пул
     /// </summary>
-    public class Pool : BaseItem
+	[Serializable]
+	public class Pool : Swimlane
     {
+		#region Переменные
 		Color line_color;
 		Color fill_color;
+
+		#endregion
+		#region Свойства
+
+		/// <summary>
+		/// Gets or sets the orientation.
+		/// </summary>
+		/// <value>The orientation.</value>
+		public OrientationEnum Orientation { get; set; }
+		public override BPMNElementType ElementType {
+			get {
+				return BPMNElementType.POOL;
+			}
+		}
+		/// <summary>
+		/// Gets the type of the swimlane.
+		/// </summary>
+		/// <value>The type of the swimlane.</value>
+		public override SwimlaneType SwimlaneType 
+		{
+			get 
+			{ 
+				return SwimlaneType.Pool;
+			}
+		}
+		public List<Lane> Lanes { 
+			get; 
+			private set;
+		}
+		//todo participient
+		public string ParticipantRef;
+
+		public string ProcessRef;
+
+
+
+
+		#endregion
         /// <summary>
-        /// 
+        /// Пул
         /// </summary>
         /// <param name="pName"></param>
         /// <param name="cap"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <param name="orientation"></param>
-        public Pool (string pName, string cap, double width, double height, OrientationEnum orientation)
-            : base(pName, cap, ElementType.POOL, width, height)
+        public Pool (string pName, string cap, float width, float height, OrientationEnum orientation)
+            : base(pName, cap, width, height)
 		{
 			fill_color = new Color (0.94, 0.94, 0.94);
 			line_color = new Color (0.0, 0.0, 0.0);
             Orientation = orientation;
         }
 
-        private OrientationEnum Orientation { get; set; }
+        
 
         /// <summary>
         /// перегружаемая функция отрисовки элемента
@@ -52,22 +93,14 @@ namespace GtkControl.Control
         public override void Paint (Context g)
 		{
 			g.Save ();
-			//DrawRoundedRectangle(g, 2, 2, Width - 4, Height - 4, 1);
-			
 			g.Rectangle (1, 1, Width - 2, Height - 2);
-   
-           
-
 			// Color for the stroke
 			g.Color = line_color;
-
 			g.LineWidth = 2;
 			g.Stroke ();
-            
            
 			g.SelectFontFace ("Georgia", FontSlant.Normal, FontWeight.Bold);
 			g.SetFontSize (18.0);
-
 			TextExtents te = g.TextExtents (Body);
 			PointD titlePoint = new PointD();
 			switch (Orientation) {

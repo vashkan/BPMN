@@ -7,10 +7,28 @@ using Gtk;
 namespace GtkControl.Control
 {
 	/// <summary>
-	/// 
+	/// Ресайзер
 	/// </summary>
-	public class Resizer : Gtk.DrawingArea
+	public class Resizer : Gtk.DrawingArea,IDragged
 	{
+		//Элемент к которому привязан ресайзер
+		public BaseItem baseItem{ get; set;}
+		/// <summary>
+		/// Gets or sets the x.
+		/// </summary>
+		/// <value>The x.</value>
+		public int X{ get; set;}
+		/// <summary>
+		/// Gets or sets the y.
+		/// </summary>
+		/// <value>The y.</value>
+		public int Y{ get; set;}
+
+		// <summary>
+		/// Признак перемещения
+		/// </summary>
+		public virtual bool IsDragged { get; set; }
+
 		static Gdk.Cursor hresizeCursor = new Gdk.Cursor (Gdk.CursorType.Sizing);
         /// <summary>
         /// 
@@ -36,6 +54,7 @@ namespace GtkControl.Control
         /// <returns></returns>
 		protected override bool OnExposeEvent (Gdk.EventExpose args)
 		{	
+			//перерисовка элемента 
 			using (Context g = Gdk.CairoHelper.Create (args.Window)) {
 				g.Antialias = Antialias.Subpixel;
 				Paint (g);
@@ -44,7 +63,7 @@ namespace GtkControl.Control
 		}
 		
 		/// <summary>
-		/// 
+		/// Ресайзер
 		/// </summary>
 		public Resizer ()
 		{
@@ -70,7 +89,7 @@ namespace GtkControl.Control
 			};
 		}
 		/// <summary>
-		/// 
+		/// Изменение курсора при наведении указателя мыши
 		/// </summary>
 		/// <param name="evnt"></param>
 		/// <returns></returns>
@@ -81,7 +100,7 @@ namespace GtkControl.Control
 			return base.OnEnterNotifyEvent (evnt);
 		}
 		/// <summary>
-		/// 
+		/// Восстановление курсора
 		/// </summary>
 		/// <param name="evnt"></param>
 		/// <returns></returns>
@@ -92,7 +111,7 @@ namespace GtkControl.Control
 		}
 		
 		/// <summary>
-		/// 
+		/// Отрисовка графики элемента
 		/// </summary>
 		/// <param name="g"></param>
 		public void Paint (Cairo.Context g)
@@ -101,7 +120,6 @@ namespace GtkControl.Control
 			g.MoveTo (8, 5);
 			g.Arc (5, 5, 4, 0, 2 * Math.PI);
 			g.Color = new Cairo.Color (0.98, 0.98, 0.98);
-			//g.ClosePath ();
 			g.FillPreserve ();
 			g.Color = new Cairo.Color (0.01, 0.4, 0.6);
 	 			
@@ -111,7 +129,7 @@ namespace GtkControl.Control
 		}
 
 		/// <summary>
-		/// 
+		/// отрисовка маски
 		/// </summary>
 		/// <param name="g"></param>
 		public  void PaintMask (Cairo.Context g)

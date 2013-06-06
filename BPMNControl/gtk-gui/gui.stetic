@@ -1,31 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <stetic-interface>
   <configuration>
-    <images-root-path>..\..\GtkControl</images-root-path>
+    <images-root-path>..</images-root-path>
     <target-gtk-version>2.12</target-gtk-version>
   </configuration>
   <import>
     <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
     <widget-library name="../bin/Debug/GtkControl.exe" internal="true" />
   </import>
-  <widget class="Gtk.Window" id="MainWindow" design-size="1239 681">
-    <action-group name="Default">
-      <action id="zoomOutAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes" />
-        <property name="StockId">gtk-zoom-out</property>
-      </action>
-      <action id="zoom100Action">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes" />
-        <property name="StockId">gtk-zoom-100</property>
-      </action>
-      <action id="zoomInAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes" />
-        <property name="StockId">gtk-zoom-in</property>
-      </action>
-    </action-group>
+  <widget class="Gtk.Window" id="MainWindow" design-size="969 730">
+    <action-group name="Default" />
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -34,12 +18,12 @@
       <widget class="Gtk.HPaned" id="hpaned1">
         <property name="MemberName" />
         <property name="CanFocus">True</property>
-        <property name="Position">955</property>
+        <property name="Position">1</property>
         <child>
           <widget class="Gtk.VPaned" id="vpaned2">
             <property name="MemberName" />
             <property name="CanFocus">True</property>
-            <property name="Position">58</property>
+            <property name="Position">1</property>
             <child>
               <widget class="Gtk.HBox" id="hbox2">
                 <property name="MemberName" />
@@ -49,9 +33,9 @@
                     <property name="MemberName" />
                     <property name="ShowArrow">False</property>
                     <node name="toolbar2" type="Toolbar">
-                      <node type="Toolitem" action="zoomOutAction" />
-                      <node type="Toolitem" action="zoom100Action" />
-                      <node type="Toolitem" action="zoomInAction" />
+                      <node type="Toolitem" />
+                      <node type="Toolitem" />
+                      <node type="Toolitem" />
                     </node>
                   </widget>
                   <packing>
@@ -80,7 +64,7 @@
                     <property name="Upper">500</property>
                     <property name="PageIncrement">10</property>
                     <property name="StepIncrement">1</property>
-                    <property name="Value">100</property>
+                    <property name="Value">101</property>
                     <property name="DrawValue">True</property>
                     <property name="Digits">0</property>
                     <property name="ValuePos">Top</property>
@@ -111,32 +95,12 @@
           </packing>
         </child>
         <child>
-          <widget class="Gtk.VPaned" id="vpaned1">
+          <widget class="Gtk.VBox" id="ItemPanel">
             <property name="MemberName" />
-            <property name="CanFocus">True</property>
-            <property name="Position">49</property>
+            <property name="Spacing">2</property>
+            <property name="BorderWidth">1</property>
             <child>
-              <widget class="Gtk.Label" id="label2">
-                <property name="MemberName" />
-                <property name="LabelProp" translatable="yes">label2</property>
-              </widget>
-              <packing>
-                <property name="Resize">False</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow">
-                <property name="MemberName" />
-                <property name="ShadowType">In</property>
-                <child>
-                  <widget class="Gtk.TextView" id="textview1">
-                    <property name="MemberName" />
-                    <property name="CanFocus">True</property>
-                    <property name="ShowScrollbars">True</property>
-                    <property name="Text" translatable="yes" />
-                  </widget>
-                </child>
-              </widget>
+              <placeholder />
             </child>
           </widget>
         </child>
@@ -159,7 +123,6 @@
                 <property name="MemberName" />
                 <property name="Events">PointerMotionMask, PointerMotionHintMask, ButtonMotionMask, Button1MotionMask, Button2MotionMask, Button3MotionMask</property>
                 <property name="HasWindow">False</property>
-                <signal name="MotionNotifyEvent" handler="OnFixed1MotionNotifyEvent" />
               </widget>
             </child>
           </widget>

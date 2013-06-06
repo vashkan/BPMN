@@ -4,89 +4,116 @@ using Cairo;
 namespace GtkControl.Control
 {
 	/// <summary>
-	/// 
+	/// РЎРѕР±С‹С‚РёСЏ
 	/// </summary>
-	public class Event:BaseItem
+	[Serializable]
+	public abstract class Event:BaseItem
 	{
-	    readonly Cairo.Gradient pat;
+
+		#region РџРµСЂРµРјРµРЅРЅС‹Рµ
+	    
+		protected Cairo.Gradient pat;
 		double radius;
-	    readonly double line_width;
-	    Cairo.Color fill_color;
-		Cairo.Color line_color;
+	    protected double line_width;
+	    protected Cairo.Color fill_color;
+		protected Cairo.Color line_color;
+
+		#endregion
+
+		#region РЎРІРѕР№СЃС‚РІР°
+
         /// <summary>
-        /// 
+        /// Р’С‹СЃРѕС‚Р°
         /// </summary>
-		public override double Height {
+		public override float Height {
 			get {
-				return base.Height;
+				return (float)radius*2;
 			}
 			set {
 				base.Height = value;
+				radius = Math.Min (base.Height,base.Width)/2;
 			}
 		}
         /// <summary>
-        /// 
+        /// РЁРёСЂРёРЅР°
         /// </summary>
-		public override double Width {
+		public override float Width {
 			get {
-				return base.Width;
+				return (float)radius*2;
 			}
 			set {
 				base.Width = value;
+				radius = Math.Min (base.Height,base.Width)/2;
 			}
 		}
 		/// <summary>
-		/// 
+		/// Gets the type of the event.
+		/// </summary>
+		/// <value>The type of the event.</value>
+		public abstract EventType EventType {
+			get;
+		}
+
+		#endregion
+		/// <summary>
+		/// РЎРѕР±С‹С‚РёСЏ
 		/// </summary>
 		/// <param name="pName"></param>
 		/// <param name="cap"></param>
 		/// <param name="typeEl"></param>
 		/// <param name="radius"></param>
-		public Event (string pName, string cap, ElementType typeEl, double radius)
-		:base(pName,cap,typeEl,2*radius,2*radius)
+		public Event (string pName, string cap, float radius)
+		:base(pName,cap,2*radius,2*radius)
 		{
 			this.radius = radius;
-			switch (ELType) {
-			case ElementType.START_EVENT:{
-				line_width = 4;
-				fill_color = new Cairo.Color (0.8,1,0.5,1);
-				line_color = new Color (0.35,0.65,0.08);
-				break;
-			}
-			case ElementType.END_EVENT:{
-				line_width = 5;
-				fill_color = new Cairo.Color (0.93,0.7,0.7,1);
-				line_color = new Color (0.6,0,0);
-				break;
-			}
-			}
-			var x = line_width/2;
-			pat = new Cairo.LinearGradient(x,x, x+2*radius, x+2*radius);
-	        pat.AddColorStop (0, new Cairo.Color (1,1,1,1));
-	        pat.AddColorStop (1, fill_color);
+
 		}
 
 	    /// <summary>
-	    /// перегружаемая функция отрисовки элемента
+	    /// РїРµСЂРµРіСЂСѓР¶Р°РµРјР°СЏ С„СѓРЅРєС†РёСЏ РѕС‚СЂРёСЃРѕРІРєРё СЌР»РµРјРµРЅС‚Р°
 	    /// </summary>
 	    /// <param name="g"></param>
 	    public override void Paint (Context g)
 		{
+			switch (ElementType) {
+			case BPMNElementType.START_NONE:
+			case BPMNElementType.END_NONE:
+			{
+				g.Save ();
+				g.Arc (radius, radius, radius - line_width / 2, 0, 2 * Math.PI);
+				g.Pattern = pat;
+				g.FillPreserve ();
+				g.Restore ();
+				g.Color = line_color;
+				g.LineWidth = line_width;
+				g.Stroke ();
+				break;
+			}
+			case BPMNElementType.INTERMEDIATE_NONE:
+			{
+				g.Save ();
+				g.Arc (radius, radius, radius - line_width / 2, 0, 2 * Math.PI);
+				g.Pattern = pat;
+				g.FillPreserve ();
+				g.Restore ();
+				g.Color = line_color;
+				g.LineWidth = line_width;
+				g.Stroke ();
+				g.NewPath();
+				g.Arc(radius, radius, 0.85*radius - line_width / 2, 0, 2 * Math.PI);
+				g.Color = line_color;
+				g.LineWidth = line_width;
+				g.Stroke ();
+				break;
+			}
 
-			g.Save ();
-			g.Arc(radius,radius,radius-line_width/2,0,2*Math.PI);
-	        g.Pattern = pat;
-	        g.FillPreserve ();
-	 
-	        g.Restore ();
-			g.Color = line_color;
-	        g.LineWidth = line_width;
-	        g.Stroke ();
-		
+			default:
+				break;
+			}
 		}
 
 	    /// <summary>
-	    /// перегружаемая функция отрисовки маски для элемента
+	    /// РїРµСЂРµРіСЂСѓР¶Р°РµРјР°СЏ С„СѓРЅРєС†РёСЏ РѕС‚СЂРёСЃРѕРІРєРё РјР°СЃРєРё РґР»СЏ СЌР»РµРјРµРЅС‚Р°
 	    /// </summary>
 	    /// <param name="g"></param>
 	    public override void PaintMask (Context g)
