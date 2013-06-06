@@ -58,7 +58,7 @@ namespace GtkControl
 		public MVPanel ()
 		{
 			this.Build ();
-
+			fixed1.MotionNotifyEvent += OnFixed1MotionNotifyEvent;
 			this.DragDataReceived += new DragDataReceivedHandler (HandleLabelDragDataReceived);
 			this.DragDrop += new DragDropHandler (HandleTargetDragDrop);
 			this.DragMotion += HandleTargetDragMotion;
