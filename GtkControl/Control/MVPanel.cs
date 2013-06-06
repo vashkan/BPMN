@@ -58,6 +58,7 @@ namespace GtkControl
 		public MVPanel ()
 		{
 			this.Build ();
+
 			this.DragDataReceived += new DragDataReceivedHandler (HandleLabelDragDataReceived);
 			this.DragDrop += new DragDropHandler (HandleTargetDragDrop);
 			this.DragMotion += HandleTargetDragMotion;
@@ -65,7 +66,6 @@ namespace GtkControl
 			                  new[] { new TargetEntry("text/plain", TargetFlags.OtherWidget, 1)} ,
 								 Gdk.DragAction.Move);
 		}
-
 		void HandleLabelDragDataReceived (object o, DragDataReceivedArgs args)
 		{
 
@@ -161,6 +161,11 @@ namespace GtkControl
 				ctrl = new EndEvent (name, caption, Math.Min (height / 2,width/2));
 					break;
 				}
+			case BPMNElementType.INTERMEDIATE_NONE:
+			{
+				ctrl = new IntermediateEvent (name,caption, Math.Min (height / 2,width/2));
+				break;
+			}
 			case BPMNElementType.TASK:
 				{
 					ctrl = new Task (name, caption, width, height);
@@ -168,7 +173,7 @@ namespace GtkControl
 				}
 			case BPMNElementType.SEQUENCE_FLOW_UNCONDITIONAL:
 				{
-					ctrl = new UnCondSeqFlow (
+					ctrl = new SequenceFlow (
 						name,
 						caption,
 						width,
@@ -180,7 +185,7 @@ namespace GtkControl
 				}
 			case BPMNElementType.SEQUENCE_FLOW_CONDITIONAL:
 				{
-				ctrl = new UnCondSeqFlow (
+				ctrl = new SequenceFlow (
 						name,
 						caption,
 						width,
@@ -188,7 +193,7 @@ namespace GtkControl
 						new Cairo.PointD (15, 200),
 						new Cairo.PointD (300, 20)
 					);
-				(ctrl as UnCondSeqFlow).ConditionType = ConditionType.Expression;
+				(ctrl as SequenceFlow).ConditionType = ConditionType.Expression;
 					break;
 				}
 			case BPMNElementType.MESSAGE_FLOW:

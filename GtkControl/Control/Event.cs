@@ -6,6 +6,7 @@ namespace GtkControl.Control
 	/// <summary>
 	/// События
 	/// </summary>
+	[Serializable]
 	public abstract class Event:BaseItem
 	{
 
@@ -74,14 +75,41 @@ namespace GtkControl.Control
 	    /// <param name="g"></param>
 	    public override void Paint (Context g)
 		{
-			g.Save ();
-			g.Arc(radius,radius,radius-line_width/2,0,2*Math.PI);
-	        g.Pattern = pat;
-	        g.FillPreserve ();
-	        g.Restore ();
-			g.Color = line_color;
-	        g.LineWidth = line_width;
-	        g.Stroke ();
+			switch (ElementType) {
+			case BPMNElementType.START_NONE:
+			case BPMNElementType.END_NONE:
+			{
+				g.Save ();
+				g.Arc (radius, radius, radius - line_width / 2, 0, 2 * Math.PI);
+				g.Pattern = pat;
+				g.FillPreserve ();
+				g.Restore ();
+				g.Color = line_color;
+				g.LineWidth = line_width;
+				g.Stroke ();
+				break;
+			}
+			case BPMNElementType.INTERMEDIATE_NONE:
+			{
+				g.Save ();
+				g.Arc (radius, radius, radius - line_width / 2, 0, 2 * Math.PI);
+				g.Pattern = pat;
+				g.FillPreserve ();
+				g.Restore ();
+				g.Color = line_color;
+				g.LineWidth = line_width;
+				g.Stroke ();
+				g.NewPath();
+				g.Arc(radius, radius, 0.85*radius - line_width / 2, 0, 2 * Math.PI);
+				g.Color = line_color;
+				g.LineWidth = line_width;
+				g.Stroke ();
+				break;
+			}
+
+			default:
+				break;
+			}
 		}
 
 	    /// <summary>

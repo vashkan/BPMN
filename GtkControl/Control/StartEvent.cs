@@ -2,6 +2,7 @@ using System;
 
 namespace GtkControl.Control
 {
+	[Serializable]
 	public class StartEvent:Event
 	{
 		#region Переменные

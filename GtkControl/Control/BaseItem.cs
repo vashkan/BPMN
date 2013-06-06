@@ -395,6 +395,7 @@ namespace GtkControl.Control
 				break;
 			case BPMNElementType.START_NONE:
 			case BPMNElementType.END_NONE:
+			case BPMNElementType.INTERMEDIATE_NONE:
 				item.MinWidth = 35;
 				item.MinHeight = 35;
 				item.MaxWidth = 60;

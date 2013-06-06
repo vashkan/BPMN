@@ -46,6 +46,15 @@ public partial class MainWindow: Gtk.Window
 			40,
 			40
 		);
+		this.mvpanel1.AddMovingObject (
+			name + (index++).ToString (),
+			"Indeterm",
+			384,
+			289,
+			BPMNElementType.INTERMEDIATE_NONE,
+			40,
+			40
+			);
 
 		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "Task", 10, 10, BPMNElementType.TASK, 140, 70);
 		this.mvpanel1.AddMovingObject (name + (index++).ToString (), "end", 300, 222, BPMNElementType.END_NONE, 40, 40);
@@ -85,6 +94,7 @@ public partial class MainWindow: Gtk.Window
 			303,
 			225
 		);
+
 		/*//Прозрачность окна  
 		this.Screen.DefaultColormap = this.Screen.RgbaColormap;
 		this.Colormap = this.Screen.RgbaColormap;
