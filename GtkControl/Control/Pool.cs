@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Gtk;
 using Cairo;
 
@@ -23,6 +24,7 @@ namespace GtkControl.Control
     /// <summary>
     /// Пул
     /// </summary>
+	[Serializable]
 	public class Pool : Swimlane
     {
 		#region Переменные
@@ -31,6 +33,7 @@ namespace GtkControl.Control
 
 		#endregion
 		#region Свойства
+
 		/// <summary>
 		/// Gets or sets the orientation.
 		/// </summary>
@@ -52,6 +55,18 @@ namespace GtkControl.Control
 				return SwimlaneType.Pool;
 			}
 		}
+		public List<Lane> Lanes { 
+			get; 
+			private set;
+		}
+		//todo participient
+		public string ParticipantRef;
+
+		public string ProcessRef;
+
+
+
+
 		#endregion
         /// <summary>
         /// Пул

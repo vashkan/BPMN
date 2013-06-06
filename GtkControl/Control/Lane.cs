@@ -1,5 +1,5 @@
 using System;
-
+using System.Collections.Generic;
 namespace GtkControl.Control
 {
 	[Serializable]
@@ -19,12 +19,20 @@ namespace GtkControl.Control
 				return SwimlaneType.Lane;
 			}
 		}
-		//public 
+
+		public  Pool ParentPool {
+			get;
+			set;
+		}
 		#endregion
 		public Lane (string pName, string cap,float _width, float _height)
 			:base ( pName,  cap, _width, _height)
 		{
 
+		}
+		public List<BaseItem> GetElements()
+		{
+			return null;
 		}
 	}
 }
