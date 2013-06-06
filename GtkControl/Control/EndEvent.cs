@@ -15,7 +15,7 @@ namespace GtkControl.Control
 		/// <value>The type of the element.</value>
 		public override BPMNElementType ElementType {
 			get {
-				return BPMNElementType.START_NONE;
+				return BPMNElementType.END_NONE;
 			}
 		}
 		/// <summary>
