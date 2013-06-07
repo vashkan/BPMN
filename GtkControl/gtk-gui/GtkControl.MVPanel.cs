@@ -6,7 +6,7 @@ namespace GtkControl
 	{
 		private global::Gtk.ScrolledWindow scrolledwindow1;
 		private global::Gtk.Fixed fixed1;
-		
+
 		protected virtual void Build ()
 		{
 			global::Stetic.Gui.Initialize (this);

@@ -266,14 +266,14 @@ namespace GtkControl
 		//Render the clone of the selected object at the intermediate position
 		private void MoveClone (ref Widget wdg, object eventX, object eventY)
 		{
-			if (wdg == null) {
-				wdg = CloneCurrCtrl ();
+			//if (wdg == null) {
+			//	wdg = CloneCurrCtrl ();
 				if (selectedClones.Count <= 0) {
 					foreach (var selectedItem in SelectionService.CurrentSelection) 
 					{
 						Widget re = null;
 						BaseItem mv = selectedItem as BaseItem;
-						if ((mv) != null && mv.IsDragged != true) {
+						if ((mv) != null /*&& mv.IsDragged != true*/) {
 							re = GetMovingBox (
 								mv.Name + "Clone",
 								mv.Caption,
@@ -292,12 +292,21 @@ namespace GtkControl
 							             	 System.Convert.ToInt32(eventY)-origY+mv.Y, true);
 
 						}
+				
 					}
-				}
 				this.ShowAll ();
-				fixed1.Add(wdg);
 			}
-			MoveControl (wdg, eventX, eventY, true);
+				
+				//fixed1.Add(wdg);
+			//}
+			selectedClones.ForEach (
+				item => {
+					var original = SelectionService.CurrentSelection [selectedClones.IndexOf(item)] as BaseItem;
+					MoveControl (item, System.Convert.ToInt32 (eventX) - origX + original.X, 
+					            System.Convert.ToInt32 (eventY) - origY + original.Y, true);
+				}
+			);
+			//MoveControl (wdg, eventX, eventY, true);
 			fixed1.ShowAll ();
 			this.ShowAll ();
 		}
@@ -423,22 +432,28 @@ namespace GtkControl
 		{
 			//Final destination of the control
 			if (a.Event.Button == 1) {
-				foreach (var selectedItem in SelectionService.CurrentSelection) {
-					MoveControl (currCtrl, a.Event.X, a.Event.Y, false);
-				}
-				MoveControl (currCtrl, a.Event.X, a.Event.Y, false);
+				if (SelectionService.CurrentSelection != null)
+					SelectionService.CurrentSelection.ForEach (item=> {
+						if (selectedClones.Count>0)
+						{
+							var clone = (selectedClones[SelectionService.CurrentSelection.IndexOf(item)] as EventBox).Child as BaseItem;
+							if (clone != null)
+								MoveControl ((item as BaseItem).Parent, a.Event.X-origX + clone.X, a.Event.Y-origY+ clone.Y, false);
+						}
+					});
+				//MoveControl (currCtrl, a.Event.X, a.Event.Y, false);
 				
 				IDragged baseItem;
 				if ((currCtrl is EventBox) && (baseItem = ((currCtrl as EventBox).Child) as IDragged) != null)
 					baseItem.IsDragged = false;
-				if (currClone != null) {
-					foreach (var selectedItem in selectedClones)
-						this.fixed1.Remove (selectedItem);
+				if (selectedClones.Count>0) {
+					selectedClones.ForEach (item=>{this.fixed1.Remove(item);/* item.Destroy();*/});
 					selectedClones.Clear ();
-					this.fixed1.Remove (currClone);
+					//this.fixed1.Remove (currClone);
 
-					Console.WriteLine ("Deleting moving object" + currClone.Name);
-					currClone.Destroy ();
+
+					//Console.WriteLine ("Deleting moving object" + currClone.Name);
+					//currClone.Destroy ();
 					currClone = null;
 				}
 
